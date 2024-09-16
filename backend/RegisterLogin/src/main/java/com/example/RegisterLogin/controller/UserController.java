@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
+@RequestMapping("/student")
 public class UserController {
 
     @Autowired
@@ -38,7 +39,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login/student")
+    @PostMapping("/login")
     public ResponseEntity<User> login (@RequestParam("email") String email, @RequestParam("password") String password){
         User user = new User();
         user.setEmail(email);

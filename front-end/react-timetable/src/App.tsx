@@ -42,7 +42,7 @@ export const App = () => {
             />
           }
         />
-        <Route path="/login/:type" element={<SignIn />} />
+        <Route path=":type/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
       </Routes>
     </Router>

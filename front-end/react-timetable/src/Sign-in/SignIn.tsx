@@ -23,6 +23,7 @@ import ForgotPassword from "./ForgotPassword";
 import getSignUpTheme from "./../sign-up/theme/getSignUpTheme";
 import TemplateFrame from "../sign-up/TemplateFrame";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 // Styled components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -59,6 +60,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  const { type } = useParams();
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 
   interface User {
@@ -109,7 +111,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     data.append("password", formData.password);
     try {
       const response = await axios.post(
-        "http://localhost:8080/login/student",
+        `http://localhost:8080/${type}/login`,
         data
       );
       console.log("Signed in!", response.data);

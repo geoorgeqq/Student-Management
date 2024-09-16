@@ -25,7 +25,7 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
     if (loggedIn) {
       onLoginLogout(); // Log out if logged in
     } else {
-      navigate(`/login/${type}`); // Redirect to the specific login type
+      navigate(`/${type}/login`); // Redirect to the specific login type
     }
     handleClose(); // Close the menu after clicking
   };
