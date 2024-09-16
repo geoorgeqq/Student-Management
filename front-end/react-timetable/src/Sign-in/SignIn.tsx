@@ -20,11 +20,9 @@ import {
   ThemeProvider, // Ensure this is imported
 } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from "./CustomIcons";
-import AppTheme from "../shared-theme/AppTheme";
-import ColorModeSelect from "../shared-theme/ColorModeSelect";
-import TemplateFrame from "../sign-up/TemplateFrame";
 import getSignUpTheme from "./../sign-up/theme/getSignUpTheme";
+import TemplateFrame from "../sign-up/TemplateFrame";
+import axios from "axios";
 
 // Styled components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -63,6 +61,11 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 
+  interface User {
+    email: string;
+    password: string;
+  }
+
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
   };
@@ -76,11 +79,20 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const defaultTheme = createTheme({ palette: { mode } });
   const SignUpTheme = createTheme(getSignUpTheme(mode));
+  const [formData, setFormData] = React.useState<User>({
+    email: "",
+    password: "",
+  });
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -90,13 +102,20 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const data = new FormData();
+    data.append("email", formData.email);
+    data.append("password", formData.password);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/login/student",
+        data
+      );
+      console.log("Signed in!", response.data);
+    } catch (error) {
+      console.log("Error logging in: " + error);
+    }
   };
 
   const validateInputs = () => {
@@ -185,6 +204,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   fullWidth
                   variant="outlined"
                   color={emailError ? "error" : "primary"}
+                  onChange={handleChange}
                   InputLabelProps={{
                     style: {
                       fontFamily: "Roboto, Arial, sans-serif", // Apply font family to label
@@ -235,6 +255,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   variant="outlined"
                   color={passwordError ? "error" : "primary"}
                   sx={{ fontFamily: "Roboto, Arial, sans-serif" }}
+                  onChange={handleChange}
                 />
               </FormControl>
               <FormControlLabel

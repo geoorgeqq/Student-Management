@@ -8,16 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Service
-public class UserService {
-    @Autowired
-    private UserRepository userRepository;
 
-    public User registerUser(User user, MultipartFile pic) throws IOException {
-        if(pic != null){
-            user.setPic(pic.getBytes());
-        }
+public interface UserService {
 
-        return userRepository.save(user);
-    }
+    public User registerUser(User user, MultipartFile file) throws IOException;
+    public User login(String email, String password);
 }

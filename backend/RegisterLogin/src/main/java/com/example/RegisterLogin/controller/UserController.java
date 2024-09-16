@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/register")
 @CrossOrigin("http://localhost:3000")
 public class UserController {
 
     @Autowired
     public UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<User> register(@RequestParam("name") String name,
                                          @RequestParam("email") String email,
                                          @RequestParam("password") String password,
@@ -37,7 +36,18 @@ public class UserController {
         }catch (Exception e){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-
+    @PostMapping("/login/student")
+    public ResponseEntity<User> login (@RequestParam("email") String email, @RequestParam("password") String password){
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+            User savedUser = userService.login(user.getEmail(), user.getPassword());
+            if(savedUser != null){
+                return ResponseEntity.ok(user);
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
     }
 }
