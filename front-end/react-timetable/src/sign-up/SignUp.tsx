@@ -134,7 +134,7 @@ const SignUp: React.FC = () => {
 
     try {
       const response = await axios.post<User>(
-        "http://localhost:8080/register",
+        "http://localhost:8080/student/register",
         dataToSubmit
       );
       console.log("User registered", response.data);

@@ -16,14 +16,15 @@ import {
   createTheme,
   PaletteMode,
   styled,
-  ThemeOptions,
   ThemeProvider, // Ensure this is imported
 } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
 import getSignUpTheme from "./../sign-up/theme/getSignUpTheme";
 import TemplateFrame from "../sign-up/TemplateFrame";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Router, useParams } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -90,6 +91,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -114,7 +116,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         `http://localhost:8080/${type}/login`,
         data
       );
-      console.log("Signed in!", response.data);
+      navigate(`/student/dashboard`);
     } catch (error) {
       console.log("Error logging in: " + error);
     }
@@ -207,13 +209,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   variant="outlined"
                   color={emailError ? "error" : "primary"}
                   onChange={handleChange}
-                  InputLabelProps={{
-                    style: {
-                      fontFamily: "Roboto, Arial, sans-serif", // Apply font family to label
-                    },
-                  }}
                   sx={{
-                    fontFamily: "Roboto, Arial, sans-serif", // Apply font family to the input itself
+                    "& .MuiInputBase-input": {
+                      fontFamily: "Roboto, sans-serif", // Change font family for input text
+                      fontSize: "1rem", // You can adjust the font size if needed
+                    },
                   }}
                 />
               </FormControl>

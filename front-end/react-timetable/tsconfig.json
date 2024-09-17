@@ -15,7 +15,10 @@
     "resolveJsonModule": true, // Allow importing JSON modules
     "isolatedModules": true, // Ensure that each file can be safely transpiled independently
     "noEmit": true, // Do not emit outputs (useful in a watch mode with type checking only)
-    "jsx": "react-jsx" // Specify JSX code generation (React 17+)
+    "jsx": "react-jsx", // Specify JSX code generation (React 17+)
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "include": [
     "src" // Include files from the src directory

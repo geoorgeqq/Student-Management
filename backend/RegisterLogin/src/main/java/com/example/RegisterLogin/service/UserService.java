@@ -1,9 +1,8 @@
 package com.example.RegisterLogin.service;
 
-import com.example.RegisterLogin.entity.User;
-import com.example.RegisterLogin.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.RegisterLogin.entity.Admin;
+import com.example.RegisterLogin.entity.Student;
+import com.example.RegisterLogin.entity.Teacher;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,6 +10,10 @@ import java.io.IOException;
 
 public interface UserService {
 
-    public User registerUser(User user, MultipartFile file) throws IOException;
-    public User login(String email, String password);
+    public Student registerUser(Student user, MultipartFile file) throws IOException;
+    public Student loginStudent(String email, String password);
+
+    public Admin loginAdmin(String email, String password);
+
+    public Teacher loginTeacher(String email, String password);
 }

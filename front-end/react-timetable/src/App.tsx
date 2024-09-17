@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import SignIn from "./Sign-in/SignIn";
 import SignUp from "./sign-up/SignUp";
+import "@fontsource/roboto";
+import Dashboard from "./dashboard/Dashboard";
 
 const theme = createTheme({
   typography: {
@@ -30,21 +32,25 @@ export const App = () => {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              loggedIn={loggedIn}
-              email={email}
-              handleLoginLogout={handleLoginLogout}
-            />
-          }
-        />
-        <Route path=":type/login" element={<SignIn />} />
-        <Route path="/register" element={<SignUp />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                loggedIn={loggedIn}
+                email={email}
+                handleLoginLogout={handleLoginLogout}
+              />
+            }
+          />
+          <Route path=":type/login" element={<SignIn />} />
+          <Route path="/student/register" element={<SignUp />} />
+          <Route path=":type/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 };

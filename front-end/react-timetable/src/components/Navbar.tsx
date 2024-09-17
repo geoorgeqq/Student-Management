@@ -31,7 +31,7 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
   };
 
   const handleRegisterClick = () => {
-    navigate("/register");
+    navigate(`/student/register`);
   };
 
   return (
