@@ -18,6 +18,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from "./theme/customizations";
+import { useLocation } from "react-router-dom";
 
 const theme = createTheme({
   typography: {
@@ -54,12 +55,17 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
+console.log("Dashboard Component Rendered with name:");
+
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+  const location = useLocation();
+  const { name, email, image } = location.state;
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
-        <SideMenu />
+        <SideMenu name={name} email={email} image={image} />
         <AppNavbar />
         {/* Main content */}
         <Box

@@ -52,7 +52,13 @@ function stringAvatar(name: string) {
   };
 }
 
-export default function SideMenu() {
+interface SideMenuProps {
+  name: string;
+  email: string;
+  image: string;
+}
+
+export default function SideMenu({ name, email, image }: SideMenuProps) {
   return (
     <Drawer
       variant="permanent"
@@ -75,18 +81,20 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          {...stringAvatar("Grajdeanu George-Daniel")}
+          src={image || undefined} // This should correctly display the image URL
+          {...(image ? {} : stringAvatar(name || "FirstName LastName"))} // Fallback to initials
           sx={{ width: 36, height: 36 }}
         />
+
         <Box sx={{ mr: "auto" }}>
           <Typography
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "8px" }}
           >
-            Grajdeanu George-Daniel
+            {name}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            grajdeanu.george@school.com
+            {email}
           </Typography>
         </Box>
         <OptionsMenu />

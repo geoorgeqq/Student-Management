@@ -92,6 +92,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const userType = "yourType"; // Adjust this to your needs
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -116,7 +117,16 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         `http://localhost:8080/${type}/login`,
         data
       );
-      navigate(`/student/dashboard`);
+
+      const name = response.data.name;
+      const email = response.data.email;
+      const base64Image = response.data.pic;
+
+      const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+
+      navigate(`/student/dashboard`, {
+        state: { name, email, image: imageUrl },
+      });
     } catch (error) {
       console.log("Error logging in: " + error);
     }
@@ -308,4 +318,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       </ThemeProvider>
     </TemplateFrame>
   );
+}
+function base64ToBlob(base64: any, arg1: string) {
+  throw new Error("Function not implemented.");
 }

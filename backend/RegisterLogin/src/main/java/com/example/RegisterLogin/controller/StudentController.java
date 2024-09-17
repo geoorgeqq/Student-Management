@@ -45,6 +45,8 @@ public class StudentController {
         user.setPassword(password);
             Student savedUser = userService.loginStudent(user.getEmail(), user.getPassword());
             if(savedUser != null){
+                user.setName(savedUser.getName());
+                user.setPic(savedUser.getPic());
                 return ResponseEntity.ok(user);
             }else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
