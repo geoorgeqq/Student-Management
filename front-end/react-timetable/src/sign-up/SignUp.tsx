@@ -17,6 +17,7 @@ import dayjs, { Dayjs } from "dayjs"; // Import Dayjs type from dayjs
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 
 import {
   createTheme,
@@ -28,6 +29,8 @@ import getSignUpTheme from "./theme/getSignUpTheme";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from "./CustomIcons";
 import TemplateFrame from "./TemplateFrame";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const today = dayjs();
 
@@ -82,6 +85,7 @@ const SignUp: React.FC = () => {
     password: string;
     email: string;
     pic: File | null;
+    department_id: string | number;
   }
   // Initialize the formData state with the User interface
   const [formData, setFormData] = React.useState<User>({
@@ -89,16 +93,55 @@ const SignUp: React.FC = () => {
     email: "",
     password: "",
     pic: null,
+    department_id: "",
   });
+  const [departments, setDepartments] = React.useState<
+    { id: number; department_name: string }[]
+  >([]);
+  const [selectedDepartmentId, setSelectedDepartmentId] = React.useState<
+    number | null
+  >(null);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8080/student/departments")
+      .then((res) => res.json())
+      .then((data) => {
+        setDepartments(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  const handleDepartmentChange = (event: SelectChangeEvent<number>) => {
+    const departmentId = event.target.value as number; // Assuming departmentId is a number
+
+    setSelectedDepartmentId(departmentId); // Update selectedDepartmentId
+
+    // Update formData.department
+    setFormData({
+      ...formData,
+      department_id: departmentId.toString(), // Ensure it's a string
+    });
+
+    console.log("Updated Department in formData:", departmentId.toString());
+  };
+
   const [formDate, setFormDate] = React.useState<Date>();
+  const [imageUrl, setImageUrl] = React.useState<string>("");
 
   const fileInputRef = React.useRef<HTMLInputElement | null>(null); // Create a ref for the file input
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]; // Get the first file
       setFormData({ ...formData, pic: file });
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -117,6 +160,7 @@ const SignUp: React.FC = () => {
       setFormDate(newDate.toDate());
     }
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -125,9 +169,15 @@ const SignUp: React.FC = () => {
     dataToSubmit.append("name", formData.name);
     dataToSubmit.append("email", formData.email);
     dataToSubmit.append("password", formData.password);
+
+    if (selectedDepartmentId) {
+      dataToSubmit.append("department_id", selectedDepartmentId.toString());
+    }
+
     if (formData.pic) {
       dataToSubmit.append("pic", formData.pic);
     }
+
     if (formDate) {
       dataToSubmit.append("dateOfBirth", dayjs(formDate).format("YYYY-MM-DD"));
     }
@@ -137,9 +187,15 @@ const SignUp: React.FC = () => {
         "http://localhost:8080/student/register",
         dataToSubmit
       );
-      console.log("User registered", response.data);
+
+      const { name, email, pic } = response.data;
+      const imageUrl = `data:image/jpeg;base64,${pic}`;
+
+      navigate(`/student/dashboard`, {
+        state: { name, email, image: imageUrl },
+      });
     } catch (error) {
-      console.log("Error registration user: " + error);
+      console.log("Error registering user: " + error);
     }
   };
 
@@ -351,6 +407,26 @@ const SignUp: React.FC = () => {
                       }}
                     />
                   </LocalizationProvider>
+                </FormControl>
+                <FormControl fullWidth>
+                  <FormLabel htmlFor="department">Department</FormLabel>
+                  <Select
+                    value={
+                      selectedDepartmentId !== null ? selectedDepartmentId : ""
+                    } // Keep the value as a number or empty string
+                    onChange={handleDepartmentChange}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Department" }}
+                  >
+                    <MenuItem value="" disabled>
+                      Select a Department
+                    </MenuItem>
+                    {departments.map((department) => (
+                      <MenuItem key={department.id} value={department.id}>
+                        {department.department_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
 
                 <FormControl>

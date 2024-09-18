@@ -6,26 +6,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import SchoolIcon from "@mui/icons-material/School";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
-const mainListItems = [
-  { text: "Home", icon: <HomeRoundedIcon /> },
-  {
-    text: "Courses",
-    icon: <SchoolIcon sx={{ fontFamily: "Roboto" }} />,
-  },
-  {
-    text: "Timetable",
-    icon: <AccessTimeIcon sx={{ fontFamily: "Roboto" }} />,
-  },
-];
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddCircle from "@mui/icons-material/AddCircle";
 
 const secondaryListItems = [
   { text: "Settings", icon: <SettingsRoundedIcon /> },
@@ -33,25 +20,131 @@ const secondaryListItems = [
   { text: "Feedback", icon: <HelpRoundedIcon /> },
 ];
 
-export default function MenuContent() {
+interface MenuContentProps {
+  userType: string;
+  onMenuClick: (content: string) => void;
+}
+
+export default function MenuContent({
+  userType,
+  onMenuClick,
+}: MenuContentProps) {
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const handleListItemClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    index: number,
+    content: string
+  ) => {
+    setSelectedIndex(index);
+    onMenuClick(content);
+  };
+
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: "space-between" }}>
       <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem
-            key={index}
-            disablePadding
-            sx={{ display: "block", fontFamily: "Roboto" }}
+        <ListItem
+          disablePadding
+          sx={{ display: "block", fontFamily: "Roboto" }}
+        >
+          <ListItemButton
+            selected={selectedIndex === 0}
+            onClick={(event) => handleListItemClick(event, 0, "Home")}
           >
-            <ListItemButton selected={index === 0}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemIcon>
+              <HomeRoundedIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Home"
+              primaryTypographyProps={{ fontFamily: "Roboto" }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton
+            selected={selectedIndex === 1}
+            onClick={(event) => handleListItemClick(event, 1, "Courses")}
+          >
+            <ListItemIcon>
+              <SchoolIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Courses"
+              primaryTypographyProps={{ fontFamily: "Roboto" }}
+            />
+          </ListItemButton>
+        </ListItem>
+        {userType === "student" && (
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={selectedIndex === 2}
+              onClick={(event) => handleListItemClick(event, 2, "Join Course")}
+            >
+              <ListItemIcon>
+                <AddCircleIcon />
+              </ListItemIcon>
               <ListItemText
-                primary={item.text}
-                primaryTypographyProps={{ fontFamily: "Roboto", fontSize: 500 }}
+                primary="Join Course"
+                primaryTypographyProps={{ fontFamily: "Roboto" }}
               />
             </ListItemButton>
           </ListItem>
-        ))}
+        )}
+        <ListItem disablePadding>
+          <ListItemButton
+            selected={selectedIndex === 3}
+            onClick={(event) => handleListItemClick(event, 3, "Timetable")}
+          >
+            <ListItemIcon>
+              <AccessTimeIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Timetable"
+              primaryTypographyProps={{ fontFamily: "Roboto" }}
+            />
+          </ListItemButton>
+        </ListItem>
+
+        {/* Admin-specific items */}
+        {userType === "admin" && (
+          <>
+            <ListItem
+              disablePadding
+              sx={{ display: "block", fontFamily: "Roboto" }}
+            >
+              <ListItemButton
+                selected={selectedIndex === 4}
+                onClick={(event) =>
+                  handleListItemClick(event, 4, "Admin Settings")
+                }
+              >
+                <ListItemIcon>
+                  <SettingsRoundedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Admin Settings"
+                  primaryTypographyProps={{ fontFamily: "Roboto" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton
+                selected={selectedIndex === 5}
+                onClick={(event) =>
+                  handleListItemClick(event, 5, "User Management")
+                }
+              >
+                <ListItemIcon>
+                  <HelpRoundedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="User Management"
+                  primaryTypographyProps={{ fontFamily: "Roboto" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )}
       </List>
 
       <List dense>

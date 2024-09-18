@@ -18,7 +18,8 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from "./theme/customizations";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import ContentRenderer from "./components/ContentRenderer";
 
 const theme = createTheme({
   typography: {
@@ -55,42 +56,31 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-console.log("Dashboard Component Rendered with name:");
-
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const location = useLocation();
-  const { name, email, image } = location.state;
+  const { name, email, image, id } = location.state;
+  const { type } = useParams<{ type: string }>();
+
+  const [selectedContent, setSelectedContent] = React.useState("home");
+
+  const handleMenuClick = (content: string) => {
+    setSelectedContent(content);
+  };
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
-      <CssBaseline enableColorScheme />
+      <CssBaseline enableColorScheme />%
       <Box sx={{ display: "flex" }}>
-        <SideMenu name={name} email={email} image={image} />
+        <SideMenu
+          userType={type || "student"}
+          name={name}
+          email={email}
+          image={image}
+          onMenuClick={handleMenuClick}
+        />
         <AppNavbar />
         {/* Main content */}
-        <Box
-          component="main"
-          sx={(theme) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: "auto",
-          })}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: "center",
-              mx: 3,
-              pb: 10,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <Header />
-            <MainGrid />
-          </Stack>
-        </Box>
+        <ContentRenderer selectedContent={selectedContent} id={id} />
       </Box>
     </AppTheme>
   );

@@ -56,9 +56,17 @@ interface SideMenuProps {
   name: string;
   email: string;
   image: string;
+  userType: string;
+  onMenuClick: (conent: string) => void;
 }
 
-export default function SideMenu({ name, email, image }: SideMenuProps) {
+export default function SideMenu({
+  name,
+  email,
+  image,
+  userType,
+  onMenuClick,
+}: SideMenuProps) {
   return (
     <Drawer
       variant="permanent"
@@ -87,15 +95,27 @@ export default function SideMenu({ name, email, image }: SideMenuProps) {
         />
 
         <Box sx={{ mr: "auto" }}>
-          <Typography
-            variant="body2"
-            sx={{ fontWeight: 500, lineHeight: "8px" }}
-          >
-            {name}
-          </Typography>
-          <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            {email}
-          </Typography>
+          {(userType === "student" || userType === "teacher") && (
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: 500, lineHeight: "8px" }}
+            >
+              {name}
+            </Typography>
+          )}
+          {(userType === "student" || userType === "teacher") && (
+            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+              {email}
+            </Typography>
+          )}
+          {userType === "admin" && (
+            <Typography
+              variant="caption"
+              sx={{ color: "text.primary", fontSize: 15 }}
+            >
+              {email}
+            </Typography>
+          )}
         </Box>
         <OptionsMenu />
       </Stack>
@@ -105,7 +125,7 @@ export default function SideMenu({ name, email, image }: SideMenuProps) {
         }}
       ></Box>
       <Divider />
-      <MenuContent />
+      <MenuContent userType={userType} onMenuClick={onMenuClick} />
     </Drawer>
   );
 }

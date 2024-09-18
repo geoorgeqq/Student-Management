@@ -1,5 +1,8 @@
 package com.example.RegisterLogin.controller;
 
+import com.example.RegisterLogin.entity.Course;
+import com.example.RegisterLogin.entity.Department;
+import com.example.RegisterLogin.entity.Enrollment;
 import com.example.RegisterLogin.entity.Student;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -27,7 +33,8 @@ public class StudentController {
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password); // Consider hashing this password for security
-        user.setDepartment_id(department_id);
+        Department department = userService.getDepartmentByDepartmentId(department_id);
+        user.setDepartment(department);
         user.setDateOfBirth(dateOfBirth);
 
         try {
@@ -51,5 +58,16 @@ public class StudentController {
             }else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
+    }
+
+    @GetMapping("/courses")
+    public ResponseEntity<List<Course>> getCourses(){
+       return ResponseEntity.ok(userService.getCourses());
+    }
+
+    @GetMapping("/departments")
+    public ResponseEntity<List<Department>> getDepartments(){
+        List<Department> departments = userService.getDepartmentsWithCourses();
+        return ResponseEntity.ok(departments);
     }
 }

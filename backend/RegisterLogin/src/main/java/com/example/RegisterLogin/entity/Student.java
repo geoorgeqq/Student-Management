@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "student")
@@ -19,11 +20,17 @@ public class Student {
 
     private String password;
 
-    private Long department_id;
+    @ManyToOne
+    @JoinColumn(name = "department_id",referencedColumnName = "id")
+    private Department department;
 
     private Date dateOfBirth;
+
     @Lob
     private byte[] pic;
+
+    @OneToMany(mappedBy = "student")
+    private Set<Enrollment> enrollments;
 
 
 }

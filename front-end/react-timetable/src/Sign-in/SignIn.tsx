@@ -87,6 +87,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     password: "",
   });
   const [emailError, setEmailError] = React.useState(false);
+  const [departments, setDepartments] = React.useState([]);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
@@ -120,12 +121,13 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       const name = response.data.name;
       const email = response.data.email;
+      const id = response.data.id;
       const base64Image = response.data.pic;
 
       const imageUrl = `data:image/jpeg;base64,${base64Image}`;
 
-      navigate(`/student/dashboard`, {
-        state: { name, email, image: imageUrl },
+      navigate(`/${type}/dashboard`, {
+        state: { name, email, id, image: imageUrl },
       });
     } catch (error) {
       console.log("Error logging in: " + error);
