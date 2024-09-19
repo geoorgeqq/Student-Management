@@ -103,7 +103,7 @@ const SignUp: React.FC = () => {
   >(null);
 
   React.useEffect(() => {
-    fetch("http://localhost:8080/student/departments")
+    fetch("http://localhost:8080/departments")
       .then((res) => res.json())
       .then((data) => {
         setDepartments(data);
@@ -190,9 +190,9 @@ const SignUp: React.FC = () => {
 
       const { name, email, pic } = response.data;
       const imageUrl = `data:image/jpeg;base64,${pic}`;
-
+      const departmentId = selectedDepartmentId;
       navigate(`/student/dashboard`, {
-        state: { name, email, image: imageUrl },
+        state: { name, email, image: imageUrl, departmentId },
       });
     } catch (error) {
       console.log("Error registering user: " + error);
