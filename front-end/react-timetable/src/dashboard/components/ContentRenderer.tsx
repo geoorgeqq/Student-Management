@@ -5,19 +5,22 @@ import { alpha } from "@mui/material/styles";
 import Header from "./Header";
 import MainGrid from "./MainGrid";
 import CoursesContent from "./CoursesContent";
+import EnrollCourse from "./EnrollCourse";
 
 interface ContentRendererProps {
   selectedContent: string;
   id: string;
+  departmentId: string;
 }
 
 export default function ContentRenderer({
   selectedContent,
   id,
+  departmentId,
 }: ContentRendererProps) {
   const renderContent = () => {
     switch (selectedContent) {
-      case "home":
+      case "Home":
         return (
           <Box
             component="main"
@@ -44,9 +47,20 @@ export default function ContentRenderer({
           </Box>
         );
       case "Courses":
-        return <CoursesContent selectedContent={selectedContent} />;
+        return (
+          <CoursesContent
+            selectedContent={selectedContent}
+            departmentId={departmentId}
+          />
+        );
       case "Join Course":
-        return <div>Hello</div>;
+        return (
+          <EnrollCourse
+            selectedContent={selectedContent}
+            departmentId={departmentId}
+            studentId={id}
+          />
+        );
       case "Timetable":
         return (
           <Box

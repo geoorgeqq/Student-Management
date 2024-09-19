@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,7 +85,8 @@ public class UserServiceImpl implements UserService{
     }
 
     public Set<Course> findCoursesByDepartmentId(Long departmentId){
-        return courseRepository.findByDepartmentId(departmentId);
+        Set<Course> courses = courseRepository.findByDepartmentId(departmentId);
+        return courses;
     }
 
     @Override
@@ -95,18 +99,70 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<Student> getStudents() {
+        List<Student>  students= userRepository.findAll();
+        return students;
+
+    }
+
+    @Override
     public Enrollment addEnrollment(Long studentId, Long courseId) {
-        Student student = userRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
-
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course ID"));
-
+        Student tempStudent = userRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found!"));
+        Course tempCourse = courseRepository.findById(courseId).orElseThrow(()-> new RuntimeException("Course not found!"));
         Enrollment enrollment = new Enrollment();
-        enrollment.setStudent(student);
-        enrollment.setCourse(course);
+        enrollment.setStudent(tempStudent);
+        enrollment.setCourse(tempCourse);
 
-        return enrollmentRepository.save(enrollment);
+        enrollmentRepository.save(enrollment);
+
+        return enrollment;
+    }
+
+    @Override
+    public void saveEnrollments() {
+        List<Student> students = userRepository.findAll();
+        List<Enrollment> enrollments = new ArrayList<>();
+
+        for (Student student : students) {
+            Set<Course> courses = getEnrolledCoursesByStudentId(student.getId());
+
+            if (!courses.isEmpty()) {
+                // Convert Set to List to access elements by index
+                List<Course> courseList = new ArrayList<>(courses);
+
+                for (int i = 0; i < courseList.size(); i++) {
+                    Course course = courseList.get(i);
+
+                    // Create new Enrollment object
+                    Enrollment enrollment = new Enrollment();
+                    enrollment.setStudent(student);
+                    enrollment.setCourse(course);
+
+                    // Add the new Enrollment to the enrollments list
+                    enrollments.add(enrollment);
+                }
+            }
+        }
+
+        // Assuming you have a method to save all enrollments at once
+        enrollmentRepository.saveAll(enrollments);
+    }
+
+
+    @Override
+    public Set<Course> getEnrolledCoursesByStudentId(Long studentId) {
+        Student student = userRepository.findById(studentId).orElseThrow(() ->new RuntimeException("Not found!"));
+        List<Enrollment> enrollments = enrollmentRepository.findByStudent(student);
+
+        Set<Course> enrolledCourses = new HashSet<>();
+
+        // Iterate through enrollments to get the courses
+        for (Enrollment enrollment : enrollments) {
+            enrolledCourses.add(enrollment.getCourse());
+        }
+
+        return enrolledCourses;
+
     }
 
 

@@ -122,12 +122,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       const name = response.data.name;
       const email = response.data.email;
       const id = response.data.id;
+      const departmentId = response.data.department.id;
+      console.log(departmentId);
       const base64Image = response.data.pic;
 
       const imageUrl = `data:image/jpeg;base64,${base64Image}`;
 
       navigate(`/${type}/dashboard`, {
-        state: { name, email, id, image: imageUrl },
+        state: { name, email, id, image: imageUrl, departmentId },
       });
     } catch (error) {
       console.log("Error logging in: " + error);

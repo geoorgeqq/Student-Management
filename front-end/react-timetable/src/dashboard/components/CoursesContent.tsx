@@ -13,38 +13,34 @@ import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
-// Interface for department and courses data
+// Interface for courses data
 interface Course {
   id: number;
   courseName: string;
   enrollment: any[];
 }
 
-interface Department {
-  id: number;
-  department_name: string;
-  courses: Course[];
-}
-
 interface CoursesContentProps {
   selectedContent: string;
+  departmentId: string;
 }
 
 export default function CoursesContent({
   selectedContent,
+  departmentId,
 }: CoursesContentProps) {
-  const [departments, setDepartments] = React.useState<Department[]>([]);
+  const [courses, setCourses] = React.useState<Course[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
 
   // Fetch data when component mounts
   React.useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/student/departments"
+          `http://localhost:8080/departments/${departmentId}`
         );
-        setDepartments(response.data);
+        setCourses(response.data);
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch data");
@@ -52,7 +48,7 @@ export default function CoursesContent({
       }
     };
 
-    fetchDepartments();
+    fetchCourses();
   }, []);
 
   // Display loading state or error state
@@ -84,7 +80,7 @@ export default function CoursesContent({
           ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
           : alpha(theme.palette.background.default, 1),
         overflow: "auto",
-        fontFamily: "Roboto", // Apply Roboto font to the entire Box
+        fontFamily: "Roboto",
       })}
     >
       <Stack
@@ -94,7 +90,7 @@ export default function CoursesContent({
           mx: 3,
           pb: 10,
           mt: { xs: 8, md: 0 },
-          fontFamily: "Roboto", // Apply Roboto font to all children of Stack
+          fontFamily: "Roboto",
         }}
       >
         <Header selectedContent={selectedContent} />
@@ -107,9 +103,6 @@ export default function CoursesContent({
                 <TableCell sx={{ fontFamily: "Roboto", fontWeight: "bold" }}>
                   Course Name
                 </TableCell>
-                <TableCell sx={{ fontFamily: "Roboto", fontWeight: "bold" }}>
-                  Department Name
-                </TableCell>
                 <TableCell
                   align="right"
                   sx={{ fontFamily: "Roboto", fontWeight: "bold" }}
@@ -119,21 +112,16 @@ export default function CoursesContent({
               </TableRow>
             </TableHead>
             <TableBody>
-              {departments.map((department) =>
-                department.courses.map((course) => (
-                  <TableRow key={course.id}>
-                    <TableCell sx={{ fontFamily: "Roboto" }}>
-                      {course.courseName}
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: "Roboto" }}>
-                      {department.department_name}
-                    </TableCell>
-                    <TableCell align="right" sx={{ fontFamily: "Roboto" }}>
-                      {course.enrollment.length}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+              {courses.map((course) => (
+                <TableRow key={course.id}>
+                  <TableCell sx={{ fontFamily: "Roboto" }}>
+                    {course.courseName}
+                  </TableCell>
+                  <TableCell align="right" sx={{ fontFamily: "Roboto" }}>
+                    {course.enrollment.length}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

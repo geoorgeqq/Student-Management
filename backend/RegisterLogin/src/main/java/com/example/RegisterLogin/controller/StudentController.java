@@ -1,9 +1,6 @@
 package com.example.RegisterLogin.controller;
 
-import com.example.RegisterLogin.entity.Course;
-import com.example.RegisterLogin.entity.Department;
-import com.example.RegisterLogin.entity.Enrollment;
-import com.example.RegisterLogin.entity.Student;
+import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,14 +10,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/student")
 public class StudentController {
 
     @Autowired
     public UserService userService;
+
+    @GetMapping("")
+    public ResponseEntity<List<Student>> getStudents(){
+        List<Student> students = userService.getStudents();
+        return ResponseEntity.ok(students);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<Student> register(@RequestParam("name") String name,
@@ -47,27 +51,34 @@ public class StudentController {
 
     @PostMapping("/login")
     public ResponseEntity<Student> login (@RequestParam("email") String email, @RequestParam("password") String password){
-        Student user = new Student();
-        user.setEmail(email);
-        user.setPassword(password);
-            Student savedUser = userService.loginStudent(user.getEmail(), user.getPassword());
+            Student savedUser = userService.loginStudent(email, password);
             if(savedUser != null){
-                user.setName(savedUser.getName());
-                user.setPic(savedUser.getPic());
-                return ResponseEntity.ok(user);
+                return ResponseEntity.ok(savedUser);
             }else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
     }
+    @PostMapping("/enroll")
+    public ResponseEntity<EnrollmentResponse> enroll(@RequestBody EnrollmentRequest request) {
+        Long studentId = request.getStudentId();
+        Long courseId = request.getCourseId();
 
-    @GetMapping("/courses")
-    public ResponseEntity<List<Course>> getCourses(){
-       return ResponseEntity.ok(userService.getCourses());
+        // Log the received parameters for debugging
+        System.out.println("Received studentId: " + studentId + ", courseId: " + courseId);
+
+        try {
+            Enrollment enrollment = userService.addEnrollment(studentId, courseId);
+            return ResponseEntity.ok(new EnrollmentResponse(enrollment, enrollment.getCourse().getCourseName()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @GetMapping("/departments")
-    public ResponseEntity<List<Department>> getDepartments(){
-        List<Department> departments = userService.getDepartmentsWithCourses();
-        return ResponseEntity.ok(departments);
+    @GetMapping("/enrolled/{studentId}")
+    public ResponseEntity<Set<Course>> getEnrolledCourses(@PathVariable Long studentId) {
+        Set<Course> enrolledCourses = userService.getEnrolledCoursesByStudentId(studentId);
+        return ResponseEntity.ok(enrolledCourses);
     }
+
+
 }

@@ -58,7 +58,7 @@ const xThemeComponents = {
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const location = useLocation();
-  const { name, email, image, id } = location.state;
+  const { name, email, image, id, departmentId } = location.state;
   const { type } = useParams<{ type: string }>();
 
   const [selectedContent, setSelectedContent] = React.useState("home");
@@ -80,7 +80,11 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
         />
         <AppNavbar />
         {/* Main content */}
-        <ContentRenderer selectedContent={selectedContent} id={id} />
+        <ContentRenderer
+          selectedContent={selectedContent}
+          id={id}
+          departmentId={departmentId}
+        />
       </Box>
     </AppTheme>
   );

@@ -28,5 +28,11 @@ public interface UserService {
 
     public void saveCourses();
 
+    public List<Student> getStudents();
+
     public Enrollment addEnrollment(Long studentId, Long courseId);
+
+    public void saveEnrollments();
+
+    Set<Course> getEnrolledCoursesByStudentId(Long studentId);
 }
