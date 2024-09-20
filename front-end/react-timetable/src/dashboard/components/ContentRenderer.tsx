@@ -11,12 +11,18 @@ interface ContentRendererProps {
   selectedContent: string;
   id: string;
   departmentId: string;
+  students: [] | undefined;
+  loading: boolean;
+  error: string | null;
 }
 
 export default function ContentRenderer({
   selectedContent,
   id,
   departmentId,
+  students,
+  loading,
+  error,
 }: ContentRendererProps) {
   const renderContent = () => {
     switch (selectedContent) {
@@ -42,7 +48,7 @@ export default function ContentRenderer({
               }}
             >
               <Header selectedContent={selectedContent} />
-              <MainGrid />
+              <MainGrid students={students} loading={loading} error={error} />
             </Stack>
           </Box>
         );
@@ -158,7 +164,7 @@ export default function ContentRenderer({
               }}
             >
               <Header selectedContent={selectedContent} />
-              <MainGrid />
+              <MainGrid students={students} loading={loading} error={error} />
             </Stack>
           </Box>
         );

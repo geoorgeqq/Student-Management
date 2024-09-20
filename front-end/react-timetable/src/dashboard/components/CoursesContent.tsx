@@ -37,9 +37,7 @@ export default function CoursesContent({
   React.useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/departments/${departmentId}`
-        );
+        const response = await axios.get(`http://localhost:8080/courses`);
         setCourses(response.data);
         setLoading(false);
       } catch (err) {

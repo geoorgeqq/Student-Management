@@ -20,6 +20,7 @@ import {
 } from "./theme/customizations";
 import { useLocation, useParams } from "react-router-dom";
 import ContentRenderer from "./components/ContentRenderer";
+import axios from "axios";
 
 const theme = createTheme({
   typography: {
@@ -67,6 +68,25 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     setSelectedContent(content);
   };
 
+  const [students, setStudents] = React.useState<[]>();
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/student`);
+        setStudents(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch data");
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />%
@@ -84,6 +104,9 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           selectedContent={selectedContent}
           id={id}
           departmentId={departmentId}
+          students={students}
+          loading={loading}
+          error={error}
         />
       </Box>
     </AppTheme>

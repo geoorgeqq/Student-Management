@@ -14,6 +14,8 @@ public interface UserService {
 
     public Student loginStudent(String email, String password);
 
+    public Student findStudentById(Long id);
+
     public Admin loginAdmin(String email, String password);
 
     public Teacher loginTeacher(String email, String password);
@@ -32,7 +34,11 @@ public interface UserService {
 
     public Enrollment addEnrollment(Long studentId, Long courseId);
 
-    public void saveEnrollments();
+    public List<Enrollment> getEnrollments();
 
     Set<Course> getEnrolledCoursesByStudentId(Long studentId);
+
+    Set<Enrollment> findEnrollmentsByCourse(Course course);
+
+    public void saveEnrollmentsToCourse(Course course);
 }

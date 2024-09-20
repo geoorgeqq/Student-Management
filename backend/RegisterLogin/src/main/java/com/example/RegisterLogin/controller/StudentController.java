@@ -26,6 +26,18 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id){
+        if(userService.findStudentById(id) !=null){
+            return ResponseEntity.ok(userService.findStudentById(id));
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+
+
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Student> register(@RequestParam("name") String name,
                                             @RequestParam("email") String email,

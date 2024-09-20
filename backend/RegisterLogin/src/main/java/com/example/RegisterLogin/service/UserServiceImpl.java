@@ -3,12 +3,11 @@ package com.example.RegisterLogin.service;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +46,13 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public Student findStudentById(Long id) {
+        Student tempStudent = userRepository.findById(id).orElse(null);
+
+        return tempStudent;
+    }
+
     public Admin loginAdmin (String email, String password){
         Admin user = adminRepository.findByEmail(email);
 
@@ -75,7 +81,11 @@ public class UserServiceImpl implements UserService{
     
     @Override
     public List<Course> getCourses() {
-        return courseRepository.findAll();
+        List<Course> courses = courseRepository.findAll();
+        for(Course course : courses){
+            saveEnrollmentsToCourse(course);
+        }
+        return courses;
     }
 
     @Override
@@ -113,39 +123,16 @@ public class UserServiceImpl implements UserService{
         enrollment.setStudent(tempStudent);
         enrollment.setCourse(tempCourse);
 
-        enrollmentRepository.save(enrollment);
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
 
-        return enrollment;
+        return savedEnrollment;
     }
 
     @Override
-    public void saveEnrollments() {
-        List<Student> students = userRepository.findAll();
-        List<Enrollment> enrollments = new ArrayList<>();
-
-        for (Student student : students) {
-            Set<Course> courses = getEnrolledCoursesByStudentId(student.getId());
-
-            if (!courses.isEmpty()) {
-                // Convert Set to List to access elements by index
-                List<Course> courseList = new ArrayList<>(courses);
-
-                for (int i = 0; i < courseList.size(); i++) {
-                    Course course = courseList.get(i);
-
-                    // Create new Enrollment object
-                    Enrollment enrollment = new Enrollment();
-                    enrollment.setStudent(student);
-                    enrollment.setCourse(course);
-
-                    // Add the new Enrollment to the enrollments list
-                    enrollments.add(enrollment);
-                }
-            }
-        }
+    public List<Enrollment> getEnrollments() {
 
         // Assuming you have a method to save all enrollments at once
-        enrollmentRepository.saveAll(enrollments);
+        return enrollmentRepository.findAll();
     }
 
 
@@ -165,5 +152,20 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    @Override
+    public Set<Enrollment> findEnrollmentsByCourse(Course course) {
+            Set<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
+            return enrollments;
+    }
+
+
+
+    @Override
+    public void saveEnrollmentsToCourse(Course course) {
+        Set<Enrollment> enrollments = findEnrollmentsByCourse(course);
+        course.setEnrollment(enrollments);
+
+
+    }
 
 }

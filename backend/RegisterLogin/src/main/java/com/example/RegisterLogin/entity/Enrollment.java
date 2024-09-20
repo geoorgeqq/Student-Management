@@ -1,5 +1,6 @@
 package com.example.RegisterLogin.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,14 +11,15 @@ public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long enrollment_id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
-
+    
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "course_Id")
+    @JoinColumn(name = "course_id")
     private Course course;
 
 

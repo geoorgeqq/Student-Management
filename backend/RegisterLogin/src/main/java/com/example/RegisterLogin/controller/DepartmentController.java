@@ -31,7 +31,6 @@ public class DepartmentController {
     @GetMapping("/{id}")
     public ResponseEntity<Set<Course>> getCoursesForDepartmentId(@PathVariable("id") Long id){
         Set<Course> courses = userService.findCoursesByDepartmentId(id);
-        userService.saveEnrollments();
         if(!courses.isEmpty()){
             return ResponseEntity.ok(courses);
         }else {
