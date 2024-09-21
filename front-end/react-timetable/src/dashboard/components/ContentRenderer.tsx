@@ -6,6 +6,7 @@ import Header from "./Header";
 import MainGrid from "./MainGrid";
 import CoursesContent from "./CoursesContent";
 import EnrollCourse from "./EnrollCourse";
+import MyAccountContent from "./MyAccountContent";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -14,6 +15,7 @@ interface ContentRendererProps {
   students: [] | undefined;
   loading: boolean;
   error: string | null;
+  image: string;
 }
 
 export default function ContentRenderer({
@@ -23,6 +25,7 @@ export default function ContentRenderer({
   students,
   loading,
   error,
+  image,
 }: ContentRendererProps) {
   const renderContent = () => {
     switch (selectedContent) {
@@ -141,6 +144,14 @@ export default function ContentRenderer({
               <Header selectedContent={selectedContent} />
             </Stack>
           </Box>
+        );
+      case "My Account":
+        return (
+          <MyAccountContent
+            selectedContent={selectedContent}
+            id={id}
+            image={image}
+          />
         );
       default:
         return (

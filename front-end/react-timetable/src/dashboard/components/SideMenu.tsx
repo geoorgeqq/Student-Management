@@ -58,6 +58,7 @@ interface SideMenuProps {
   image: string;
   userType: string;
   onMenuClick: (conent: string) => void;
+  selectedContent: string;
 }
 
 export default function SideMenu({
@@ -66,6 +67,7 @@ export default function SideMenu({
   image,
   userType,
   onMenuClick,
+  selectedContent,
 }: SideMenuProps) {
   return (
     <Drawer
@@ -117,7 +119,10 @@ export default function SideMenu({
             </Typography>
           )}
         </Box>
-        <OptionsMenu />
+        <OptionsMenu
+          onMenuClick={onMenuClick}
+          selectedContent={selectedContent}
+        />
       </Stack>
       <Box
         sx={{

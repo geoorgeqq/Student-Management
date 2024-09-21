@@ -97,6 +97,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           email={email}
           image={image}
           onMenuClick={handleMenuClick}
+          selectedContent={selectedContent}
         />
         <AppNavbar />
         {/* Main content */}
@@ -107,6 +108,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           students={students}
           loading={loading}
           error={error}
+          image={image}
         />
       </Box>
     </AppTheme>

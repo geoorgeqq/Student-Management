@@ -138,7 +138,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Set<Course> getEnrolledCoursesByStudentId(Long studentId) {
-        Student student = userRepository.findById(studentId).orElseThrow(() ->new RuntimeException("Not found!"));
+        Student student = userRepository.findById(studentId).orElse(null);
+
         List<Enrollment> enrollments = enrollmentRepository.findByStudent(student);
 
         Set<Course> enrolledCourses = new HashSet<>();

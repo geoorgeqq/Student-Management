@@ -21,21 +21,18 @@ public class StudentController {
     public UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<List<Student>> getStudents(){
+    public ResponseEntity<List<Student>> getStudents() {
         List<Student> students = userService.getStudents();
         return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id){
-        if(userService.findStudentById(id) !=null){
+    public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
+        if (userService.findStudentById(id) != null) {
             return ResponseEntity.ok(userService.findStudentById(id));
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-
-
     }
 
     @PostMapping("/register")
@@ -54,22 +51,23 @@ public class StudentController {
         user.setDateOfBirth(dateOfBirth);
 
         try {
-            Student savedUser = userService.registerUser(user,pic);
+            Student savedUser = userService.registerUser(user, pic);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Student> login (@RequestParam("email") String email, @RequestParam("password") String password){
-            Student savedUser = userService.loginStudent(email, password);
-            if(savedUser != null){
-                return ResponseEntity.ok(savedUser);
-            }else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
+    public ResponseEntity<Student> login(@RequestParam("email") String email, @RequestParam("password") String password) {
+        Student savedUser = userService.loginStudent(email, password);
+        if (savedUser != null) {
+            return ResponseEntity.ok(savedUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
+
     @PostMapping("/enroll")
     public ResponseEntity<EnrollmentResponse> enroll(@RequestBody EnrollmentRequest request) {
         Long studentId = request.getStudentId();

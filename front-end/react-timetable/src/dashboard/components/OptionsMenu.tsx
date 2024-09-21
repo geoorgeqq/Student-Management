@@ -1,6 +1,5 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import Divider, { dividerClasses } from "@mui/material/Divider";
 import Menu from "@mui/material/Menu";
 import MuiMenuItem from "@mui/material/MenuItem";
 import { paperClasses } from "@mui/material/Paper";
@@ -11,12 +10,22 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import dividerClasses from "@mui/material/Divider/dividerClasses";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
 });
 
-export default function OptionsMenu() {
+interface OptionsMenuProps {
+  onMenuClick: (conent: string) => void;
+  selectedContent: string;
+}
+
+export default function OptionsMenu({
+  onMenuClick,
+  selectedContent,
+}: OptionsMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,6 +39,13 @@ export default function OptionsMenu() {
 
   const handleLogout = () => {
     navigate("/");
+  };
+
+  const handleListItemClick = (
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    content: string
+  ) => {
+    onMenuClick(content);
   };
   return (
     <React.Fragment>
@@ -60,7 +76,9 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={(event) => handleListItemClick(event, "My Account")}>
+          My account
+        </MenuItem>
         <MenuItem onClick={handleClose}>Settings</MenuItem>
         <MenuItem
           onClick={handleLogout}
