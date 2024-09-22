@@ -41,4 +41,8 @@ public interface UserService {
     Set<Enrollment> findEnrollmentsByCourse(Course course);
 
     public void saveEnrollmentsToCourse(Course course);
+
+    public Student updateStudentById(Long id, Student student);
+
+    void updateStudentImage(Long id, byte[] imageBytes);
 }

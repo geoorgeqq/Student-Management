@@ -6,10 +6,7 @@ import type {} from "@mui/x-tree-view/themeAugmentation";
 import { alpha, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import AppNavbar from "./components/AppNavbar";
-import Header from "./components/Header";
-import MainGrid from "./components/MainGrid";
 import SideMenu from "./components/SideMenu";
 import AppTheme from "../shared-theme/AppTheme";
 import {
@@ -22,6 +19,7 @@ import { useLocation, useParams } from "react-router-dom";
 import ContentRenderer from "./components/ContentRenderer";
 import axios from "axios";
 
+// Create theme with customizations
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -40,11 +38,11 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: `
-      @font-face{
-      font-family: 'Roboto';
-          font-style: normal;
-          font-display: swap;
-          font-weight: 400;
+      @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-display: swap;
+        font-weight: 400;
       }`,
     },
   },
@@ -59,21 +57,28 @@ const xThemeComponents = {
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const location = useLocation();
-  const { name, email, image, id, departmentId } = location.state;
   const { type } = useParams<{ type: string }>();
 
-  const [selectedContent, setSelectedContent] = React.useState("home");
+  // Create states for user-related data
+  const [name, setName] = React.useState<string>(location.state?.name || "");
+  const [email, setEmail] = React.useState<string>(location.state?.email || "");
+  const [image, setImage] = React.useState<string>(location.state?.image || "");
+  const [id, setId] = React.useState<string>(location.state?.id || "");
+  const [departmentId, setDepartmentId] = React.useState<string>(
+    location.state?.departmentId || ""
+  );
 
-  const handleMenuClick = (content: string) => {
-    setSelectedContent(content);
-  };
+  // State for managing selected content
+  const [selectedContent, setSelectedContent] = React.useState<string>("Home");
 
-  const [students, setStudents] = React.useState<[]>();
+  // State for managing students data, loading state, and error state
+  const [students, setStudents] = React.useState<[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Fetch students data when component mounts
   React.useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchStudents = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/student`);
         setStudents(response.data);
@@ -84,13 +89,19 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
       }
     };
 
-    fetchCourses();
+    fetchStudents();
   }, []);
+
+  // Handle side menu item click
+  const handleMenuClick = (content: string) => {
+    setSelectedContent(content);
+  };
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
-      <CssBaseline enableColorScheme />%
+      <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
+        {/* Pass current states to SideMenu */}
         <SideMenu
           userType={type || "student"}
           name={name}
@@ -103,12 +114,19 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
         {/* Main content */}
         <ContentRenderer
           selectedContent={selectedContent}
-          id={id}
-          departmentId={departmentId}
           students={students}
           loading={loading}
           error={error}
+          name={name}
+          setName={setName} // Pass set state functions
+          email={email}
+          setEmail={setEmail} // Pass set state functions
           image={image}
+          setImage={setImage} // Pass set state functions
+          id={id}
+          setId={setId} // Pass set state functions
+          departmentId={departmentId}
+          setDepartmentId={setDepartmentId} // Pass set state functions
         />
       </Box>
     </AppTheme>

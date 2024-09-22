@@ -7,6 +7,7 @@ import MainGrid from "./MainGrid";
 import CoursesContent from "./CoursesContent";
 import EnrollCourse from "./EnrollCourse";
 import MyAccountContent from "./MyAccountContent";
+import SettingsContent from "./SettingsContent";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -16,6 +17,13 @@ interface ContentRendererProps {
   loading: boolean;
   error: string | null;
   image: string;
+  name: string;
+  email: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setImage: React.Dispatch<React.SetStateAction<string>>;
+  setId: React.Dispatch<React.SetStateAction<string>>;
+  setDepartmentId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function ContentRenderer({
@@ -26,6 +34,12 @@ export default function ContentRenderer({
   loading,
   error,
   image,
+  name,
+  setName,
+  setEmail,
+  setImage,
+  setId,
+  setDepartmentId,
 }: ContentRendererProps) {
   const renderContent = () => {
     switch (selectedContent) {
@@ -151,6 +165,20 @@ export default function ContentRenderer({
             selectedContent={selectedContent}
             id={id}
             image={image}
+          />
+        );
+      case "Settings":
+        return (
+          <SettingsContent
+            selectedContent={selectedContent}
+            id={id}
+            image={image}
+            name={name}
+            setName={setName}
+            setEmail={setEmail}
+            setImage={setImage}
+            setId={setId}
+            setDepartmentId={setDepartmentId}
           />
         );
       default:

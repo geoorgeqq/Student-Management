@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -85,9 +86,20 @@ public class StudentController {
     }
 
     @GetMapping("/enrolled/{studentId}")
-    public ResponseEntity<Set<Course>> getEnrolledCourses(@PathVariable Long studentId) {
+    public ResponseEntity<Set<Course>> getEnrolledCourses(@PathVariable("studentId") Long studentId) {
         Set<Course> enrolledCourses = userService.getEnrolledCoursesByStudentId(studentId);
         return ResponseEntity.ok(enrolledCourses);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudentInfo(@PathVariable("id") Long id, @RequestBody Student student){
+        Student tempStudent = userService.updateStudentById(id, student);
+        if(tempStudent !=null){
+            return ResponseEntity.ok(tempStudent);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
     }
 
 

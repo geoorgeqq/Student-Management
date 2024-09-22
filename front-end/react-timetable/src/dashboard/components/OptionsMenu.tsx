@@ -15,10 +15,11 @@ import dividerClasses from "@mui/material/Divider/dividerClasses";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
+  fontFamily: "Roboto, sans-serif", // Added Roboto font
 });
 
 interface OptionsMenuProps {
-  onMenuClick: (conent: string) => void;
+  onMenuClick: (content: string) => void;
   selectedContent: string;
 }
 
@@ -47,6 +48,7 @@ export default function OptionsMenu({
   ) => {
     onMenuClick(content);
   };
+
   return (
     <React.Fragment>
       <MenuButton
@@ -79,7 +81,9 @@ export default function OptionsMenu({
         <MenuItem onClick={(event) => handleListItemClick(event, "My Account")}>
           My account
         </MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        <MenuItem onClick={(event) => handleListItemClick(event, "Settings")}>
+          Settings
+        </MenuItem>
         <MenuItem
           onClick={handleLogout}
           sx={{
@@ -89,7 +93,10 @@ export default function OptionsMenu({
             },
           }}
         >
-          <ListItemText>Logout</ListItemText>
+          <ListItemText
+            primary="Logout"
+            sx={{ fontFamily: "Roboto, sans-serif" }}
+          />
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>

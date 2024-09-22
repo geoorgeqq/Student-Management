@@ -17,12 +17,15 @@ const Drawer = styled(MuiDrawer)({
   flexShrink: 0,
   boxSizing: "border-box",
   mt: 10,
+  overflow: "hidden", // Added to prevent scrollbar
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
     boxSizing: "border-box",
+    overflow: "hidden", // Added to prevent scrollbar on paper
   },
 });
 
+// Function to generate a color from a string
 function stringToColor(string: string) {
   let hash = 0;
   let i;
@@ -43,6 +46,7 @@ function stringToColor(string: string) {
   return color;
 }
 
+// Function to create an avatar
 function stringAvatar(name: string) {
   return {
     sx: {
@@ -57,10 +61,11 @@ interface SideMenuProps {
   email: string;
   image: string;
   userType: string;
-  onMenuClick: (conent: string) => void;
+  onMenuClick: (content: string) => void;
   selectedContent: string;
 }
 
+// Main component
 export default function SideMenu({
   name,
   email,
@@ -76,6 +81,8 @@ export default function SideMenu({
         display: { xs: "none", md: "block" },
         [`& .${drawerClasses.paper}`]: {
           backgroundColor: "background.paper",
+          overflow: "hidden", // Added to prevent scrollbar
+          width: "18%",
         },
       }}
     >
@@ -91,8 +98,8 @@ export default function SideMenu({
       >
         <Avatar
           sizes="small"
-          src={image || undefined} // This should correctly display the image URL
-          {...(image ? {} : stringAvatar(name || "FirstName LastName"))} // Fallback to initials
+          src={image || undefined}
+          {...(image ? {} : stringAvatar(name || "FirstName LastName"))}
           sx={{ width: 36, height: 36 }}
         />
 
@@ -100,20 +107,31 @@ export default function SideMenu({
           {(userType === "student" || userType === "teacher") && (
             <Typography
               variant="body2"
-              sx={{ fontWeight: 500, lineHeight: "8px" }}
+              sx={{
+                fontWeight: 300,
+                lineHeight: "8px",
+                fontFamily: "Roboto, sans-serif",
+              }}
             >
               {name}
             </Typography>
           )}
           {(userType === "student" || userType === "teacher") && (
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+            <Typography
+              variant="caption"
+              sx={{ color: "text.secondary", fontFamily: "Roboto, sans-serif" }}
+            >
               {email}
             </Typography>
           )}
           {userType === "admin" && (
             <Typography
               variant="caption"
-              sx={{ color: "text.primary", fontSize: 15 }}
+              sx={{
+                color: "text.primary",
+                fontSize: 15,
+                fontFamily: "Roboto, sans-serif",
+              }}
             >
               {email}
             </Typography>

@@ -169,4 +169,30 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    @Override
+    public Student updateStudentById(Long id, Student student) {
+        Student tempStudent = userRepository.getReferenceById(id);
+            tempStudent.setDepartment(student.getDepartment());
+            tempStudent.setId(student.getId());
+            tempStudent.setName(student.getName());
+            tempStudent.setPic(student.getPic());
+            tempStudent.setPassword(student.getPassword());
+            tempStudent.setDateOfBirth(student.getDateOfBirth());
+            tempStudent.setEnrollments(student.getEnrollments());
+            tempStudent.setEmail(student.getEmail());
+            return userRepository.save(tempStudent);
+    }
+
+    @Override
+    public void updateStudentImage(Long id, byte[] imageBytes) {
+        Student student = userRepository.findById(id)
+                .orElse(null);
+
+        // Update the image field
+        student.setPic(imageBytes); // Assuming the setter method is defined in your Student entity
+
+        // Save the student back to the repository
+        userRepository.save(student);
+    }
+
 }
