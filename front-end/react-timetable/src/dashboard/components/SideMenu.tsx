@@ -60,7 +60,7 @@ interface SideMenuProps {
   name: string;
   email: string;
   image: string;
-  userType: string;
+  userType: string | undefined;
   onMenuClick: (content: string) => void;
   selectedContent: string;
 }
@@ -82,7 +82,6 @@ export default function SideMenu({
         [`& .${drawerClasses.paper}`]: {
           backgroundColor: "background.paper",
           overflow: "hidden", // Added to prevent scrollbar
-          width: "18%",
         },
       }}
     >
@@ -140,6 +139,7 @@ export default function SideMenu({
         <OptionsMenu
           onMenuClick={onMenuClick}
           selectedContent={selectedContent}
+          userType={userType}
         />
       </Stack>
       <Box

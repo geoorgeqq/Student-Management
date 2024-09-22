@@ -18,7 +18,7 @@ public class Course {
     @Column(name = "course_name")
     private String courseName;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;

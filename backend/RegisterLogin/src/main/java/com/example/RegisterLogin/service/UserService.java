@@ -26,6 +26,8 @@ public interface UserService {
 
     public List<Department> getDepartmentsWithCourses();
 
+    public Set<Course> getCoursesByDepartmentId(Long id);
+
     public Set<Course> findCoursesByDepartmentId(Long departmentId);
 
     public void saveCourses();

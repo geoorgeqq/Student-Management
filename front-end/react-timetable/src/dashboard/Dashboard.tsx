@@ -103,7 +103,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
       <Box sx={{ display: "flex" }}>
         {/* Pass current states to SideMenu */}
         <SideMenu
-          userType={type || "student"}
+          userType={type}
           name={name}
           email={email}
           image={image}
@@ -113,6 +113,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
         <AppNavbar />
         {/* Main content */}
         <ContentRenderer
+          userType={type}
           selectedContent={selectedContent}
           students={students}
           loading={loading}

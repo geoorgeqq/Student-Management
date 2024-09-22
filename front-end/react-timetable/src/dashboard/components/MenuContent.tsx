@@ -21,7 +21,7 @@ const secondaryListItems = [
 ];
 
 interface MenuContentProps {
-  userType: string;
+  userType: string | undefined;
   onMenuClick: (content: string) => void;
 }
 

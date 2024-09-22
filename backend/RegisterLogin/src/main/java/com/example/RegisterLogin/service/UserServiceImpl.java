@@ -94,8 +94,21 @@ public class UserServiceImpl implements UserService{
         return departmentRepository.findAllWithCourses();
     }
 
+    @Override
+    public Set<Course> getCoursesByDepartmentId(Long id) {
+        Department department = departmentRepository.findById(id).orElse(null);
+        if(department.getCourses() != null){
+            return department.getCourses();
+        }else {
+            return null;
+        }
+    }
+
     public Set<Course> findCoursesByDepartmentId(Long departmentId){
         Set<Course> courses = courseRepository.findByDepartmentId(departmentId);
+        for(Course course : courses){
+            saveEnrollmentsToCourse(course);
+        }
         return courses;
     }
 
@@ -130,7 +143,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<Enrollment> getEnrollments() {
-
         // Assuming you have a method to save all enrollments at once
         return enrollmentRepository.findAll();
     }

@@ -8,11 +8,12 @@ import CoursesContent from "./CoursesContent";
 import EnrollCourse from "./EnrollCourse";
 import MyAccountContent from "./MyAccountContent";
 import SettingsContent from "./SettingsContent";
+import UserManagementContent from "./UserManagementContent";
 
 interface ContentRendererProps {
   selectedContent: string;
   id: string;
-  departmentId: string;
+  departmentId?: string;
   students: [] | undefined;
   loading: boolean;
   error: string | null;
@@ -24,6 +25,7 @@ interface ContentRendererProps {
   setImage: React.Dispatch<React.SetStateAction<string>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
   setDepartmentId: React.Dispatch<React.SetStateAction<string>>;
+  userType: string | undefined;
 }
 
 export default function ContentRenderer({
@@ -40,6 +42,7 @@ export default function ContentRenderer({
   setImage,
   setId,
   setDepartmentId,
+  userType,
 }: ContentRendererProps) {
   const renderContent = () => {
     switch (selectedContent) {
@@ -74,6 +77,7 @@ export default function ContentRenderer({
           <CoursesContent
             selectedContent={selectedContent}
             departmentId={departmentId}
+            userType={userType}
           />
         );
       case "Join Course":
@@ -135,30 +139,7 @@ export default function ContentRenderer({
           </Box>
         );
       case "User Management":
-        return (
-          <Box
-            component="main"
-            sx={(theme) => ({
-              flexGrow: 1,
-              backgroundColor: theme.vars
-                ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-                : alpha(theme.palette.background.default, 1),
-              overflow: "auto",
-            })}
-          >
-            <Stack
-              spacing={2}
-              sx={{
-                alignItems: "center",
-                mx: 3,
-                pb: 10,
-                mt: { xs: 8, md: 0 },
-              }}
-            >
-              <Header selectedContent={selectedContent} />
-            </Stack>
-          </Box>
-        );
+        return <UserManagementContent selectedContent={selectedContent} />;
       case "My Account":
         return (
           <MyAccountContent

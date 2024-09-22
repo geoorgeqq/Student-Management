@@ -21,11 +21,13 @@ const MenuItem = styled(MuiMenuItem)({
 interface OptionsMenuProps {
   onMenuClick: (content: string) => void;
   selectedContent: string;
+  userType: string | undefined;
 }
 
 export default function OptionsMenu({
   onMenuClick,
   selectedContent,
+  userType,
 }: OptionsMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -78,12 +80,21 @@ export default function OptionsMenu({
           },
         }}
       >
-        <MenuItem onClick={(event) => handleListItemClick(event, "My Account")}>
-          My account
-        </MenuItem>
-        <MenuItem onClick={(event) => handleListItemClick(event, "Settings")}>
-          Settings
-        </MenuItem>
+        {(userType === "student" || userType === "teacher") && (
+          <>
+            <MenuItem
+              onClick={(event) => handleListItemClick(event, "My Account")}
+            >
+              My account
+            </MenuItem>
+            <MenuItem
+              onClick={(event) => handleListItemClick(event, "Settings")}
+            >
+              Settings
+            </MenuItem>
+          </>
+        )}
+
         <MenuItem
           onClick={handleLogout}
           sx={{

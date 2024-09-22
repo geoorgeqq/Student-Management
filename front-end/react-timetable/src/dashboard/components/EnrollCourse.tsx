@@ -20,7 +20,7 @@ interface Course {
 
 interface EnrollCourseProps {
   selectedContent: string;
-  departmentId: string;
+  departmentId?: string;
   studentId: string; // Use string to handle Long values
 }
 
