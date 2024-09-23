@@ -14,7 +14,7 @@ public class Enrollment {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = false)
     private Student student;
     
     @JsonIgnore

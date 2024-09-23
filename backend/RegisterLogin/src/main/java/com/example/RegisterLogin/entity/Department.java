@@ -17,6 +17,7 @@ public class Department {
 
     private String department_name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     private Set<Course> courses;
 

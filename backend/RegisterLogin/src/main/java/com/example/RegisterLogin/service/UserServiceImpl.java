@@ -129,6 +129,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void deleteStudentById(Long id) {
+        Student tempStudent = userRepository.findById(id).orElse(null);
+        if(tempStudent !=null){
+            userRepository.delete(tempStudent);
+        }
+    }
+
+    @Override
     public Enrollment addEnrollment(Long studentId, Long courseId) {
         Student tempStudent = userRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found!"));
         Course tempCourse = courseRepository.findById(courseId).orElseThrow(()-> new RuntimeException("Course not found!"));
@@ -182,29 +190,58 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Student updateStudentById(Long id, Student student) {
-        Student tempStudent = userRepository.getReferenceById(id);
-            tempStudent.setDepartment(student.getDepartment());
-            tempStudent.setId(student.getId());
-            tempStudent.setName(student.getName());
-            tempStudent.setPic(student.getPic());
-            tempStudent.setPassword(student.getPassword());
-            tempStudent.setDateOfBirth(student.getDateOfBirth());
-            tempStudent.setEnrollments(student.getEnrollments());
-            tempStudent.setEmail(student.getEmail());
-            return userRepository.save(tempStudent);
+    public Student updateStudentById(Long id, Student updatedStudent) {
+        Student existingStudent = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found!"));
+
+        // Update basic fields
+        existingStudent.setDepartment(updatedStudent.getDepartment());
+        existingStudent.setName(updatedStudent.getName());
+        existingStudent.setPic(updatedStudent.getPic());
+        existingStudent.setPassword(updatedStudent.getPassword());
+        existingStudent.setDateOfBirth(updatedStudent.getDateOfBirth());
+        existingStudent.setEmail(updatedStudent.getEmail());
+
+        // Update enrollments in place (without replacing the collection)
+        updateEnrollments(existingStudent, updatedStudent.getEnrollments());
+
+        return userRepository.save(existingStudent);
     }
 
-    @Override
-    public void updateStudentImage(Long id, byte[] imageBytes) {
-        Student student = userRepository.findById(id)
-                .orElse(null);
+    private void updateEnrollments(Student existingStudent, Set<Enrollment> updatedEnrollments) {
+        // Initialize updatedEnrollments if null
+        if (updatedEnrollments == null) {
+            updatedEnrollments = new HashSet<>();
+        }
 
-        // Update the image field
-        student.setPic(imageBytes); // Assuming the setter method is defined in your Student entity
+        // Fetch current enrollments
+        Set<Enrollment> currentEnrollments = existingStudent.getEnrollments();
+        if (currentEnrollments == null) {
+            currentEnrollments = new HashSet<>();
+        }
 
-        // Save the student back to the repository
-        userRepository.save(student);
+        // Create a set of IDs for quick lookup
+        Set<Long> updatedEnrollmentIds = new HashSet<>();
+        for (Enrollment enrollment : updatedEnrollments) {
+            updatedEnrollmentIds.add(enrollment.getId());
+        }
+
+        // Remove enrollments that are no longer present
+        currentEnrollments.removeIf(existingEnrollment ->
+                !updatedEnrollmentIds.contains(existingEnrollment.getId())
+        );
+
+        // Add new enrollments that are not already present
+        for (Enrollment updatedEnrollment : updatedEnrollments) {
+            if (currentEnrollments.stream().noneMatch(e -> e.getId() == updatedEnrollment.getId())) {
+                updatedEnrollment.setStudent(existingStudent);  // Maintain bidirectional relationship
+                currentEnrollments.add(updatedEnrollment);
+            }
+        }
+
+        // Update the student object with the modified set of enrollments
+        existingStudent.setEnrollments(currentEnrollments);
     }
+
+
 
 }

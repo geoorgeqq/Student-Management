@@ -29,7 +29,7 @@ public class Student {
     @Lob
     private byte[] pic;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Enrollment> enrollments;
 
 

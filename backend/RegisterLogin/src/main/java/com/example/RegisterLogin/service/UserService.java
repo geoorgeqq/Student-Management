@@ -34,6 +34,8 @@ public interface UserService {
 
     public List<Student> getStudents();
 
+    public void deleteStudentById(Long id);
+
     public Enrollment addEnrollment(Long studentId, Long courseId);
 
     public List<Enrollment> getEnrollments();
@@ -46,5 +48,4 @@ public interface UserService {
 
     public Student updateStudentById(Long id, Student student);
 
-    void updateStudentImage(Long id, byte[] imageBytes);
 }

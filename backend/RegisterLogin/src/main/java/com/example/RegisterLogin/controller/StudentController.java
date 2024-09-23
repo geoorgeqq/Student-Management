@@ -99,8 +99,15 @@ public class StudentController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteStudent(@PathVariable("id") Long id){
+        userService.deleteStudentById(id);
+        return ResponseEntity.ok("User Deleted");
+    }
+
+
 
 
 }
