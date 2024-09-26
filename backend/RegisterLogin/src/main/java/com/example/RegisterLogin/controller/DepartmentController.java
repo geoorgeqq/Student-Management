@@ -23,18 +23,37 @@ public class DepartmentController {
     UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<List<Department>> getDepartments(){
+    public ResponseEntity<List<Department>> getDepartments() {
         List<Department> departments = userService.getDepartmentsWithCourses();
         return ResponseEntity.ok(departments);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Set<Course>> getCoursesForDepartmentId(@PathVariable("id") Long id){
+    public ResponseEntity<Set<Course>> getCoursesForDepartmentId(@PathVariable("id") Long id) {
         Set<Course> courses = userService.findCoursesByDepartmentId(id);
-        if(!courses.isEmpty()){
+        if (!courses.isEmpty()) {
             return ResponseEntity.ok(courses);
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PutMapping("")
+    public ResponseEntity<Department> addDepartment(@RequestBody Department department) {
+        userService.addDepartment(department);
+        return ResponseEntity.ok(department);
+    }
+
+    @PostMapping("/{departmentId}")
+    public ResponseEntity<Department> editDepartment(@PathVariable("departmentId") Long departmentId, @RequestBody Department department) {
+        Department tempDepartment = userService.updateDepartmentById(departmentId, department);
+        return ResponseEntity.ok(tempDepartment);
+    }
+
+    @DeleteMapping("/{departmentId}")
+    public ResponseEntity<String> deleteDepartment(@PathVariable("departmentId") Long departmentId) {
+        userService.deleteDepartmentById(departmentId);
+        return ResponseEntity.ok("Department Deleted!");
+
     }
 }

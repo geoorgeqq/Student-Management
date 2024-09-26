@@ -81,6 +81,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 const SignUp: React.FC = () => {
   interface User {
+    id?: number;
     name: string;
     password: string;
     email: string;
@@ -188,11 +189,11 @@ const SignUp: React.FC = () => {
         dataToSubmit
       );
 
-      const { name, email, pic } = response.data;
+      const { name, email, pic, id } = response.data;
       const imageUrl = `data:image/jpeg;base64,${pic}`;
       const departmentId = selectedDepartmentId;
       navigate(`/student/dashboard`, {
-        state: { name, email, image: imageUrl, departmentId },
+        state: { name, email, image: imageUrl, departmentId, id },
       });
     } catch (error) {
       console.log("Error registering user: " + error);

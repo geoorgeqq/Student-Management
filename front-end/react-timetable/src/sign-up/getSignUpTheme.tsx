@@ -1,11 +1,16 @@
-import * as React from 'react';
-import type {} from '@mui/material/themeCssVarsAugmentation';
-import { createTheme, ThemeOptions, alpha, PaletteMode } from '@mui/material/styles';
+import * as React from "react";
+import type {} from "@mui/material/themeCssVarsAugmentation";
+import {
+  createTheme,
+  ThemeOptions,
+  alpha,
+  PaletteMode,
+} from "@mui/material/styles";
 
-import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
-declare module '@mui/material/styles/createPalette' {
+declare module "@mui/material/styles/createPalette" {
   interface ColorRange {
     50: string;
     100: string;
@@ -25,68 +30,68 @@ declare module '@mui/material/styles/createPalette' {
 const customTheme = createTheme();
 
 export const brand = {
-  50: 'hsl(210, 100%, 97%)',
-  100: 'hsl(210, 100%, 90%)',
-  200: 'hsl(210, 100%, 80%)',
-  300: 'hsl(210, 100%, 65%)',
-  400: 'hsl(210, 98%, 48%)',
-  500: 'hsl(210, 98%, 42%)',
-  600: 'hsl(210, 98%, 55%)',
-  700: 'hsl(210, 100%, 35%)',
-  800: 'hsl(210, 100%, 16%)',
-  900: 'hsl(210, 100%, 21%)',
+  50: "hsl(210, 100%, 97%)",
+  100: "hsl(210, 100%, 90%)",
+  200: "hsl(210, 100%, 80%)",
+  300: "hsl(210, 100%, 65%)",
+  400: "hsl(210, 98%, 48%)",
+  500: "hsl(210, 98%, 42%)",
+  600: "hsl(210, 98%, 55%)",
+  700: "hsl(210, 100%, 35%)",
+  800: "hsl(210, 100%, 16%)",
+  900: "hsl(210, 100%, 21%)",
 };
 
 export const gray = {
-  50: 'hsl(220, 60%, 99%)',
-  100: 'hsl(220, 35%, 94%)',
-  200: 'hsl(220, 35%, 88%)',
-  300: 'hsl(220, 25%, 80%)',
-  400: 'hsl(220, 20%, 65%)',
-  500: 'hsl(220, 20%, 42%)',
-  600: 'hsl(220, 25%, 35%)',
-  700: 'hsl(220, 25%, 25%)',
-  800: 'hsl(220, 25%, 10%)',
-  900: 'hsl(220, 30%, 5%)',
+  50: "hsl(220, 60%, 99%)",
+  100: "hsl(220, 35%, 94%)",
+  200: "hsl(220, 35%, 88%)",
+  300: "hsl(220, 25%, 80%)",
+  400: "hsl(220, 20%, 65%)",
+  500: "hsl(220, 20%, 42%)",
+  600: "hsl(220, 25%, 35%)",
+  700: "hsl(220, 25%, 25%)",
+  800: "hsl(220, 25%, 10%)",
+  900: "hsl(220, 30%, 5%)",
 };
 
 export const green = {
-  50: 'hsl(120, 80%, 98%)',
-  100: 'hsl(120, 75%, 94%)',
-  200: 'hsl(120, 75%, 87%)',
-  300: 'hsl(120, 61%, 77%)',
-  400: 'hsl(120, 44%, 53%)',
-  500: 'hsl(120, 59%, 30%)',
-  600: 'hsl(120, 70%, 25%)',
-  700: 'hsl(120, 75%, 16%)',
-  800: 'hsl(120, 84%, 10%)',
-  900: 'hsl(120, 87%, 6%)',
+  50: "hsl(120, 80%, 98%)",
+  100: "hsl(120, 75%, 94%)",
+  200: "hsl(120, 75%, 87%)",
+  300: "hsl(120, 61%, 77%)",
+  400: "hsl(120, 44%, 53%)",
+  500: "hsl(120, 59%, 30%)",
+  600: "hsl(120, 70%, 25%)",
+  700: "hsl(120, 75%, 16%)",
+  800: "hsl(120, 84%, 10%)",
+  900: "hsl(120, 87%, 6%)",
 };
 
 export const orange = {
-  50: 'hsl(45, 100%, 97%)',
-  100: 'hsl(45, 92%, 90%)',
-  200: 'hsl(45, 94%, 80%)',
-  300: 'hsl(45, 90%, 65%)',
-  400: 'hsl(45, 90%, 40%)',
-  500: 'hsl(45, 90%, 35%)',
-  600: 'hsl(45, 91%, 25%)',
-  700: 'hsl(45, 94%, 20%)',
-  800: 'hsl(45, 95%, 16%)',
-  900: 'hsl(45, 93%, 12%)',
+  50: "hsl(45, 100%, 97%)",
+  100: "hsl(45, 92%, 90%)",
+  200: "hsl(45, 94%, 80%)",
+  300: "hsl(45, 90%, 65%)",
+  400: "hsl(45, 90%, 40%)",
+  500: "hsl(45, 90%, 35%)",
+  600: "hsl(45, 91%, 25%)",
+  700: "hsl(45, 94%, 20%)",
+  800: "hsl(45, 95%, 16%)",
+  900: "hsl(45, 93%, 12%)",
 };
 
 export const red = {
-  50: 'hsl(0, 100%, 97%)',
-  100: 'hsl(0, 92%, 90%)',
-  200: 'hsl(0, 94%, 80%)',
-  300: 'hsl(0, 90%, 65%)',
-  400: 'hsl(0, 90%, 40%)',
-  500: 'hsl(0, 90%, 30%)',
-  600: 'hsl(0, 91%, 25%)',
-  700: 'hsl(0, 94%, 20%)',
-  800: 'hsl(0, 95%, 16%)',
-  900: 'hsl(0, 93%, 12%)',
+  50: "hsl(0, 100%, 97%)",
+  100: "hsl(0, 92%, 90%)",
+  200: "hsl(0, 94%, 80%)",
+  300: "hsl(0, 90%, 65%)",
+  400: "hsl(0, 90%, 40%)",
+  500: "hsl(0, 90%, 30%)",
+  600: "hsl(0, 91%, 25%)",
+  700: "hsl(0, 94%, 20%)",
+  800: "hsl(0, 95%, 16%)",
+  900: "hsl(0, 93%, 12%)",
 };
 
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -97,7 +102,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       main: brand[500],
       dark: brand[800],
       contrastText: brand[50],
-      ...(mode === 'dark' && {
+      ...(mode === "dark" && {
         contrastText: brand[100],
         light: brand[300],
         main: brand[400],
@@ -108,7 +113,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       light: orange[300],
       main: orange[400],
       dark: orange[800],
-      ...(mode === 'dark' && {
+      ...(mode === "dark" && {
         light: orange[400],
         main: orange[500],
         dark: orange[700],
@@ -118,7 +123,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       light: red[300],
       main: red[400],
       dark: red[800],
-      ...(mode === 'dark' && {
+      ...(mode === "dark" && {
         light: red[400],
         main: red[500],
         dark: red[700],
@@ -128,7 +133,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       light: green[300],
       main: green[400],
       dark: green[800],
-      ...(mode === 'dark' && {
+      ...(mode === "dark" && {
         light: green[400],
         main: green[500],
         dark: green[700],
@@ -137,26 +142,32 @@ const getDesignTokens = (mode: PaletteMode) => ({
     grey: {
       ...gray,
     },
-    divider: mode === 'dark' ? alpha(gray[600], 0.3) : alpha(gray[300], 0.5),
+    divider: mode === "dark" ? alpha(gray[600], 0.3) : alpha(gray[300], 0.5),
     background: {
-      default: 'hsl(0, 0%, 100%)',
+      default: "hsl(0, 0%, 100%)",
       paper: gray[100],
-      ...(mode === 'dark' && { default: 'hsl(220, 30%, 3%)', paper: gray[900] }),
+      ...(mode === "dark" && {
+        default: "hsl(220, 30%, 3%)",
+        paper: gray[900],
+      }),
     },
     text: {
       primary: gray[800],
       secondary: gray[600],
-      ...(mode === 'dark' && { primary: 'hsl(0, 0%, 100%)', secondary: gray[400] }),
+      ...(mode === "dark" && {
+        primary: "hsl(0, 0%, 100%)",
+        secondary: gray[400],
+      }),
     },
     action: {
       selected: `${alpha(brand[200], 0.2)}`,
-      ...(mode === 'dark' && {
+      ...(mode === "dark" && {
         selected: alpha(brand[800], 0.2),
       }),
     },
   },
   typography: {
-    fontFamily: ['"Inter", "sans-serif"'].join(','),
+    fontFamily: ['"Roboto", "sans-serif"'].join(","),
     h1: {
       fontSize: customTheme.typography.pxToRem(60),
       fontWeight: 600,
@@ -219,11 +230,11 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
         },
         styleOverrides: {
           root: {
-            boxSizing: 'border-box',
-            transition: 'all 100ms ease',
-            '&:focus-visible': {
+            boxSizing: "border-box",
+            transition: "all 100ms ease",
+            "&:focus-visible": {
               outline: `3px solid ${alpha(brand[400], 0.5)}`,
-              outlineOffset: '2px',
+              outlineOffset: "2px",
             },
           },
         },
@@ -231,43 +242,43 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            boxShadow: 'none',
+            boxShadow: "none",
             borderRadius: theme.shape.borderRadius,
-            textTransform: 'none',
+            textTransform: "none",
             variants: [
               {
                 props: {
-                  size: 'small',
+                  size: "small",
                 },
                 style: {
-                  height: '2rem', // 32px
-                  padding: '0 0.5rem',
+                  height: "2rem", // 32px
+                  padding: "0 0.5rem",
                 },
               },
               {
                 props: {
-                  size: 'medium',
+                  size: "medium",
                 },
                 style: {
-                  height: '2.5rem', // 40px
+                  height: "2.5rem", // 40px
                 },
               },
               {
                 props: {
-                  color: 'primary',
-                  variant: 'contained',
+                  color: "primary",
+                  variant: "contained",
                 },
                 style: {
-                  color: 'white',
+                  color: "white",
                   backgroundColor: brand[300],
                   backgroundImage: `linear-gradient(to bottom, ${alpha(brand[400], 0.8)}, ${brand[500]})`,
                   boxShadow: `inset 0 2px 0 ${alpha(brand[200], 0.2)}, inset 0 -2px 0 ${alpha(brand[700], 0.4)}`,
                   border: `1px solid ${brand[500]}`,
-                  '&:hover': {
+                  "&:hover": {
                     backgroundColor: brand[700],
-                    boxShadow: 'none',
+                    boxShadow: "none",
                   },
-                  '&:active': {
+                  "&:active": {
                     backgroundColor: brand[700],
                     boxShadow: `inset 0 2.5px 0 ${alpha(brand[700], 0.4)}`,
                   },
@@ -275,91 +286,91 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
               },
               {
                 props: {
-                  variant: 'outlined',
+                  variant: "outlined",
                 },
                 style: {
                   color: brand[700],
                   backgroundColor: alpha(brand[300], 0.1),
                   borderColor: alpha(brand[200], 0.8),
                   boxShadow: `inset 0 2px ${alpha(brand[50], 0.5)}, inset 0 -2px ${alpha(brand[200], 0.2)}`,
-                  '&:hover': {
+                  "&:hover": {
                     backgroundColor: alpha(brand[300], 0.2),
                     borderColor: alpha(brand[300], 0.5),
-                    boxShadow: 'none',
+                    boxShadow: "none",
                   },
-                  '&:active': {
+                  "&:active": {
                     backgroundColor: alpha(brand[300], 0.3),
                     boxShadow: `inset 0 2.5px 0 ${alpha(brand[400], 0.2)}`,
-                    backgroundImage: 'none',
+                    backgroundImage: "none",
                   },
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     color: brand[200],
                     backgroundColor: alpha(brand[600], 0.1),
                     borderColor: alpha(brand[600], 0.6),
                     boxShadow: `inset 0 2.5px ${alpha(brand[400], 0.1)}, inset 0 -2px ${alpha(gray[900], 0.5)}`,
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: alpha(brand[700], 0.2),
                       borderColor: alpha(brand[700], 0.5),
-                      boxShadow: 'none',
+                      boxShadow: "none",
                     },
-                    '&:active': {
+                    "&:active": {
                       backgroundColor: alpha(brand[800], 0.2),
                       boxShadow: `inset 0 2.5px 0 ${alpha(brand[900], 0.4)}`,
-                      backgroundImage: 'none',
+                      backgroundImage: "none",
                     },
                   }),
                 },
               },
               {
                 props: {
-                  color: 'secondary',
-                  variant: 'outlined',
+                  color: "secondary",
+                  variant: "outlined",
                 },
                 style: {
                   backgroundColor: alpha(gray[300], 0.1),
                   borderColor: alpha(gray[300], 0.5),
                   color: gray[700],
-                  '&:hover': {
+                  "&:hover": {
                     backgroundColor: alpha(gray[300], 0.3),
                     borderColor: alpha(gray[300], 0.5),
-                    boxShadow: 'none',
+                    boxShadow: "none",
                   },
-                  '&:active': {
+                  "&:active": {
                     backgroundColor: alpha(gray[300], 0.4),
                     boxShadow: `inset 0 2.5px 0 ${alpha(gray[400], 0.2)}`,
-                    backgroundImage: 'none',
+                    backgroundImage: "none",
                   },
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     color: gray[300],
                     backgroundColor: alpha(gray[600], 0.1),
                     borderColor: alpha(gray[700], 0.5),
                     boxShadow: `inset 0 2.5px ${alpha(gray[600], 0.1)}, inset 0 -2px ${alpha(gray[900], 0.5)}`,
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: alpha(gray[700], 0.2),
                       borderColor: alpha(gray[700], 0.5),
-                      boxShadow: 'none',
+                      boxShadow: "none",
                     },
-                    '&:active': {
+                    "&:active": {
                       backgroundColor: alpha(gray[800], 0.2),
                       boxShadow: `inset 0 2.5px 0 ${alpha(gray[900], 0.4)}`,
-                      backgroundImage: 'none',
+                      backgroundImage: "none",
                     },
                   }),
                 },
               },
               {
                 props: {
-                  color: 'primary',
-                  variant: 'text',
+                  color: "primary",
+                  variant: "text",
                 },
                 style: {
                   color: brand[700],
-                  '&:hover': {
+                  "&:hover": {
                     backgroundColor: alpha(brand[300], 0.3),
                   },
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     color: brand[200],
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: alpha(brand[700], 0.3),
                     },
                   }),
@@ -367,17 +378,17 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
               },
               {
                 props: {
-                  color: 'info',
-                  variant: 'text',
+                  color: "info",
+                  variant: "text",
                 },
                 style: {
                   color: gray[700],
-                  '&:hover': {
+                  "&:hover": {
                     backgroundColor: alpha(gray[300], 0.3),
                   },
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     color: gray[200],
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: alpha(gray[700], 0.3),
                     },
                   }),
@@ -390,30 +401,30 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiCard: {
         styleOverrides: {
           root: ({ theme }) => ({
-            transition: 'all 100ms ease',
+            transition: "all 100ms ease",
             backgroundColor: gray[50],
             borderRadius: theme.shape.borderRadius,
             border: `1px solid ${alpha(gray[200], 0.5)}`,
-            boxShadow: 'none',
-            ...theme.applyStyles('dark', {
+            boxShadow: "none",
+            ...theme.applyStyles("dark", {
               backgroundColor: alpha(gray[800], 0.6),
               border: `1px solid ${alpha(gray[700], 0.3)}`,
             }),
             variants: [
               {
                 props: {
-                  variant: 'outlined',
+                  variant: "outlined",
                 },
                 style: {
                   border: `1px solid ${gray[200]}`,
-                  boxShadow: 'none',
+                  boxShadow: "none",
                   background: `linear-gradient(to bottom, hsl(0, 0%, 100%), ${gray[50]})`,
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     border: `1px solid ${alpha(gray[700], 0.4)}`,
-                    boxShadow: 'none',
+                    boxShadow: "none",
                     background: `linear-gradient(to bottom, ${gray[900]}, ${alpha(
                       gray[800],
-                      0.5,
+                      0.5
                     )})`,
                   }),
                 },
@@ -427,7 +438,7 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
           disableRipple: true,
           icon: (
             <CheckBoxOutlineBlankRoundedIcon
-              sx={{ color: 'hsla(210, 0%, 0%, 0.0)' }}
+              sx={{ color: "hsla(210, 0%, 0%, 0.0)" }}
             />
           ),
           checkedIcon: <CheckRoundedIcon sx={{ height: 14, width: 14 }} />,
@@ -438,39 +449,39 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
             height: 16,
             width: 16,
             borderRadius: 5,
-            border: '1px solid ',
+            border: "1px solid ",
             borderColor: alpha(gray[300], 0.8),
             backgroundColor: alpha(gray[100], 0.4),
-            boxShadow: '0 0 0 1.5px hsla(210, 0%, 0%, 0.04) inset',
-            transition: 'border-color, background-color, 120ms ease-in',
-            '&:hover': {
+            boxShadow: "0 0 0 1.5px hsla(210, 0%, 0%, 0.04) inset",
+            transition: "border-color, background-color, 120ms ease-in",
+            "&:hover": {
               borderColor: gray[400],
             },
-            '&.Mui-focusVisible': {
+            "&.Mui-focusVisible": {
               outline: `3px solid ${alpha(brand[500], 0.5)}`,
-              outlineOffset: '2px',
+              outlineOffset: "2px",
               borderColor: brand[400],
             },
-            '&.Mui-checked': {
-              color: 'white',
+            "&.Mui-checked": {
+              color: "white",
               backgroundColor: brand[500],
               borderColor: brand[500],
               boxShadow: `none`,
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: brand[600],
               },
             },
-            ...theme.applyStyles('dark', {
+            ...theme.applyStyles("dark", {
               borderColor: alpha(gray[700], 0.5),
-              boxShadow: '0 0 0 1.5px hsl(210, 0%, 0%) inset',
+              boxShadow: "0 0 0 1.5px hsl(210, 0%, 0%) inset",
               backgroundColor: alpha(gray[900], 0.8),
-              '&:hover': {
+              "&:hover": {
                 borderColor: brand[300],
               },
-              '&.Mui-focusVisible': {
+              "&.Mui-focusVisible": {
                 borderColor: brand[400],
                 outline: `3px solid ${alpha(brand[500], 0.5)}`,
-                outlineOffset: '2px',
+                outlineOffset: "2px",
               },
             }),
           }),
@@ -479,9 +490,9 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiDialog: {
         styleOverrides: {
           root: ({ theme }) => ({
-            '& .MuiDialog-paper': {
-              borderRadius: '10px',
-              border: '1px solid',
+            "& .MuiDialog-paper": {
+              borderRadius: "10px",
+              border: "1px solid",
               borderColor: theme.palette.divider,
             },
           }),
@@ -491,7 +502,7 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
         styleOverrides: {
           root: ({ theme }) => ({
             borderColor: `${alpha(gray[200], 0.8)}`,
-            ...theme.applyStyles('dark', {
+            ...theme.applyStyles("dark", {
               borderColor: `${alpha(gray[700], 0.4)}`,
             }),
           }),
@@ -509,13 +520,13 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
         styleOverrides: {
           root: ({ theme }) => ({
             color: brand[500],
-            '&:hover': {
+            "&:hover": {
               backgroundColor: alpha(brand[300], 0.3),
               borderColor: brand[200],
             },
-            ...theme.applyStyles('dark', {
+            ...theme.applyStyles("dark", {
               color: brand[200],
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: alpha(brand[600], 0.3),
                 borderColor: brand[700],
               },
@@ -523,20 +534,20 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
             variants: [
               {
                 props: {
-                  size: 'small',
+                  size: "small",
                 },
                 style: {
-                  height: '2rem',
-                  width: '2rem',
+                  height: "2rem",
+                  width: "2rem",
                 },
               },
               {
                 props: {
-                  size: 'medium',
+                  size: "medium",
                 },
                 style: {
-                  height: '2.5rem',
-                  width: '2.5rem',
+                  height: "2.5rem",
+                  width: "2.5rem",
                 },
               },
             ],
@@ -546,41 +557,41 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiInputBase: {
         styleOverrides: {
           root: {
-            border: 'none',
+            border: "none",
           },
         },
       },
       MuiLink: {
         defaultProps: {
-          underline: 'none',
+          underline: "none",
         },
         styleOverrides: {
           root: ({ theme }) => ({
             color: brand[700],
             fontWeight: 500,
-            position: 'relative',
-            textDecoration: 'none',
-            '&::before': {
+            position: "relative",
+            textDecoration: "none",
+            "&::before": {
               content: '""',
-              position: 'absolute',
+              position: "absolute",
               width: 0,
-              height: '1px',
+              height: "1px",
               bottom: 0,
               left: 0,
               backgroundColor: brand[200],
               opacity: 0.7,
-              transition: 'width 0.3s ease, opacity 0.3s ease',
+              transition: "width 0.3s ease, opacity 0.3s ease",
             },
-            '&:hover::before': {
-              width: '100%',
+            "&:hover::before": {
+              width: "100%",
               opacity: 1,
             },
-            '&:focus-visible': {
+            "&:focus-visible": {
               outline: `3px solid ${alpha(brand[500], 0.5)}`,
-              outlineOffset: '4px',
-              borderRadius: '2px',
+              outlineOffset: "4px",
+              borderRadius: "2px",
             },
-            ...theme.applyStyles('dark', {
+            ...theme.applyStyles("dark", {
               color: brand[200],
             }),
           }),
@@ -589,82 +600,82 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {
-            border: 'none',
+            border: "none",
           },
           input: {
             paddingLeft: 10,
           },
           root: ({ theme }) => ({
-            'input:-webkit-autofill': {
+            "input:-webkit-autofill": {
               WebkitBoxShadow: `0 0 0 1000px ${brand[100]} inset, 0 0 0 1px ${brand[200]}`,
-              maxHeight: '4px',
-              borderRadius: '8px',
+              maxHeight: "4px",
+              borderRadius: "8px",
             },
-            '& .MuiInputBase-input': {
-              fontSize: '1rem',
-              '&::placeholder': {
+            "& .MuiInputBase-input": {
+              fontSize: "1rem",
+              "&::placeholder": {
                 opacity: 0.7,
                 color: gray[500],
               },
             },
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             flexGrow: 1,
-            height: '40px',
+            height: "40px",
             borderRadius: theme.shape.borderRadius,
-            border: '1px solid',
+            border: "1px solid",
             borderColor: alpha(gray[300], 0.8),
-            boxShadow: '0 0 0 1.5px hsla(210, 0%, 0%, 0.02) inset',
-            transition: 'border-color 120ms ease-in',
+            boxShadow: "0 0 0 1.5px hsla(210, 0%, 0%, 0.02) inset",
+            transition: "border-color 120ms ease-in",
             backgroundColor: alpha(gray[100], 0.4),
-            '&:hover': {
+            "&:hover": {
               borderColor: brand[300],
             },
-            '&.Mui-focused': {
+            "&.Mui-focused": {
               outline: `3px solid ${alpha(brand[500], 0.5)}`,
-              outlineOffset: '2px',
+              outlineOffset: "2px",
               borderColor: brand[400],
             },
-            ...theme.applyStyles('dark', {
-              'input:-webkit-autofill': {
+            ...theme.applyStyles("dark", {
+              "input:-webkit-autofill": {
                 WebkitBoxShadow: `0 0 0 1000px ${brand[900]} inset, 0 0 0 1px ${brand[600]}`,
-                maxHeight: '6px',
-                borderRadius: '8px',
+                maxHeight: "6px",
+                borderRadius: "8px",
               },
-              '& .MuiInputBase-input': {
-                fontSize: '1rem',
-                '&::placeholder': {
+              "& .MuiInputBase-input": {
+                fontSize: "1rem",
+                "&::placeholder": {
                   opacity: 1,
                   color: gray[500],
                 },
               },
               borderColor: alpha(gray[700], 0.5),
-              boxShadow: '0 0 0 1.5px hsl(210, 0%, 0%) inset',
+              boxShadow: "0 0 0 1.5px hsl(210, 0%, 0%) inset",
               backgroundColor: alpha(gray[900], 0.8),
-              transition: 'border-color 120ms ease-in',
-              '&:hover': {
+              transition: "border-color 120ms ease-in",
+              "&:hover": {
                 borderColor: brand[300],
               },
-              '&.Mui-focused': {
+              "&.Mui-focused": {
                 borderColor: brand[400],
                 outline: `3px solid ${alpha(brand[500], 0.5)}`,
-                outlineOffset: '2px',
+                outlineOffset: "2px",
               },
             }),
             variants: [
               {
                 props: {
-                  color: 'error',
+                  color: "error",
                 },
                 style: {
                   borderColor: red[200],
                   color: red[500],
-                  '& + .MuiFormHelperText-root': {
+                  "& + .MuiFormHelperText-root": {
                     color: red[500],
                   },
-                  ...theme.applyStyles('dark', {
+                  ...theme.applyStyles("dark", {
                     borderColor: red[700],
                     color: red[300],
-                    '& + .MuiFormHelperText-root': {
+                    "& + .MuiFormHelperText-root": {
                       color: red[300],
                     },
                   }),
@@ -689,12 +700,12 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
             boxShadow: `0 1px 2px hsla(210, 0%, 0%, 0.05), 0 2px 12px ${alpha(brand[200], 0.5)}`,
-            '& .Mui-selected': {
+            "& .Mui-selected": {
               color: brand[500],
             },
-            ...theme.applyStyles('dark', {
-              '& .Mui-selected': {
-                color: 'hsl(0, 0%, 100%)',
+            ...theme.applyStyles("dark", {
+              "& .Mui-selected": {
+                color: "hsl(0, 0%, 100%)",
               },
               boxShadow: `0 0 0 1px hsla(210, 0%, 0%, 0.5), 0 2px 12px ${alpha(brand[700], 0.5)}`,
             }),
@@ -704,13 +715,13 @@ export default function getSignUpTheme(mode: PaletteMode): ThemeOptions {
       MuiToggleButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            padding: '12px 16px',
-            textTransform: 'none',
+            padding: "12px 16px",
+            textTransform: "none",
             borderRadius: theme.shape.borderRadius,
             fontWeight: 500,
-            ...theme.applyStyles('dark', {
+            ...theme.applyStyles("dark", {
               color: gray[400],
-              '&.Mui-selected': { color: brand[300] },
+              "&.Mui-selected": { color: brand[300] },
             }),
           }),
         },

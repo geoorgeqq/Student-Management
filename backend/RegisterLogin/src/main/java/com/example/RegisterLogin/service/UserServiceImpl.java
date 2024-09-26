@@ -89,6 +89,34 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void deleteCourseById(Long id) {
+        Course tempCourse = courseRepository.findById(id).orElse(null);
+        if(tempCourse != null){
+            courseRepository.delete(tempCourse);
+        }
+
+    }
+
+    @Override
+    public Course editCourse(Long id, Course course) {
+        Course tempCourse = courseRepository.findById(id).orElse(null);
+        if(tempCourse != null){
+            tempCourse.setCourseName(course.getCourseName());
+            courseRepository.save(tempCourse);
+            return tempCourse;
+        }else return null;
+    }
+
+    @Override
+    public Course addCourse(String courseName, Long departmentId) {
+        Course tempCourse = new Course();
+        tempCourse.setCourseName(courseName);
+        tempCourse.setDepartment(departmentRepository.findById(departmentId).orElse(null));
+        return courseRepository.save(tempCourse);
+
+    }
+
+    @Override
     public List<Department> getDepartmentsWithCourses() {
         saveCourses();
         return departmentRepository.findAllWithCourses();
@@ -205,6 +233,30 @@ public class UserServiceImpl implements UserService{
         updateEnrollments(existingStudent, updatedStudent.getEnrollments());
 
         return userRepository.save(existingStudent);
+    }
+
+    @Override
+    public void addDepartment(Department department) {
+            departmentRepository.save(department);
+    }
+
+    @Override
+    public void deleteDepartmentById(Long id) {
+        Department tempDepartment = departmentRepository.findById(id).orElse(null);
+        if(tempDepartment !=null){
+            departmentRepository.delete(tempDepartment);
+        }
+
+    }
+
+    @Override
+    public Department updateDepartmentById(Long id, Department department) {
+        Department tempDepartment = departmentRepository.findById(id).orElse(null);
+        if(tempDepartment != null){
+            tempDepartment.setDepartment_name(department.getDepartment_name());
+            departmentRepository.save(tempDepartment);
+            return tempDepartment;
+        }else return null;
     }
 
     private void updateEnrollments(Student existingStudent, Set<Enrollment> updatedEnrollments) {

@@ -24,6 +24,12 @@ public interface UserService {
 
     public List<Course> getCourses();
 
+    public void deleteCourseById(Long id);
+
+    public Course editCourse(Long id, Course course);
+
+    public Course addCourse(String courseName, Long departmentId);
+
     public List<Department> getDepartmentsWithCourses();
 
     public Set<Course> getCoursesByDepartmentId(Long id);
@@ -47,5 +53,11 @@ public interface UserService {
     public void saveEnrollmentsToCourse(Course course);
 
     public Student updateStudentById(Long id, Student student);
+
+    public void addDepartment(Department department);
+
+    public void deleteDepartmentById(Long id);
+
+    public Department updateDepartmentById(Long id, Department department);
 
 }

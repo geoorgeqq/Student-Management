@@ -9,6 +9,7 @@ import EnrollCourse from "./EnrollCourse";
 import MyAccountContent from "./MyAccountContent";
 import SettingsContent from "./SettingsContent";
 import UserManagementContent from "./UserManagementContent";
+import DepartmentManagementContent from "./DepartmentManagementContent";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -140,6 +141,10 @@ export default function ContentRenderer({
         );
       case "User Management":
         return <UserManagementContent selectedContent={selectedContent} />;
+      case "Department Management":
+        return (
+          <DepartmentManagementContent selectedContent={selectedContent} />
+        );
       case "My Account":
         return (
           <MyAccountContent

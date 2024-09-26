@@ -1,5 +1,6 @@
 package com.example.RegisterLogin.controller;
 
+import com.example.RegisterLogin.entity.AddCourse;
 import com.example.RegisterLogin.entity.Course;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,33 @@ public class CoursesController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @DeleteMapping("{courseId}")
+    public ResponseEntity<String> deleteCourse(@PathVariable("courseId") Long courseId){
+        userService.deleteCourseById(courseId);
+        return ResponseEntity.ok("Course deleted!");
+    }
+
+    @PutMapping("{courseId}")
+    public ResponseEntity<Course> editCourse(@PathVariable("courseId")Long courseId, @RequestBody Course course){
+        Course tempCourse = userService.editCourse(courseId, course);
+        if(tempCourse != null){
+            return ResponseEntity.ok(tempCourse);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Course> addCourse(@RequestBody AddCourse addCourse){
+        Course tempCourse = userService.addCourse(addCourse.getCourseName(),addCourse.getDepartmentId());
+        if(tempCourse != null){
+            return ResponseEntity.ok(tempCourse);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
 
 }
