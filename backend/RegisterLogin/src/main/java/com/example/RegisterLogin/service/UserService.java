@@ -18,7 +18,13 @@ public interface UserService {
 
     public Admin loginAdmin(String email, String password);
 
+    public List<Teacher> getTeachers();
+
+    public Teacher editTeacher(Long id, Teacher teacher);
+
     public Teacher loginTeacher(String email, String password);
+
+    public Teacher addTeacher(Teacher teacher);
 
     public Department getDepartmentByDepartmentId(long id);
 

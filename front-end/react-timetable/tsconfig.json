@@ -18,7 +18,9 @@
     "jsx": "react-jsx", // Specify JSX code generation (React 17+)
     "paths": {
       "react": ["./node_modules/@types/react"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types",
+      "./node_modules/@mui/types"]
   },
   "include": [
     "src" // Include files from the src directory

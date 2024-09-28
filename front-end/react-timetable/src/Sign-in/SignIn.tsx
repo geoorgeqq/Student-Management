@@ -25,6 +25,8 @@ import axios from "axios";
 import { Router, useParams } from "react-router-dom";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { InputAdornment, IconButton } from "@mui/material";
 
 // Styled components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -63,6 +65,11 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const { type } = useParams<{ type: string }>();
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   interface User {
     email: string;
@@ -258,8 +265,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   error={passwordError}
                   helperText={passwordErrorMessage}
                   name="password"
-                  placeholder="••••••"
-                  type="password"
+                  placeholder="•"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
                   autoFocus
@@ -269,6 +276,43 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   color={passwordError ? "error" : "primary"}
                   sx={{ fontFamily: "Roboto, Arial, sans-serif" }}
                   onChange={handleChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        sx={{ position: "relative" }}
+                      >
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleTogglePasswordVisibility}
+                          edge="end"
+                          sx={{
+                            position: "absolute",
+                            right: 0, // Align to the right side of the TextField
+                            padding: 0, // Remove padding
+                            backgroundColor: "transparent", // No background
+                            border: "none", // Remove border
+                            outline: "none", // Remove outline
+                            background: "none",
+                            height: "0px",
+                            "&:hover": {
+                              backgroundColor: "transparent", // Ensure no background on hover
+                            },
+                            "&:focus": {
+                              outline: "none", // Remove outline on focus
+                              backgroundColor: "transparent", // No background on focus
+                            },
+                            "&:active": {
+                              outline: "none", // Remove outline on active
+                              backgroundColor: "transparent", // No background on active
+                            },
+                          }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </FormControl>
               <FormControlLabel

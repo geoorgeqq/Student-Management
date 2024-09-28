@@ -10,6 +10,7 @@ import MyAccountContent from "./MyAccountContent";
 import SettingsContent from "./SettingsContent";
 import UserManagementContent from "./UserManagementContent";
 import DepartmentManagementContent from "./DepartmentManagementContent";
+import TeacherManagement from "./TeacherManagement";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -144,6 +145,10 @@ export default function ContentRenderer({
       case "Department Management":
         return (
           <DepartmentManagementContent selectedContent={selectedContent} />
+        );
+      case "Teacher Management":
+        return (
+          <TeacherManagement selectedContent={selectedContent} />
         );
       case "My Account":
         return (

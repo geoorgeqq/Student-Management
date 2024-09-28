@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @CrossOrigin("http://localhost:3000")
-@RequestMapping("/teacher")
+@RequestMapping("/teachers")
 public class TeacherController {
 
     @Autowired
@@ -34,5 +33,30 @@ public class TeacherController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher){
+        Teacher tempTeacher = userService.addTeacher(teacher);
+        if(tempTeacher != null){
+           return ResponseEntity.ok(tempTeacher);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Teacher>> listTeachers(){
+        List<Teacher> teachers = userService.getTeachers();
+        return ResponseEntity.ok(teachers);
+    }
+
+    @PutMapping("/{teacherId}")
+    public ResponseEntity<Teacher> editTeacher(@PathVariable("teacherId") Long teacherId,@RequestBody Teacher teacher){
+        Teacher tempTeacher = userService.editTeacher(teacherId, teacher);
+        if(tempTeacher != null){
+            return ResponseEntity.ok(tempTeacher);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
 }

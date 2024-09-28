@@ -64,6 +64,23 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<Teacher> getTeachers() {
+        List<Teacher> teachers = teacherRespository.findAll();
+        return teachers;
+    }
+
+    @Override
+    public Teacher editTeacher(Long id, Teacher teacher) {
+        Teacher tempTeacher = teacherRespository.findById(id).orElse(null);
+        if(tempTeacher != null){
+           tempTeacher.setDepartment(teacher.getDepartment());
+           tempTeacher.setName(teacher.getName());
+           tempTeacher.setEmail(teacher.getEmail());
+         return teacherRespository.save(tempTeacher);
+        }else return null;
+    }
+
+    @Override
     public Teacher loginTeacher(String email, String password) {
         Teacher user = teacherRespository.findByEmail(email);
 
@@ -71,6 +88,12 @@ public class UserServiceImpl implements UserService{
             return user;
         }else
             return null;
+    }
+
+    @Override
+    public Teacher addTeacher(Teacher teacher) {
+        Teacher tempTeacher = teacherRespository.save(teacher);
+        return tempTeacher;
     }
 
     @Override

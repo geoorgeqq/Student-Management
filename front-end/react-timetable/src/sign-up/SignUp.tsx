@@ -17,7 +17,7 @@ import dayjs, { Dayjs } from "dayjs"; // Import Dayjs type from dayjs
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { InputLabel, Select, MenuItem, SelectChangeEvent, IconButton, InputAdornment } from "@mui/material";
 
 import {
   createTheme,
@@ -31,6 +31,7 @@ import TemplateFrame from "./TemplateFrame";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 const today = dayjs();
 
@@ -102,6 +103,12 @@ const SignUp: React.FC = () => {
   const [selectedDepartmentId, setSelectedDepartmentId] = React.useState<
     number | null
   >(null);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   React.useEffect(() => {
     fetch("http://localhost:8080/departments")
@@ -366,7 +373,7 @@ const SignUp: React.FC = () => {
                     fullWidth
                     name="password"
                     placeholder="••••••"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="new-password"
                     variant="outlined"
@@ -380,6 +387,43 @@ const SignUp: React.FC = () => {
                         fontSize: "1rem", // Adjust the font size if needed
                       },
                       mb: 1, // Adjust margin-bottom for spacing below the password field
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          sx={{ position: "relative" }}
+                        >
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                            sx={{
+                              position: "absolute",
+                              right: 0, // Align to the right side of the TextField
+                              padding: 0, // Remove padding
+                              backgroundColor: "transparent", // No background
+                              border: "none", // Remove border
+                              outline: "none", // Remove outline
+                              background: "none",
+                              height: "0px",
+                              "&:hover": {
+                                backgroundColor: "transparent", // Ensure no background on hover
+                              },
+                              "&:focus": {
+                                outline: "none", // Remove outline on focus
+                                backgroundColor: "transparent", // No background on focus
+                              },
+                              "&:active": {
+                                outline: "none", // Remove outline on active
+                                backgroundColor: "transparent", // No background on active
+                              },
+                            }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                     }}
                   />
                 </FormControl>

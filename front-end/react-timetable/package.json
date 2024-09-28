@@ -6,30 +6,23 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "@mui/base": "^5.0.0-beta.40",
-    "@mui/icons-material": "^6.1.0",
-    "@mui/material": "^6.1.0",
-    "@mui/x-charts": "^7.17.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@toolpad/core": "^0.6.0",
-    "@toolpad/studio": "^0.6.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.108",
+    "@mui/icons-material": "^6.1.1",
+    "@mui/material": "^6.1.1",
+    "@mui/x-charts": "^7.18.0",
+    "@mui/x-data-grid": "^7.18.0",
+    "@mui/x-data-grid-pro": "^7.18.0",
+    "@mui/x-date-pickers": "^7.18.0",
+    "@mui/x-date-pickers-pro": "^7.18.0",
+    "@mui/x-tree-view": "^7.18.0",
+    "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.7",
-    "cors": "^2.8.5",
-    "next-themes": "^0.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.3.1",
+    "dayjs": "^1.11.13",
     "react-router-dom": "^6.26.2",
-    "react-scripts": "5.0.1",
-    "styled-components": "^6.1.13",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -54,9 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.6",
-    "@types/styled-components": "^5.1.34"
   }
 }
