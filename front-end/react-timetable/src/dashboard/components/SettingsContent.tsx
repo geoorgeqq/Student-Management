@@ -22,6 +22,7 @@ interface SettingsContentProps {
   setImage: React.Dispatch<React.SetStateAction<string>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
   setDepartmentId: React.Dispatch<React.SetStateAction<string>>;
+  type: string | undefined;
 }
 
 interface Course {
@@ -55,6 +56,7 @@ export default function SettingsContent({
   setImage,
   setId,
   setDepartmentId,
+  type,
 }: SettingsContentProps) {
   const [student, setStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -72,7 +74,7 @@ export default function SettingsContent({
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/student/${id}`);
+        const response = await fetch(`http://localhost:8080/${type}/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch student data");
         }
@@ -146,7 +148,7 @@ export default function SettingsContent({
 
     // Send updated data to the server
     try {
-      const response = await fetch(`http://localhost:8080/student/${id}`, {
+      const response = await fetch(`http://localhost:8080/${type}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +158,11 @@ export default function SettingsContent({
       if (!response.ok) {
         throw new Error("Failed to update student data");
       } else {
-        alert("Student profile updated successfully!");
+        if (type === "student") {
+          alert(`Student profile updated successfully!`);
+        } else {
+          alert(`Teacher profile updated successfully!`);
+        }
       }
 
       // Update the parent state with new values
@@ -331,25 +337,28 @@ export default function SettingsContent({
               },
             }}
           />
-          <TextField
-            label="Date of Birth"
-            type="date"
-            variant="outlined"
-            fullWidth
-            value={editDateOfBirth.split("-").reverse().join("-")} // Convert DD-MM-YYYY back to YYYY-MM-DD for input
-            onChange={handleDateChange} // Updates the state in the correct format
-            sx={{ mb: 2 }}
-            InputProps={{
-              sx: {
-                fontFamily: "Roboto, sans-serif", // Set font for the input text
-              },
-            }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: "Roboto, sans-serif", // Set font for the label
-              },
-            }}
-          />
+          {type === "student" && (
+            <TextField
+              label="Date of Birth"
+              type="date"
+              variant="outlined"
+              fullWidth
+              value={editDateOfBirth.split("-").reverse().join("-")} // Convert DD-MM-YYYY back to YYYY-MM-DD for input
+              onChange={handleDateChange} // Updates the state in the correct format
+              sx={{ mb: 2 }}
+              InputProps={{
+                sx: {
+                  fontFamily: "Roboto, sans-serif", // Set font for the input text
+                },
+              }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: "Roboto, sans-serif", // Set font for the label
+                },
+              }}
+            />
+          )}
+
           <Typography
             variant="body1"
             component="div"
@@ -362,66 +371,67 @@ export default function SettingsContent({
           >
             Department: {student.department.department_name}
           </Typography>
-          <Divider sx={{ my: 3 }} />
-
-          <Box sx={{ width: "100%" }}>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{
-                fontFamily: "Roboto, sans-serif",
-                mb: 2,
-                fontWeight: "bold",
-              }}
-            >
-              Enrolled Courses:
-            </Typography>
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start",
-                flexDirection: "column",
-                p: 2,
-              }}
-            >
-              {courses.length > 0 ? (
-                <Stack spacing={2} sx={{ width: "100%" }}>
-                  {courses.map((course) => (
-                    <Box
-                      key={course.id}
-                      sx={{
-                        p: 2,
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                        bgcolor: "background.default",
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontFamily: "Roboto, sans-serif" }}
+          {type === "student" && <Divider sx={{ my: 3 }} />}
+          {type === "student" && (
+            <Box sx={{ width: "100%" }}>
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{
+                  fontFamily: "Roboto, sans-serif",
+                  mb: 2,
+                  fontWeight: "bold",
+                }}
+              >
+                Enrolled Courses:
+              </Typography>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                  p: 2,
+                }}
+              >
+                {courses.length > 0 ? (
+                  <Stack spacing={2} sx={{ width: "100%" }}>
+                    {courses.map((course) => (
+                      <Box
+                        key={course.id}
+                        sx={{
+                          p: 2,
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: 1,
+                          bgcolor: "background.default",
+                        }}
                       >
-                        {course.courseName}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Stack>
-              ) : (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontFamily: "Roboto, sans-serif",
-                    mb: 3,
-                    textAlign: "center",
-                  }}
-                >
-                  No courses enrolled.
-                </Typography>
-              )}
+                        <Typography
+                          variant="body2"
+                          sx={{ fontFamily: "Roboto, sans-serif" }}
+                        >
+                          {course.courseName}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "Roboto, sans-serif",
+                      mb: 3,
+                      textAlign: "center",
+                    }}
+                  >
+                    No courses enrolled.
+                  </Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
+          )}
 
           <Button
             variant="contained"

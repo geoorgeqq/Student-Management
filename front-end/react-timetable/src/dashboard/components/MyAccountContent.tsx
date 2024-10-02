@@ -1,12 +1,12 @@
 import { Box, alpha, Stack, Typography, Avatar, Divider } from "@mui/material";
 import Header from "./Header";
-import * as React from "react";
 import { useState, useEffect } from "react";
 
 interface MyAccountContentProps {
   selectedContent: string;
   id: string;
   image: string;
+  type: string | undefined;
 }
 
 interface Course {
@@ -33,6 +33,7 @@ export default function MyAccountContent({
   selectedContent,
   id,
   image,
+  type,
 }: MyAccountContentProps) {
   const [student, setStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -44,7 +45,7 @@ export default function MyAccountContent({
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/student/${id}`);
+        const response = await fetch(`http://localhost:8080/${type}/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch student data");
         }
@@ -164,13 +165,15 @@ export default function MyAccountContent({
           >
             {student.email}
           </Typography>
-          <Typography
-            variant="body2"
-            component="div"
-            sx={{ fontFamily: "Roboto", mb: 2, textAlign: "center" }}
-          >
-            {new Date(student.dateOfBirth).toLocaleDateString()}
-          </Typography>
+          {type === "student" && (
+            <Typography
+              variant="body2"
+              component="div"
+              sx={{ fontFamily: "Roboto", mb: 2, textAlign: "center" }}
+            >
+              {new Date(student.dateOfBirth).toLocaleDateString()}
+            </Typography>
+          )}
           <Typography
             variant="body1"
             component="div"
@@ -183,54 +186,59 @@ export default function MyAccountContent({
           >
             Department: {student.department.department_name}
           </Typography>
-          <Divider sx={{ my: 3 }} /> {/* Adds a divider line */}
-          <Box sx={{ width: "100%" }}>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ fontFamily: "Roboto", mb: 2, fontWeight: "bold" }}
-            >
-              Enrolled Courses:
-            </Typography>
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start", // Align items to the start vertically
-                flexDirection: "column", // Stack elements vertically
-                p: 2, // Padding for the Box
-              }}
-            >
-              {courses.length > 0 ? (
-                <Stack spacing={2} sx={{ width: "100%" }}>
-                  {courses.map((course) => (
-                    <Box
-                      key={course.id}
-                      sx={{
-                        p: 2,
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                        bgcolor: "background.default",
-                      }}
-                    >
-                      <Typography variant="body2" sx={{ fontFamily: "Roboto" }}>
-                        {course.courseName}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Stack>
-              ) : (
-                <Typography
-                  variant="body2"
-                  sx={{ fontFamily: "Roboto", mb: 3, textAlign: "center" }}
-                >
-                  No courses enrolled.
-                </Typography>
-              )}
+          <Divider sx={{ my: 3 }} />
+          {type === "student" && (
+            <Box sx={{ width: "100%" }}>
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{ fontFamily: "Roboto", mb: 2, fontWeight: "bold" }}
+              >
+                Enrolled Courses:
+              </Typography>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start", // Align items to the start vertically
+                  flexDirection: "column", // Stack elements vertically
+                  p: 2, // Padding for the Box
+                }}
+              >
+                {courses.length > 0 ? (
+                  <Stack spacing={2} sx={{ width: "100%" }}>
+                    {courses.map((course) => (
+                      <Box
+                        key={course.id}
+                        sx={{
+                          p: 2,
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: 1,
+                          bgcolor: "background.default",
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ fontFamily: "Roboto" }}
+                        >
+                          {course.courseName}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{ fontFamily: "Roboto", mb: 3, textAlign: "center" }}
+                  >
+                    No courses enrolled.
+                  </Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Stack>
     </Box>

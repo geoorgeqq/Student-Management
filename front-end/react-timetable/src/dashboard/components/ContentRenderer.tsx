@@ -147,15 +147,14 @@ export default function ContentRenderer({
           <DepartmentManagementContent selectedContent={selectedContent} />
         );
       case "Teacher Management":
-        return (
-          <TeacherManagement selectedContent={selectedContent} />
-        );
+        return <TeacherManagement selectedContent={selectedContent} />;
       case "My Account":
         return (
           <MyAccountContent
             selectedContent={selectedContent}
             id={id}
             image={image}
+            type={userType}
           />
         );
       case "Settings":
@@ -170,6 +169,7 @@ export default function ContentRenderer({
             setImage={setImage}
             setId={setId}
             setDepartmentId={setDepartmentId}
+            type={userType}
           />
         );
       default:

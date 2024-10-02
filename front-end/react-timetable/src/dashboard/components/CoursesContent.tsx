@@ -78,7 +78,7 @@ export default function CoursesContent({
   // Fetch courses when component mounts
   React.useEffect(() => {
     const fetchCourses = async () => {
-      if (userType === "student" || userType === "teacher") {
+      if (userType === "student" || userType === "teachers") {
         try {
           const response = await axios.get(
             `http://localhost:8080/departments/${departmentId}`
@@ -221,7 +221,7 @@ export default function CoursesContent({
         <Header selectedContent={selectedContent} />
 
         {/* Table for Students */}
-        {userType === "student" && (
+        {(userType === "student" || userType === "teachers") && (
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="courses table">
               <TableHead>

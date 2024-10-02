@@ -95,7 +95,7 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
                     <MenuItem onClick={() => handleLoginClick("admin")}>
                       Admin Login
                     </MenuItem>
-                    <MenuItem onClick={() => handleLoginClick("teacher")}>
+                    <MenuItem onClick={() => handleLoginClick("teachers")}>
                       Teacher Login
                     </MenuItem>
                     <MenuItem onClick={() => handleLoginClick("student")}>

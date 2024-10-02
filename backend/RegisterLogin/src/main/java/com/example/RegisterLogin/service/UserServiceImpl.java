@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Teacher getTeacherById(Long id) {
+        return teacherRespository.findById(id).orElse(null);
+    }
+
+    @Override
     public Teacher editTeacher(Long id, Teacher teacher) {
         Teacher tempTeacher = teacherRespository.findById(id).orElse(null);
         if(tempTeacher != null){
@@ -78,6 +83,14 @@ public class UserServiceImpl implements UserService{
            tempTeacher.setEmail(teacher.getEmail());
          return teacherRespository.save(tempTeacher);
         }else return null;
+    }
+
+    @Override
+    public void deleteTeacher(Long id) {
+        Teacher tempTeacher = teacherRespository.findById(id).orElse(null);
+        if(tempTeacher != null){
+            teacherRespository.delete(tempTeacher);
+        }
     }
 
     @Override

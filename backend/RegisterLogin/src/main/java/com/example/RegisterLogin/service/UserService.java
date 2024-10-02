@@ -20,7 +20,11 @@ public interface UserService {
 
     public List<Teacher> getTeachers();
 
+    public Teacher getTeacherById(Long id);
+
     public Teacher editTeacher(Long id, Teacher teacher);
+
+    public void deleteTeacher(Long id);
 
     public Teacher loginTeacher(String email, String password);
 

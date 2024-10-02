@@ -43,6 +43,12 @@ public class TeacherController {
         }
     }
 
+    @DeleteMapping("/{teacherId}")
+    public ResponseEntity<String> deleteTeacher(@PathVariable("teacherId") Long teacherId){
+        userService.deleteTeacher(teacherId);
+        return ResponseEntity.ok("User deleted!");
+    }
+
     @GetMapping
     public ResponseEntity<List<Teacher>> listTeachers(){
         List<Teacher> teachers = userService.getTeachers();
@@ -57,6 +63,14 @@ public class TeacherController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/{teacherId}")
+    public ResponseEntity<Teacher> listTeacherById(@PathVariable("teacherId") Long teacherId){
+        Teacher tempteacher = userService.getTeacherById(teacherId);
+        if(tempteacher != null){
+            return ResponseEntity.ok(tempteacher);
+        }else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }
