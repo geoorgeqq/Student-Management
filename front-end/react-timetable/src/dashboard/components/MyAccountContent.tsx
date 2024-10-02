@@ -186,7 +186,7 @@ export default function MyAccountContent({
           >
             Department: {student.department.department_name}
           </Typography>
-          <Divider sx={{ my: 3 }} />
+          {type === "student" && <Divider sx={{ my: 3 }} />}
           {type === "student" && (
             <Box sx={{ width: "100%" }}>
               <Typography
