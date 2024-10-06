@@ -18,6 +18,13 @@ public class Course {
     @Column(name = "course_name")
     private String courseName;
 
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
+
+    private String location;
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "department_id")

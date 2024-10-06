@@ -16,6 +16,14 @@ public interface UserService {
 
     public Student findStudentById(Long id);
 
+    public CourseSchedule addCourseSchedule(CourseSchedule courseSchedule);
+
+    public List<CourseSchedule> getCourseSchedules();
+
+    public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule);
+
+    public void deleteCourseScheduleById(Long id);
+
     public Admin loginAdmin(String email, String password);
 
     public List<Teacher> getTeachers();

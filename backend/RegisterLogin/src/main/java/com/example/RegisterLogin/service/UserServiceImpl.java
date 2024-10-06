@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,21 +27,21 @@ public class UserServiceImpl implements UserService{
     private CourseRepository courseRepository;
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+    @Autowired
+    private CourseScheduleRepository courseScheduleRepository;
 
     public Student registerUser(Student user, MultipartFile pic) throws IOException {
-        if(pic != null){
+        if (pic != null) {
             user.setPic(pic.getBytes());
         }
-
         return userRepository.save(user);
     }
 
-    public Student loginStudent(String email, String password){
+    public Student loginStudent(String email, String password) {
         Student user = userRepository.findByEmail(email);
-
-        if(user != null && password.equals(user.getPassword())){
+        if (user != null && password.equals(user.getPassword())) {
             return user;
-        }else{
+        } else {
             return null;
         }
     }
@@ -49,16 +49,50 @@ public class UserServiceImpl implements UserService{
     @Override
     public Student findStudentById(Long id) {
         Student tempStudent = userRepository.findById(id).orElse(null);
-
         return tempStudent;
     }
 
-    public Admin loginAdmin (String email, String password){
-        Admin user = adminRepository.findByEmail(email);
+    @Override
+    public CourseSchedule addCourseSchedule(CourseSchedule courseSchedule) {
+        return courseScheduleRepository.save(courseSchedule);
+    }
 
-        if(user != null && password.equals(user.getPassword())){
+    @Override
+    public List<CourseSchedule> getCourseSchedules() {
+        List<CourseSchedule> schedules = courseScheduleRepository.findAll();
+        return schedules;
+    }
+
+    @Override
+    public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule) {
+        CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElse(null);
+        if(tempCourseSchedule != null){
+            tempCourseSchedule.setStartTime(courseSchedule.getStartTime());
+            tempCourseSchedule.setEndTime(courseSchedule.getEndTime());
+            tempCourseSchedule.setStartDate(courseSchedule.getStartDate());
+            tempCourseSchedule.setEndDate(courseSchedule.getEndDate());
+            tempCourseSchedule.setRecurrenceType(courseSchedule.getRecurrenceType());
+            tempCourseSchedule.setDayOfWeek(courseSchedule.getDayOfWeek());
+            tempCourseSchedule.setInterval(courseSchedule.getInterval());
+            tempCourseSchedule.setIsActive(courseSchedule.getIsActive());
+
+            return courseScheduleRepository.save(tempCourseSchedule);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteCourseScheduleById(Long id) {
+        CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found with id: " + id));
+    }
+
+
+    @Override
+    public Admin loginAdmin(String email, String password) {
+        Admin user = adminRepository.findByEmail(email);
+        if (user != null && password.equals(user.getPassword())) {
             return user;
-        }else{
+        } else {
             return null;
         }
     }
@@ -77,18 +111,18 @@ public class UserServiceImpl implements UserService{
     @Override
     public Teacher editTeacher(Long id, Teacher teacher) {
         Teacher tempTeacher = teacherRespository.findById(id).orElse(null);
-        if(tempTeacher != null){
-           tempTeacher.setDepartment(teacher.getDepartment());
-           tempTeacher.setName(teacher.getName());
-           tempTeacher.setEmail(teacher.getEmail());
-         return teacherRespository.save(tempTeacher);
-        }else return null;
+        if (tempTeacher != null) {
+            tempTeacher.setDepartment(teacher.getDepartment());
+            tempTeacher.setName(teacher.getName());
+            tempTeacher.setEmail(teacher.getEmail());
+            return teacherRespository.save(tempTeacher);
+        } else return null;
     }
 
     @Override
     public void deleteTeacher(Long id) {
         Teacher tempTeacher = teacherRespository.findById(id).orElse(null);
-        if(tempTeacher != null){
+        if (tempTeacher != null) {
             teacherRespository.delete(tempTeacher);
         }
     }
@@ -97,9 +131,9 @@ public class UserServiceImpl implements UserService{
     public Teacher loginTeacher(String email, String password) {
         Teacher user = teacherRespository.findByEmail(email);
 
-        if(user != null && password.equals(user.getPassword())){
+        if (user != null && password.equals(user.getPassword())) {
             return user;
-        }else
+        } else
             return null;
     }
 
@@ -114,11 +148,11 @@ public class UserServiceImpl implements UserService{
         Department department = departmentRepository.findById(id).orElse(null);
         return department;
     }
-    
+
     @Override
     public List<Course> getCourses() {
         List<Course> courses = courseRepository.findAll();
-        for(Course course : courses){
+        for (Course course : courses) {
             saveEnrollmentsToCourse(course);
         }
         return courses;
@@ -127,7 +161,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteCourseById(Long id) {
         Course tempCourse = courseRepository.findById(id).orElse(null);
-        if(tempCourse != null){
+        if (tempCourse != null) {
             courseRepository.delete(tempCourse);
         }
 
@@ -136,11 +170,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public Course editCourse(Long id, Course course) {
         Course tempCourse = courseRepository.findById(id).orElse(null);
-        if(tempCourse != null){
+        if (tempCourse != null) {
             tempCourse.setCourseName(course.getCourseName());
             courseRepository.save(tempCourse);
             return tempCourse;
-        }else return null;
+        } else return null;
     }
 
     @Override
@@ -161,16 +195,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public Set<Course> getCoursesByDepartmentId(Long id) {
         Department department = departmentRepository.findById(id).orElse(null);
-        if(department.getCourses() != null){
+        if (department.getCourses() != null) {
             return department.getCourses();
-        }else {
+        } else {
             return null;
         }
     }
 
-    public Set<Course> findCoursesByDepartmentId(Long departmentId){
+    public Set<Course> findCoursesByDepartmentId(Long departmentId) {
         Set<Course> courses = courseRepository.findByDepartmentId(departmentId);
-        for(Course course : courses){
+        for (Course course : courses) {
             saveEnrollmentsToCourse(course);
         }
         return courses;
@@ -178,8 +212,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void saveCourses() {
-        List<Department> departments= departmentRepository.findAll();
-        for(Department department : departments){
+        List<Department> departments = departmentRepository.findAll();
+        for (Department department : departments) {
             department.setCourses(findCoursesByDepartmentId(department.getId()));
         }
 
@@ -187,7 +221,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<Student> getStudents() {
-        List<Student>  students= userRepository.findAll();
+        List<Student> students = userRepository.findAll();
         return students;
 
     }
@@ -195,7 +229,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteStudentById(Long id) {
         Student tempStudent = userRepository.findById(id).orElse(null);
-        if(tempStudent !=null){
+        if (tempStudent != null) {
             userRepository.delete(tempStudent);
         }
     }
@@ -203,7 +237,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public Enrollment addEnrollment(Long studentId, Long courseId) {
         Student tempStudent = userRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found!"));
-        Course tempCourse = courseRepository.findById(courseId).orElseThrow(()-> new RuntimeException("Course not found!"));
+        Course tempCourse = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found!"));
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(tempStudent);
         enrollment.setCourse(tempCourse);
@@ -239,10 +273,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Set<Enrollment> findEnrollmentsByCourse(Course course) {
-            Set<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
-            return enrollments;
+        Set<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
+        return enrollments;
     }
-
 
 
     @Override
@@ -273,13 +306,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void addDepartment(Department department) {
-            departmentRepository.save(department);
+        departmentRepository.save(department);
     }
 
     @Override
     public void deleteDepartmentById(Long id) {
         Department tempDepartment = departmentRepository.findById(id).orElse(null);
-        if(tempDepartment !=null){
+        if (tempDepartment != null) {
             departmentRepository.delete(tempDepartment);
         }
 
@@ -288,11 +321,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public Department updateDepartmentById(Long id, Department department) {
         Department tempDepartment = departmentRepository.findById(id).orElse(null);
-        if(tempDepartment != null){
+        if (tempDepartment != null) {
             tempDepartment.setDepartment_name(department.getDepartment_name());
             departmentRepository.save(tempDepartment);
             return tempDepartment;
-        }else return null;
+        } else return null;
     }
 
     private void updateEnrollments(Student existingStudent, Set<Enrollment> updatedEnrollments) {
@@ -329,7 +362,6 @@ public class UserServiceImpl implements UserService{
         // Update the student object with the modified set of enrollments
         existingStudent.setEnrollments(currentEnrollments);
     }
-
 
 
 }
