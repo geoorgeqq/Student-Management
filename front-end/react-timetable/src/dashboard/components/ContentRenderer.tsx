@@ -11,6 +11,7 @@ import SettingsContent from "./SettingsContent";
 import UserManagementContent from "./UserManagementContent";
 import DepartmentManagementContent from "./DepartmentManagementContent";
 import TeacherManagement from "./TeacherManagement";
+import CourseSchedulerContent from "./CourseSchedulerContent";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -90,31 +91,8 @@ export default function ContentRenderer({
             studentId={id}
           />
         );
-      case "Timetable":
-        return (
-          <Box
-            component="main"
-            sx={(theme) => ({
-              flexGrow: 1,
-              backgroundColor: theme.vars
-                ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-                : alpha(theme.palette.background.default, 1),
-              overflow: "auto",
-            })}
-          >
-            <Stack
-              spacing={2}
-              sx={{
-                alignItems: "center",
-                mx: 3,
-                pb: 10,
-                mt: { xs: 8, md: 0 },
-              }}
-            >
-              <Header selectedContent={selectedContent} />
-            </Stack>
-          </Box>
-        );
+      case "Course Scheduler":
+        return <CourseSchedulerContent selectedContent={selectedContent} />;
       case "Admin Settings":
         return (
           <Box

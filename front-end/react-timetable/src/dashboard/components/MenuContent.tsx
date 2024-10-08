@@ -14,7 +14,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddCircle from "@mui/icons-material/AddCircle";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
 const secondaryListItems = [
   { text: "Settings", icon: <SettingsRoundedIcon /> },
@@ -95,13 +95,15 @@ export default function MenuContent({
         <ListItem disablePadding>
           <ListItemButton
             selected={selectedIndex === 3}
-            onClick={(event) => handleListItemClick(event, 3, "Timetable")}
+            onClick={(event) =>
+              handleListItemClick(event, 3, "Course Scheduler")
+            }
           >
             <ListItemIcon>
               <AccessTimeIcon />
             </ListItemIcon>
             <ListItemText
-              primary="Timetable"
+              primary="Course Scheduler"
               primaryTypographyProps={{ fontFamily: "Roboto" }}
             />
           </ListItemButton>

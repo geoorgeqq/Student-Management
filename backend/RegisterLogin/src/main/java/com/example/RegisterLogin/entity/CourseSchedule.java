@@ -33,6 +33,7 @@ public class CourseSchedule {
 
     private String dayOfWeek;
 
+    @Column(name = "`interval`")  // Escape the reserved keyword
     private Integer interval;
 
     private Boolean isActive = true;

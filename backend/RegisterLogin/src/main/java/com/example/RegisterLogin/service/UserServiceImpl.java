@@ -1,5 +1,6 @@
 package com.example.RegisterLogin.service;
 
+import com.example.RegisterLogin.controller.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CourseSchedule addCourseSchedule(CourseSchedule courseSchedule) {
-        return courseScheduleRepository.save(courseSchedule);
+    public CourseSchedule addCourseSchedule(CourseScheduleRequest courseScheduleRequest) {
+        Course course = courseRepository.findById(courseScheduleRequest.getCourseId()).orElse(null);
+        if(course != null){
+            CourseSchedule newSchedule = new CourseSchedule();
+            newSchedule.setCourse(course);  // Set the fetched Course entity
+            newSchedule.setStartTime(courseScheduleRequest.getStartTime());
+            newSchedule.setEndTime(courseScheduleRequest.getEndTime());
+            newSchedule.setStartDate(courseScheduleRequest.getStartDate());
+            newSchedule.setEndDate(courseScheduleRequest.getEndDate());
+            newSchedule.setRecurrenceType(courseScheduleRequest.getRecurrenceType());
+            newSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
+            newSchedule.setInterval(courseScheduleRequest.getInterval());
+            newSchedule.setIsActive(courseScheduleRequest.getIsActive());
+
+            return courseScheduleRepository.save(newSchedule);
+        }
+        return null;
+
     }
 
     @Override
@@ -84,6 +101,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteCourseScheduleById(Long id) {
         CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found with id: " + id));
+        courseScheduleRepository.delete(tempCourseSchedule);
     }
 
 
