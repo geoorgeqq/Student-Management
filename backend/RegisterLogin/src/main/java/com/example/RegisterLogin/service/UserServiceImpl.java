@@ -1,14 +1,14 @@
 package com.example.RegisterLogin.service;
 
-import com.example.RegisterLogin.controller.CourseScheduleRequest;
+import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,18 +57,13 @@ public class UserServiceImpl implements UserService {
     public CourseSchedule addCourseSchedule(CourseScheduleRequest courseScheduleRequest) {
         Course course = courseRepository.findById(courseScheduleRequest.getCourseId()).orElse(null);
         if(course != null){
-            CourseSchedule newSchedule = new CourseSchedule();
-            newSchedule.setCourse(course);  // Set the fetched Course entity
-            newSchedule.setStartTime(courseScheduleRequest.getStartTime());
-            newSchedule.setEndTime(courseScheduleRequest.getEndTime());
-            newSchedule.setStartDate(courseScheduleRequest.getStartDate());
-            newSchedule.setEndDate(courseScheduleRequest.getEndDate());
-            newSchedule.setRecurrenceType(courseScheduleRequest.getRecurrenceType());
-            newSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
-            newSchedule.setInterval(courseScheduleRequest.getInterval());
-            newSchedule.setIsActive(courseScheduleRequest.getIsActive());
-
-            return courseScheduleRepository.save(newSchedule);
+            CourseSchedule courseSchedule = new CourseSchedule();
+            courseSchedule.setCourse(course);
+            courseSchedule.setStartTime(courseScheduleRequest.getStartTime());
+            courseSchedule.setEndTime(courseScheduleRequest.getEndTime());
+            courseSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
+            courseSchedule.setIsActive(courseScheduleRequest.getIsActive());
+            return courseScheduleRepository.save(courseSchedule);
         }
         return null;
 
@@ -86,16 +81,27 @@ public class UserServiceImpl implements UserService {
         if(tempCourseSchedule != null){
             tempCourseSchedule.setStartTime(courseSchedule.getStartTime());
             tempCourseSchedule.setEndTime(courseSchedule.getEndTime());
-            tempCourseSchedule.setStartDate(courseSchedule.getStartDate());
-            tempCourseSchedule.setEndDate(courseSchedule.getEndDate());
-            tempCourseSchedule.setRecurrenceType(courseSchedule.getRecurrenceType());
             tempCourseSchedule.setDayOfWeek(courseSchedule.getDayOfWeek());
-            tempCourseSchedule.setInterval(courseSchedule.getInterval());
             tempCourseSchedule.setIsActive(courseSchedule.getIsActive());
 
             return courseScheduleRepository.save(tempCourseSchedule);
         }
         return null;
+    }
+
+    @Override
+    public List<CourseSchedule> listCourseSchedulesByStudentId(Long id) {
+       Set<Course> courses  = getEnrolledCoursesByStudentId(id);
+       List<CourseSchedule> courseSchedules = courseScheduleRepository.findAll();
+        List<CourseSchedule> tempCourseSchedules = new ArrayList<>();
+       for(CourseSchedule courseSchedule : courseSchedules){
+           for(Course course : courses){
+               if(courseSchedule.getCourse() == course){
+                   tempCourseSchedules.add(courseSchedule);
+               }
+           }
+       }
+       return tempCourseSchedules;
     }
 
     @Override

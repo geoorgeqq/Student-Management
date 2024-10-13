@@ -77,49 +77,67 @@ export default function MenuContent({
           </ListItemButton>
         </ListItem>
         {userType === "student" && (
-          <ListItem disablePadding>
-            <ListItemButton
-              selected={selectedIndex === 2}
-              onClick={(event) => handleListItemClick(event, 2, "Join Course")}
-            >
-              <ListItemIcon>
-                <AddCircleIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Join Course"
-                primaryTypographyProps={{ fontFamily: "Roboto" }}
-              />
-            </ListItemButton>
-          </ListItem>
+          <>
+            <ListItem disablePadding>
+              <ListItemButton
+                selected={selectedIndex === 2}
+                onClick={(event) =>
+                  handleListItemClick(event, 2, "Join Course")
+                }
+              >
+                <ListItemIcon>
+                  <AddCircleIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Join Course"
+                  primaryTypographyProps={{ fontFamily: "Roboto" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton
+                selected={selectedIndex === 4}
+                onClick={(event) => handleListItemClick(event, 4, "Timetable")}
+              >
+                <ListItemIcon>
+                  <AccessTimeIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Timetable"
+                  primaryTypographyProps={{ fontFamily: "Roboto" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </>
         )}
-        <ListItem disablePadding>
-          <ListItemButton
-            selected={selectedIndex === 3}
-            onClick={(event) =>
-              handleListItemClick(event, 3, "Course Scheduler")
-            }
-          >
-            <ListItemIcon>
-              <AccessTimeIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Course Scheduler"
-              primaryTypographyProps={{ fontFamily: "Roboto" }}
-            />
-          </ListItemButton>
-        </ListItem>
 
         {/* Admin-specific items */}
         {userType === "admin" && (
           <>
+            <ListItem disablePadding>
+              <ListItemButton
+                selected={selectedIndex === 3}
+                onClick={(event) =>
+                  handleListItemClick(event, 3, "Course Scheduler")
+                }
+              >
+                <ListItemIcon>
+                  <AccessTimeIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Course Scheduler"
+                  primaryTypographyProps={{ fontFamily: "Roboto" }}
+                />
+              </ListItemButton>
+            </ListItem>
             <ListItem
               disablePadding
               sx={{ display: "block", fontFamily: "Roboto" }}
             >
               <ListItemButton
-                selected={selectedIndex === 4}
+                selected={selectedIndex === 5}
                 onClick={(event) =>
-                  handleListItemClick(event, 4, "Admin Settings")
+                  handleListItemClick(event, 5, "Admin Settings")
                 }
               >
                 <ListItemIcon>
@@ -133,9 +151,9 @@ export default function MenuContent({
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton
-                selected={selectedIndex === 5}
+                selected={selectedIndex === 6}
                 onClick={(event) =>
-                  handleListItemClick(event, 5, "User Management")
+                  handleListItemClick(event, 6, "User Management")
                 }
               >
                 <ListItemIcon>
@@ -149,9 +167,9 @@ export default function MenuContent({
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton
-                selected={selectedIndex === 6}
+                selected={selectedIndex === 7}
                 onClick={(event) =>
-                  handleListItemClick(event, 6, "Teacher Management")
+                  handleListItemClick(event, 7, "Teacher Management")
                 }
               >
                 <ListItemIcon>
@@ -165,9 +183,9 @@ export default function MenuContent({
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton
-                selected={selectedIndex === 7}
+                selected={selectedIndex === 8}
                 onClick={(event) =>
-                  handleListItemClick(event, 7, "Department Management")
+                  handleListItemClick(event, 8, "Department Management")
                 }
               >
                 <ListItemIcon>

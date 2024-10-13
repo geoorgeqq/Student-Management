@@ -1,6 +1,7 @@
 package com.example.RegisterLogin.controller;
 
 import com.example.RegisterLogin.entity.CourseSchedule;
+import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,5 +49,10 @@ public class CourseScheduleController {
     private ResponseEntity<String> deleteCourseSchedule(@PathVariable("scheduleId")Long scheduleId){
         userService.deleteCourseScheduleById(scheduleId);
         return ResponseEntity.ok("Course deleted!");
+    }
+
+    @GetMapping("/{studentId}")
+    private ResponseEntity<List<CourseSchedule>> listEnrolledCourseSchedulesByStudentId(@PathVariable("studentId") Long studentId){
+        return ResponseEntity.ok(userService.listCourseSchedulesByStudentId(studentId));
     }
 }

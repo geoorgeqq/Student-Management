@@ -12,6 +12,7 @@ import UserManagementContent from "./UserManagementContent";
 import DepartmentManagementContent from "./DepartmentManagementContent";
 import TeacherManagement from "./TeacherManagement";
 import CourseSchedulerContent from "./CourseSchedulerContent";
+import TimeTableContent from "./TimetableContent";
 
 interface ContentRendererProps {
   selectedContent: string;
@@ -92,7 +93,21 @@ export default function ContentRenderer({
           />
         );
       case "Course Scheduler":
-        return <CourseSchedulerContent selectedContent={selectedContent} />;
+        return (
+          <CourseSchedulerContent
+            selectedContent={selectedContent}
+            type={userType}
+            studentId={id}
+          />
+        );
+      case "Timetable":
+        return (
+          <TimeTableContent
+            selectedContent={selectedContent}
+            type={userType}
+            studentId={id}
+          ></TimeTableContent>
+        );
       case "Admin Settings":
         return (
           <Box

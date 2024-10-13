@@ -1,6 +1,6 @@
 package com.example.RegisterLogin.service;
 
-import com.example.RegisterLogin.controller.CourseScheduleRequest;
+import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +22,8 @@ public interface UserService {
     public List<CourseSchedule> getCourseSchedules();
 
     public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule);
+
+    public List<CourseSchedule> listCourseSchedulesByStudentId(Long id);
 
     public void deleteCourseScheduleById(Long id);
 

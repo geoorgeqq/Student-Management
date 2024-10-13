@@ -23,18 +23,7 @@ public class CourseSchedule {
 
     private LocalTime endTime;
 
-    private LocalDate startDate;
-
-    private LocalDate endDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RecurrenceType recurrenceType;
-
     private String dayOfWeek;
-
-    @Column(name = "`interval`")  // Escape the reserved keyword
-    private Integer interval;
 
     private Boolean isActive = true;
 
