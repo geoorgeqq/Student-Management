@@ -56,7 +56,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public CourseSchedule addCourseSchedule(CourseScheduleRequest courseScheduleRequest) {
         Course course = courseRepository.findById(courseScheduleRequest.getCourseId()).orElse(null);
-        if(course != null){
+
+        if(course == null){
+            return null;
+        }
+
+        Long departmentId = course.getDepartment().getId();
+
+        List<CourseSchedule> conflictingCourseSchedules = courseScheduleRepository.findConflictingSchedules(
+                departmentId,
+                courseScheduleRequest.getDayOfWeek(),
+                courseScheduleRequest.getStartTime(),
+                courseScheduleRequest.getEndTime());
+
+        if(!conflictingCourseSchedules.isEmpty()){
+            return null;
+        }
+
             CourseSchedule courseSchedule = new CourseSchedule();
             courseSchedule.setCourse(course);
             courseSchedule.setStartTime(courseScheduleRequest.getStartTime());
@@ -64,8 +80,6 @@ public class UserServiceImpl implements UserService {
             courseSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
             courseSchedule.setIsActive(courseScheduleRequest.getIsActive());
             return courseScheduleRepository.save(courseSchedule);
-        }
-        return null;
 
     }
 
@@ -78,15 +92,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule) {
         CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElse(null);
-        if(tempCourseSchedule != null){
+
+        Long departmentId = tempCourseSchedule.getCourse().getDepartment().getId();
+
+        List<CourseSchedule> conflictingCourseSchedules = courseScheduleRepository.findConflictingSchedules(
+                departmentId,
+                tempCourseSchedule.getDayOfWeek(),
+                tempCourseSchedule.getStartTime(),
+                tempCourseSchedule.getEndTime());
+
+        if(!conflictingCourseSchedules.isEmpty()){
+            return null;
+        }
+
             tempCourseSchedule.setStartTime(courseSchedule.getStartTime());
             tempCourseSchedule.setEndTime(courseSchedule.getEndTime());
             tempCourseSchedule.setDayOfWeek(courseSchedule.getDayOfWeek());
             tempCourseSchedule.setIsActive(courseSchedule.getIsActive());
 
             return courseScheduleRepository.save(tempCourseSchedule);
-        }
-        return null;
     }
 
     @Override

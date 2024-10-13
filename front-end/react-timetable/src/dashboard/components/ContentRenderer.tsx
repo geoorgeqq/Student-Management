@@ -97,7 +97,6 @@ export default function ContentRenderer({
           <CourseSchedulerContent
             selectedContent={selectedContent}
             type={userType}
-            studentId={id}
           />
         );
       case "Timetable":

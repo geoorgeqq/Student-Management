@@ -16,6 +16,8 @@ import {
   TextField,
   MenuItem,
   DialogActions,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
@@ -27,7 +29,6 @@ import Header from "./Header";
 interface CourseSchedulerContentProps {
   selectedContent: string;
   type: string | undefined; // Type prop
-  studentId?: string; // Optional studentId prop for student type
 }
 
 interface Schedule {
@@ -59,7 +60,6 @@ interface NewSchedule {
 export default function CourseSchedulerContent({
   selectedContent,
   type,
-  studentId, // Receive studentId as prop
 }: CourseSchedulerContentProps) {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -80,7 +80,24 @@ export default function CourseSchedulerContent({
   const [newSchedule, setNewSchedule] =
     useState<NewSchedule>(initialNewSchedule);
 
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   // Fetch schedules based on user type
+  useEffect(() => {
+    axios.get("http://localhost:8080/schedules").then((response) => {
+      setSchedules(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (type === "admin") {
+      axios.get("http://localhost:8080/courses").then((response) => {
+        setCourses(response.data);
+      });
+    }
+  }, [type]);
 
   // Handle form field change
   const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +148,7 @@ export default function CourseSchedulerContent({
     setNewSchedule(initialNewSchedule);
   };
 
-  // Submit new schedule
+  // Handle Snackbar close
   const handleAddSchedule = () => {
     axios
       .post("http://localhost:8080/schedules", newSchedule)
@@ -140,7 +157,18 @@ export default function CourseSchedulerContent({
         handleDialogClose();
       })
       .catch((error) => {
-        console.error("Error adding schedule", error);
+        if (error.response) {
+          if (error.response.status === 409) {
+            // Check for HTTP 409 Conflict
+            const errorMessage =
+              error.response.data.error ||
+              "A course schedule already exists for this time period.";
+            setSnackbarMessage(errorMessage);
+            setSnackbarOpen(true);
+          } else {
+            console.error("Unexpected error", error);
+          }
+        }
       });
   };
 
@@ -160,11 +188,26 @@ export default function CourseSchedulerContent({
           handleDialogClose();
         })
         .catch((error) => {
-          console.error("Error updating schedule", error);
+          if (error.response) {
+            if (error.response.status === 409) {
+              // Check for HTTP 409 Conflict
+              const errorMessage =
+                error.response.data.error ||
+                "A course schedule already exists for this time period.";
+              setSnackbarMessage(errorMessage);
+              setSnackbarOpen(true);
+            } else {
+              console.error("Unexpected error", error);
+            }
+          }
         });
     }
   };
 
+  // Function to handle Snackbar close event
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   // Delete existing schedule (DELETE request)
   const handleDeleteSchedule = () => {
     if (editingScheduleId !== null) {
@@ -341,12 +384,26 @@ export default function CourseSchedulerContent({
                 )}
               </DialogActions>
             </Dialog>
+
+            {/* Snackbar for Error Messages */}
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity="error"
+                sx={{ width: "100%" }}
+              >
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
           </Stack>
         </Box>
       </LocalizationProvider>
     );
   }
-
-  // Default return if no type matches
   return null;
 }

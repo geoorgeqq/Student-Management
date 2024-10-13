@@ -24,7 +24,7 @@ public class CourseScheduleController {
         if (tempCourseSchedule != null) {
             return ResponseEntity.ok(tempCourseSchedule);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
@@ -42,7 +42,7 @@ public class CourseScheduleController {
             CourseSchedule tempCourseSchedule = userService.editCourseSchedule(schedulesId,courseSchedule);
             if(tempCourseSchedule != null){
                 return ResponseEntity.ok(tempCourseSchedule);
-            }else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }else return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @DeleteMapping("/{scheduleId}")

@@ -57,11 +57,7 @@ export default function TimeTableContent({
   const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
-    if (type === "admin") {
-      axios.get("http://localhost:8080/schedules").then((response) => {
-        setSchedules(response.data);
-      });
-    } else if (type === "student" && studentId) {
+    if (studentId) {
       axios
         .get(`http://localhost:8080/schedules/${studentId}`)
         .then((response) => {
