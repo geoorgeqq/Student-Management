@@ -29,30 +29,30 @@ public class CourseScheduleController {
     }
 
     @GetMapping
-    private ResponseEntity<List<CourseSchedule>> listCourseSchedules(){
+    private ResponseEntity<List<CourseSchedule>> listCourseSchedules() {
         List<CourseSchedule> schedules = userService.getCourseSchedules();
 
-        if(schedules != null){
+        if (schedules != null) {
             return ResponseEntity.ok(schedules);
-        }else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PutMapping("/{scheduleId}")
-    private ResponseEntity<CourseSchedule> editCourseSchedule(@PathVariable("scheduleId") Long schedulesId, @RequestBody CourseSchedule courseSchedule){
-            CourseSchedule tempCourseSchedule = userService.editCourseSchedule(schedulesId,courseSchedule);
-            if(tempCourseSchedule != null){
-                return ResponseEntity.ok(tempCourseSchedule);
-            }else return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    private ResponseEntity<CourseSchedule> editCourseSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody CourseScheduleRequest courseScheduleRequest) {
+        CourseSchedule tempCourseSchedule = userService.editCourseSchedule(scheduleId, courseScheduleRequest);
+        if (tempCourseSchedule != null) {
+            return ResponseEntity.ok(tempCourseSchedule);
+        } else return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @DeleteMapping("/{scheduleId}")
-    private ResponseEntity<String> deleteCourseSchedule(@PathVariable("scheduleId")Long scheduleId){
+    private ResponseEntity<String> deleteCourseSchedule(@PathVariable("scheduleId") Long scheduleId) {
         userService.deleteCourseScheduleById(scheduleId);
         return ResponseEntity.ok("Course deleted!");
     }
 
     @GetMapping("/{studentId}")
-    private ResponseEntity<List<CourseSchedule>> listEnrolledCourseSchedulesByStudentId(@PathVariable("studentId") Long studentId){
+    private ResponseEntity<List<CourseSchedule>> listEnrolledCourseSchedulesByStudentId(@PathVariable("studentId") Long studentId) {
         return ResponseEntity.ok(userService.listCourseSchedulesByStudentId(studentId));
     }
 }

@@ -21,7 +21,7 @@ public interface UserService {
 
     public List<CourseSchedule> getCourseSchedules();
 
-    public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule);
+    public CourseSchedule editCourseSchedule(Long id, CourseScheduleRequest courseSchedule);
 
     public List<CourseSchedule> listCourseSchedulesByStudentId(Long id);
 

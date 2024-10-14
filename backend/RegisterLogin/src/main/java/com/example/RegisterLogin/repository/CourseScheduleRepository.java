@@ -17,9 +17,10 @@ public interface CourseScheduleRepository extends JpaRepository<CourseSchedule, 
 
     @Query("SELECT c FROM CourseSchedule c WHERE c.course.department.id = :departmentId " +
             "AND c.dayOfWeek = :dayOfWeek " +
-            "AND ((c.startTime < :endTime AND c.endTime > :startTime))")
+            "AND ((:startTime < c.endTime AND :endTime > c.startTime))")
     List<CourseSchedule> findConflictingSchedules(@Param("departmentId") Long departmentId,
                                                   @Param("dayOfWeek") String dayOfWeek,
                                                   @Param("startTime") LocalTime startTime,
                                                   @Param("endTime") LocalTime endTime);
+
 }

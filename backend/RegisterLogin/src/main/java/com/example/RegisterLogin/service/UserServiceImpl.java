@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -75,11 +72,7 @@ public class UserServiceImpl implements UserService {
 
             CourseSchedule courseSchedule = new CourseSchedule();
             courseSchedule.setCourse(course);
-            courseSchedule.setStartTime(courseScheduleRequest.getStartTime());
-            courseSchedule.setEndTime(courseScheduleRequest.getEndTime());
-            courseSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
-            courseSchedule.setIsActive(courseScheduleRequest.getIsActive());
-            return courseScheduleRepository.save(courseSchedule);
+            return updateSchedule(courseSchedule,courseScheduleRequest);
 
     }
 
@@ -90,27 +83,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CourseSchedule editCourseSchedule(Long id, CourseSchedule courseSchedule) {
+    public CourseSchedule editCourseSchedule(Long id, CourseScheduleRequest courseSchedule) {
         CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElse(null);
+
 
         Long departmentId = tempCourseSchedule.getCourse().getDepartment().getId();
 
         List<CourseSchedule> conflictingCourseSchedules = courseScheduleRepository.findConflictingSchedules(
                 departmentId,
-                tempCourseSchedule.getDayOfWeek(),
-                tempCourseSchedule.getStartTime(),
-                tempCourseSchedule.getEndTime());
+                courseSchedule.getDayOfWeek(),
+                courseSchedule.getStartTime(),
+                courseSchedule.getEndTime());
+
+        for(CourseSchedule courseSchedule1 : conflictingCourseSchedules){
+            if(Objects.equals(courseSchedule1.getId(), tempCourseSchedule.getId())){
+                updateSchedule(tempCourseSchedule,courseSchedule);
+            }
+        }
 
         if(!conflictingCourseSchedules.isEmpty()){
             return null;
         }
 
-            tempCourseSchedule.setStartTime(courseSchedule.getStartTime());
-            tempCourseSchedule.setEndTime(courseSchedule.getEndTime());
-            tempCourseSchedule.setDayOfWeek(courseSchedule.getDayOfWeek());
-            tempCourseSchedule.setIsActive(courseSchedule.getIsActive());
+        return updateSchedule(tempCourseSchedule,courseSchedule);
+    }
 
-            return courseScheduleRepository.save(tempCourseSchedule);
+    public CourseSchedule updateSchedule(CourseSchedule tempSchedule, CourseScheduleRequest courseScheduleRequest){
+        tempSchedule.setStartTime(courseScheduleRequest.getStartTime());
+        tempSchedule.setEndTime(courseScheduleRequest.getEndTime());
+        tempSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
+        tempSchedule.setIsActive(courseScheduleRequest.getIsActive());
+
+        return courseScheduleRepository.save(tempSchedule);
     }
 
     @Override

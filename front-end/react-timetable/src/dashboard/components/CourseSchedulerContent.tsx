@@ -266,7 +266,6 @@ export default function CourseSchedulerContent({
                     <TableCell>Start Time</TableCell>
                     <TableCell>End Time</TableCell>
                     <TableCell>Day of Week</TableCell>
-                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -280,11 +279,6 @@ export default function CourseSchedulerContent({
                       <TableCell>{formatTime(schedule.startTime)}</TableCell>
                       <TableCell>{formatTime(schedule.endTime)}</TableCell>
                       <TableCell>{schedule.dayOfWeek}</TableCell>
-                      <TableCell>
-                        <Button onClick={() => handleRowClick(schedule)}>
-                          Edit
-                        </Button>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
