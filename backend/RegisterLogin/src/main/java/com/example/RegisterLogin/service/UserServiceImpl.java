@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
-    private TeacherRespository teacherRespository;
+    private TeacherRepository teacherRespository;
     @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired
@@ -156,6 +156,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Teacher> getTeachersByDepartmentId(Long departmentId) {
+        List<Teacher> teachers = teacherRespository.findTeachersByDepartmentId(departmentId);
+        return teachers;
+    }
+
+    @Override
     public Teacher getTeacherById(Long id) {
         return teacherRespository.findById(id).orElse(null);
     }
@@ -220,22 +226,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Course editCourse(Long id, Course course) {
-        Course tempCourse = courseRepository.findById(id).orElse(null);
+    public Course editCourse(Long courseId,AddCourse addCourse) {
+        System.out.println(courseId);
+        Course tempCourse = courseRepository.findById(courseId).orElse(null);
         if (tempCourse != null) {
-            tempCourse.setCourseName(course.getCourseName());
-            courseRepository.save(tempCourse);
-            return tempCourse;
+            tempCourse.setCourseName(addCourse.getCourseName());
+            tempCourse.setDepartment(departmentRepository.findById(addCourse.getDepartmentId()).orElse(null));
+            tempCourse.setLocation(addCourse.getLocation());
+            tempCourse.setDescription(addCourse.getDescription());
+            tempCourse.setTeacher(teacherRespository.findById(addCourse.getTeacherId()).orElse(null));
+            return courseRepository.save(tempCourse);
         } else return null;
     }
 
     @Override
-    public Course addCourse(String courseName, Long departmentId) {
+    public Course addCourse(AddCourse addCourse) {
         Course tempCourse = new Course();
-        tempCourse.setCourseName(courseName);
-        tempCourse.setDepartment(departmentRepository.findById(departmentId).orElse(null));
+        tempCourse.setCourseName(addCourse.getCourseName());
+        tempCourse.setDepartment(departmentRepository.findById(addCourse.getDepartmentId()).orElse(null));
+        tempCourse.setLocation(addCourse.getLocation());
+        tempCourse.setDescription(addCourse.getDescription());
+        tempCourse.setTeacher(teacherRespository.findById(addCourse.getTeacherId()).orElse(null));
         return courseRepository.save(tempCourse);
-
     }
 
     @Override

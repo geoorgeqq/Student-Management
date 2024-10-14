@@ -31,6 +31,8 @@ public interface UserService {
 
     public List<Teacher> getTeachers();
 
+    public List<Teacher> getTeachersByDepartmentId(Long departmentId);
+
     public Teacher getTeacherById(Long id);
 
     public Teacher editTeacher(Long id, Teacher teacher);
@@ -47,9 +49,9 @@ public interface UserService {
 
     public void deleteCourseById(Long id);
 
-    public Course editCourse(Long id, Course course);
+    public Course editCourse(Long courseId,AddCourse addCourse);
 
-    public Course addCourse(String courseName, Long departmentId);
+    public Course addCourse(AddCourse addCourse);
 
     public List<Department> getDepartmentsWithCourses();
 

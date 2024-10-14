@@ -22,9 +22,32 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import axios from "axios";
-import EditCourseModal from "./EditCourseModal"; // Import the EditCourseModal
+import {
+  TextareaAutosize as BaseTextareaAutosize,
+  TextareaAutosize,
+} from "@mui/base/TextareaAutosize";
 
-// Interface for courses and departments
+import { makeStyles } from "@mui/styles"; // Import makeStyles
+import EditCourseModal from "./EditCourseModal";
+
+// Define the styles with makeStyles
+const useStyles = makeStyles({
+  textarea: {
+    height: "100%",
+    width: "100%",
+    fontSize: "16px",
+    padding: "10px",
+    borderRadius: "10px",
+    border: "1px solid rgba(0, 0, 0, 0.23)",
+    backgroundColor: "#05070a",
+    marginTop: "0.3rem",
+    color: "white",
+    "&::placeholder": {
+      color: "#929eb6", // Apply placeholder color here
+    },
+  },
+});
+
 interface Course {
   id: number;
   courseName: string;
@@ -36,11 +59,19 @@ interface AdminCourse {
   courseName: string;
   enrollment: any[];
   department: Department;
+  description: string;
+  location: string;
+  teacherId: string;
 }
 
 interface Department {
   id: number;
   department_name: string;
+}
+
+interface Teacher {
+  id: number;
+  name: string;
 }
 
 interface CoursesContentProps {
@@ -54,10 +85,12 @@ export default function CoursesContent({
   departmentId,
   userType,
 }: CoursesContentProps) {
+  const classes = useStyles(); // Call the useStyles function
   const [courses, setCourses] = React.useState<Course[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const [adminCourses, setAdminCourses] = React.useState<AdminCourse[]>([]);
+  const [teachers, setTeachers] = React.useState<Teacher[]>([]); // State for teachers
 
   // State for modal and new course data
   const [openAdd, setOpenAdd] = React.useState(false);
@@ -68,6 +101,9 @@ export default function CoursesContent({
   const [newCourse, setNewCourse] = React.useState({
     courseName: "",
     departmentId: "",
+    description: "",
+    location: "",
+    teacherId: "",
   });
 
   // State for departments
@@ -130,12 +166,33 @@ export default function CoursesContent({
     fetchDepartments();
   }, [openAdd, openEdit]);
 
+  // Fetch teachers based on selected department
+  React.useEffect(() => {
+    const fetchTeachers = async () => {
+      if (newCourse.departmentId) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/teachers/departments/${newCourse.departmentId}`
+          );
+          setTeachers(response.data);
+        } catch (err) {
+          setError("Failed to fetch teachers");
+        }
+      }
+    };
+
+    fetchTeachers();
+  }, [newCourse.departmentId]);
+
   // Handle adding a new course
   const handleAddCourse = async () => {
     try {
       const response = await axios.post("http://localhost:8080/courses", {
         courseName: newCourse.courseName,
         departmentId: newCourse.departmentId,
+        description: newCourse.description,
+        location: newCourse.location,
+        teacherId: newCourse.teacherId,
       });
 
       const addedCourse = response.data;
@@ -150,10 +207,19 @@ export default function CoursesContent({
             id: addedCourse.department.id,
             department_name: addedCourse.department.department_name,
           },
+          description: addedCourse.description || "",
+          location: addedCourse.location,
+          teacherId: addedCourse.teacherId,
         },
       ]);
 
-      setNewCourse({ courseName: "", departmentId: "" });
+      setNewCourse({
+        courseName: "",
+        departmentId: "",
+        description: "",
+        location: "",
+        teacherId: "",
+      });
       setOpenAdd(false);
     } catch (err) {
       setError("Failed to add course");
@@ -329,6 +395,26 @@ export default function CoursesContent({
                 setNewCourse({ ...newCourse, courseName: e.target.value })
               }
             />
+            <TextareaAutosize
+              minRows={3} // Minimum number of rows to display
+              placeholder="Description"
+              value={newCourse.description}
+              onChange={(e) =>
+                setNewCourse({ ...newCourse, description: e.target.value })
+              }
+              className={classes.textarea}
+            />
+            <TextField
+              margin="dense"
+              label="Location"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={newCourse.location}
+              onChange={(e) =>
+                setNewCourse({ ...newCourse, location: e.target.value })
+              }
+            />
             <FormControl fullWidth margin="dense">
               <InputLabel id="department-select-label">Department</InputLabel>
               <Select
@@ -341,6 +427,22 @@ export default function CoursesContent({
                 {departments.map((department) => (
                   <MenuItem key={department.id} value={department.id}>
                     {department.department_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="teacher-select-label">Teacher</InputLabel>
+              <Select
+                labelId="teacher-select-label"
+                value={newCourse.teacherId}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, teacherId: e.target.value })
+                }
+              >
+                {teachers.map((teacher) => (
+                  <MenuItem key={teacher.id} value={teacher.id}>
+                    {teacher.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -364,8 +466,11 @@ export default function CoursesContent({
             courseId={selectedCourse.id}
             existingCourseName={selectedCourse.courseName}
             existingDepartmentId={selectedCourse.department.id.toString()}
+            existingCourseDescription={selectedCourse.description}
+            existingCourseLocation={selectedCourse.location}
+            existingTeacherId={selectedCourse.teacherId}
             departments={departments}
-            onCourseUpdated={handleCourseUpdated}
+            onCourseUpdated={handleCourseUpdated} // This should match the expected type
             onCourseDeleted={handleCourseDeleted}
           />
         )}

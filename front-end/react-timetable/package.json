@@ -14,8 +14,11 @@
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/rrule": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@mui/base": "^5.0.0-beta.58",
     "@mui/icons-material": "^6.1.1",
-    "@mui/material": "^6.1.1",
+    "@mui/material": "^6.1.3",
+    "@mui/styles": "^6.1.3",
+    "@mui/utils": "^6.1.3",
     "@mui/x-charts": "^7.18.0",
     "@mui/x-data-grid": "^7.18.0",
     "@mui/x-data-grid-pro": "^7.18.0",
@@ -30,7 +33,8 @@
     "dayjs": "^1.11.13",
     "moment-timezone": "^0.5.46",
     "react-router-dom": "^6.26.2",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "react-textarea-autosize": "^8.5.4"
   },
   "devDependencies": {
     "typescript": "^4.9.5"

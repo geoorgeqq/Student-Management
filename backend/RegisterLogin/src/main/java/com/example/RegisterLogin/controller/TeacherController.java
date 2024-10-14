@@ -26,51 +26,55 @@ public class TeacherController {
         user.setPassword(password);
 
         Teacher savedUser = userService.loginTeacher(user.getEmail(), user.getPassword());
-        if(savedUser != null){
+        if (savedUser != null) {
             return ResponseEntity.ok(savedUser);
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher){
+    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
         Teacher tempTeacher = userService.addTeacher(teacher);
-        if(tempTeacher != null){
-           return ResponseEntity.ok(tempTeacher);
-        }else {
+        if (tempTeacher != null) {
+            return ResponseEntity.ok(tempTeacher);
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @DeleteMapping("/{teacherId}")
-    public ResponseEntity<String> deleteTeacher(@PathVariable("teacherId") Long teacherId){
+    public ResponseEntity<String> deleteTeacher(@PathVariable("teacherId") Long teacherId) {
         userService.deleteTeacher(teacherId);
         return ResponseEntity.ok("User deleted!");
     }
 
     @GetMapping
-    public ResponseEntity<List<Teacher>> listTeachers(){
+    public ResponseEntity<List<Teacher>> listTeachers() {
         List<Teacher> teachers = userService.getTeachers();
         return ResponseEntity.ok(teachers);
     }
 
     @PutMapping("/{teacherId}")
-    public ResponseEntity<Teacher> editTeacher(@PathVariable("teacherId") Long teacherId,@RequestBody Teacher teacher){
+    public ResponseEntity<Teacher> editTeacher(@PathVariable("teacherId") Long teacherId, @RequestBody Teacher teacher) {
         Teacher tempTeacher = userService.editTeacher(teacherId, teacher);
-        if(tempTeacher != null){
+        if (tempTeacher != null) {
             return ResponseEntity.ok(tempTeacher);
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @GetMapping("/{teacherId}")
-    public ResponseEntity<Teacher> listTeacherById(@PathVariable("teacherId") Long teacherId){
+    public ResponseEntity<Teacher> listTeacherById(@PathVariable("teacherId") Long teacherId) {
         Teacher tempteacher = userService.getTeacherById(teacherId);
-        if(tempteacher != null){
+        if (tempteacher != null) {
             return ResponseEntity.ok(tempteacher);
-        }else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @GetMapping("/departments/{departmentId}")
+    public ResponseEntity<List<Teacher>> listTeachersByDepartmentId(@PathVariable Long departmentId) {
+        return ResponseEntity.ok(userService.getTeachersByDepartmentId(departmentId));
+    }
 }

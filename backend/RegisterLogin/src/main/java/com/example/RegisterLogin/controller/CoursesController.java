@@ -25,7 +25,7 @@ public class CoursesController {
         return ResponseEntity.ok(userService.getCourses());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Set<Course>> getCoursesByStudentId(@PathVariable("id") Long id){
         Set<Course> courses = userService.getEnrolledCoursesByStudentId(id);
         if(!courses.isEmpty()){
@@ -35,15 +35,15 @@ public class CoursesController {
         }
     }
 
-    @DeleteMapping("{courseId}")
+    @DeleteMapping("/{courseId}")
     public ResponseEntity<String> deleteCourse(@PathVariable("courseId") Long courseId){
         userService.deleteCourseById(courseId);
         return ResponseEntity.ok("Course deleted!");
     }
 
-    @PutMapping("{courseId}")
-    public ResponseEntity<Course> editCourse(@PathVariable("courseId")Long courseId, @RequestBody Course course){
-        Course tempCourse = userService.editCourse(courseId, course);
+    @PutMapping("/{courseId}")
+    public ResponseEntity<Course> editCourse(@PathVariable("courseId") Long courseId, @RequestBody AddCourse addCourse){
+        Course tempCourse = userService.editCourse(courseId,addCourse);
         if(tempCourse != null){
             return ResponseEntity.ok(tempCourse);
         }else {
@@ -53,7 +53,7 @@ public class CoursesController {
 
     @PostMapping
     public ResponseEntity<Course> addCourse(@RequestBody AddCourse addCourse){
-        Course tempCourse = userService.addCourse(addCourse.getCourseName(),addCourse.getDepartmentId());
+        Course tempCourse = userService.addCourse(addCourse);
         if(tempCourse != null){
             return ResponseEntity.ok(tempCourse);
         }else {

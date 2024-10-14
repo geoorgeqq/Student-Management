@@ -7,4 +7,10 @@ public class AddCourse {
     private String courseName;
 
     private Long departmentId;
+
+    private String description;
+
+    private String location;
+
+    private Long teacherId;
 }
