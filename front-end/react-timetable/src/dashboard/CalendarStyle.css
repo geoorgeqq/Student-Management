@@ -1,0 +1,35 @@
+.fc-day-today {
+  background-color: transparent !important; /* Enforce the color change */
+  color: white !important; /* Enforce text color change */
+} /* Change the borders of the day cells to a gray color */
+
+/* CalendarStyle.css */
+
+.fc .fc-timegrid-event {
+  white-space: normal; /* Allows text to wrap */
+  overflow: visible; /* Prevents text clipping */
+  text-align: center; /* Center text in events */
+}
+
+/* Event cell styling */
+.fc .fc-timegrid-event {
+  white-space: normal; /* Allows text to wrap */
+  overflow: hidden; /* Prevents overflow */
+  text-align: center; /* Centers text */
+  padding: 5px; /* Adds padding for better spacing */
+  height: auto; /* Allows the height to adjust based on content */
+}
+
+/* Event title styling */
+.fc .fc-timegrid-event .fc-event-title {
+  font-weight: bold; /* Bold for course name */
+}
+
+/* Event teacher name styling */
+.fc .fc-timegrid-event .teacher-name {
+  font-style: italic; /* Italic for teacher name */
+  font-size: 0.9em; /* Adjusts size of teacher name for better fit */
+  overflow: hidden; /* Prevents overflow */
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  white-space: nowrap; /* Keeps the teacher's name in one line */
+}
