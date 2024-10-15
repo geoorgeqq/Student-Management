@@ -65,7 +65,9 @@ export default function MyAccountContent({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/courses/${id}`);
+        const response = await fetch(
+          `http://localhost:8080/courses/students/${id}`
+        );
         if (!response.ok) {
           if (response.status === 404) {
             setCourses([]); // Set courses to an empty array if no courses found

@@ -61,7 +61,10 @@ interface AdminCourse {
   department: Department;
   description: string;
   location: string;
-  teacherId: string;
+  teacher: {
+    id: string;
+    name: string;
+  };
 }
 
 interface Department {
@@ -209,7 +212,10 @@ export default function CoursesContent({
           },
           description: addedCourse.description || "",
           location: addedCourse.location,
-          teacherId: addedCourse.teacherId,
+          teacher: {
+            id: addedCourse.teacher.id,
+            name: addedCourse.teacher.name, // Accessing teacher.id instead of teacherId
+          },
         },
       ]);
 
@@ -468,7 +474,7 @@ export default function CoursesContent({
             existingDepartmentId={selectedCourse.department.id.toString()}
             existingCourseDescription={selectedCourse.description}
             existingCourseLocation={selectedCourse.location}
-            existingTeacherId={selectedCourse.teacherId}
+            existingTeacherId={selectedCourse.teacher.id}
             departments={departments}
             onCourseUpdated={handleCourseUpdated} // This should match the expected type
             onCourseDeleted={handleCourseDeleted}

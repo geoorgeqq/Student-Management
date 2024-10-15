@@ -101,7 +101,9 @@ export default function SettingsContent({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/courses/${id}`);
+        const response = await fetch(
+          `http://localhost:8080/students/courses/${id}`
+        );
         if (!response.ok) {
           if (response.status === 404) {
             setCourses([]);

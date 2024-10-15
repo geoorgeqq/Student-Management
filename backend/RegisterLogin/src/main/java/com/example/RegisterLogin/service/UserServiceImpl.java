@@ -251,6 +251,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Course getCourseById(Long courseId) {
+        return courseRepository.findById(courseId).orElse(null);
+    }
+
+    @Override
     public List<Department> getDepartmentsWithCourses() {
         saveCourses();
         return departmentRepository.findAllWithCourses();
@@ -341,13 +346,16 @@ public class UserServiceImpl implements UserService {
         return enrollments;
     }
 
+    @Override
+    public Set<Enrollment> findEnrollmentsByCourseId(Long courseId) {
+       return enrollmentRepository.findByCourse(courseRepository.findById(courseId).orElse(null));
+    }
+
 
     @Override
     public void saveEnrollmentsToCourse(Course course) {
         Set<Enrollment> enrollments = findEnrollmentsByCourse(course);
         course.setEnrollment(enrollments);
-
-
     }
 
     @Override

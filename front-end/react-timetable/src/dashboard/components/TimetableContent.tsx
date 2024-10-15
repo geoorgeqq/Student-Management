@@ -6,7 +6,17 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule"; // Import rrule plugin for recurring events
 import Header from "./Header";
-import { alpha, Box, Stack } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import "bootstrap/dist/css/bootstrap.css";
 import bootstrap5Plugin from "@fullcalendar/bootstrap5";
 import "./../CalendarStyle.css"; // Ensure your CSS file is imported
@@ -33,6 +43,8 @@ interface Schedule {
 interface Course {
   id: number;
   courseName: string;
+  description: string;
+  location: string;
 }
 
 export default function TimeTableContent({
@@ -41,6 +53,8 @@ export default function TimeTableContent({
   studentId,
 }: TimeTableContentProps) {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false); // Control dialog open state
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const dayMap: { [key: string]: number } = {
@@ -80,22 +94,19 @@ export default function TimeTableContent({
     const startDate = getDateForDay(schedule.dayOfWeek, schedule.startTime);
     const endDate = getDateForDay(schedule.dayOfWeek, schedule.endTime);
 
-    // Calculate the duration between start and end times
-    const duration =
-      (new Date(endDate).getTime() - new Date(startDate).getTime()) / 1000 / 60; // in minutes
-
     return {
       id: schedule.id.toString(),
       title: `${schedule.course.courseName} - ${schedule.course.teacher.name}`,
-      start: startDate.toISOString(), // Use ISO string for dtstart
+      start: startDate.toISOString(),
       rrule: {
         freq: "weekly",
         byweekday: [dayMap[schedule.dayOfWeek]],
-        dtstart: startDate.toISOString(), // Set the start date for the recurrence
+        dtstart: startDate.toISOString(),
         until: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // Recurring until next year
       },
-      duration: "02:00", // Set the event duration
+      duration: "02:00",
       extendedProps: {
+        courseId: schedule.course.id, // Add courseId for fetching course details
         courseName: schedule.course.courseName,
         teacherName: schedule.course.teacher.name,
         startTime: schedule.startTime,
@@ -103,6 +114,21 @@ export default function TimeTableContent({
       },
     };
   });
+
+  // Fetch course details and open dialog
+  const handleEventClick = (clickInfo: any) => {
+    const courseId = clickInfo.event.extendedProps.courseId;
+
+    axios.get(`http://localhost:8080/courses/${courseId}`).then((response) => {
+      setSelectedCourse(response.data); // Set course details
+      setDialogOpen(true); // Open dialog
+    });
+  };
+
+  // Close dialog
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   // Custom rendering for events
   const renderEventContent = (eventInfo: any) => {
@@ -162,8 +188,34 @@ export default function TimeTableContent({
           slotMinTime="09:00:00"
           slotMaxTime="19:00:01"
           eventContent={renderEventContent} // Use custom rendering for events
+          eventClick={handleEventClick} // Handle event clicks
         />
       </Stack>
+
+      {/* Dialog for course details */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Course Details</DialogTitle>
+        <DialogContent>
+          {selectedCourse ? (
+            <>
+              <DialogContentText>
+                <strong>Course Name:</strong> {selectedCourse.courseName}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Description:</strong> {selectedCourse.description}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Location:</strong> {selectedCourse.location}
+              </DialogContentText>
+            </>
+          ) : (
+            <DialogContentText>Loading...</DialogContentText>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

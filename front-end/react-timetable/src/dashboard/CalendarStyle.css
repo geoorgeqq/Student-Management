@@ -33,3 +33,12 @@
   text-overflow: ellipsis; /* Adds ellipsis if text overflows */
   white-space: nowrap; /* Keeps the teacher's name in one line */
 }
+
+.fc-event {
+  cursor: pointer;
+}
+
+.fc-event {
+  width: 103% !important;
+  margin-left: -1px;
+}

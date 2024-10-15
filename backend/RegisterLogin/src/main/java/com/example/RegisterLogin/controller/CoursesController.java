@@ -25,7 +25,7 @@ public class CoursesController {
         return ResponseEntity.ok(userService.getCourses());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/students/{id}")
     public ResponseEntity<Set<Course>> getCoursesByStudentId(@PathVariable("id") Long id){
         Set<Course> courses = userService.getEnrolledCoursesByStudentId(id);
         if(!courses.isEmpty()){
@@ -33,6 +33,14 @@ public class CoursesController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/{courseId}")
+    public ResponseEntity<Course> getCourseById(@PathVariable Long courseId){
+        Course tempCourse = userService.getCourseById(courseId);
+        if(tempCourse == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else return ResponseEntity.ok(tempCourse);
     }
 
     @DeleteMapping("/{courseId}")
@@ -60,6 +68,8 @@ public class CoursesController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+
 
 
 

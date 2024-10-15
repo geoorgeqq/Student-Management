@@ -53,6 +53,8 @@ public interface UserService {
 
     public Course addCourse(AddCourse addCourse);
 
+    public Course getCourseById(Long courseId);
+
     public List<Department> getDepartmentsWithCourses();
 
     public Set<Course> getCoursesByDepartmentId(Long id);
@@ -72,6 +74,8 @@ public interface UserService {
     Set<Course> getEnrolledCoursesByStudentId(Long studentId);
 
     Set<Enrollment> findEnrollmentsByCourse(Course course);
+
+    Set<Enrollment> findEnrollmentsByCourseId(Long courseId);
 
     public void saveEnrollmentsToCourse(Course course);
 

@@ -39,7 +39,10 @@ interface AdminCourse {
   department: { id: number; department_name: string };
   description: string;
   location: string;
-  teacherId: string;
+  teacher: {
+    id: string;
+    name: string;
+  };
 }
 
 interface EditCourseModalProps {
@@ -75,6 +78,7 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({
   onCourseDeleted,
 }) => {
   const classes = useStyles();
+  console.log(existingTeacherId);
 
   // Set up state variables
   const [courseName, setCourseName] = React.useState("");
