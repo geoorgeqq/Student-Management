@@ -4,6 +4,8 @@ import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +29,8 @@ public class UserServiceImpl implements UserService {
     private EnrollmentRepository enrollmentRepository;
     @Autowired
     private CourseScheduleRepository courseScheduleRepository;
+    @Autowired
+    private EmailService emailService;
 
     public Student registerUser(Student user, MultipartFile pic) throws IOException {
         if (pic != null) {
@@ -42,6 +46,41 @@ public class UserServiceImpl implements UserService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Student findStudentByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Student saveTokenAndExpiryDate(Student student,String token, String expiryDate) {
+        student.setToken(token);
+        student.setTokenExpiryDate(expiryDate);
+        return userRepository.save(student);
+    }
+
+    @Override
+    public void sendResetEmail(String email, String resetToken) {
+        String resetLink = "http://localhost:3000/reset-password?token="+resetToken;
+        emailService.sendSimpleEmail(email,"Reset Password Request", resetLink);
+    }
+
+    @Override
+    public Student findStudentByToken(String token) {
+        return userRepository.findByToken(token);
+    }
+
+    @Override
+    public Student saveStudentNewPassword(Student student, String newPassword) {
+        student.setPassword(newPassword);
+        student.setToken(null);
+        return userRepository.save(student);
+    }
+
+    @Override
+    public String generateResetToken() {
+        return UUID.randomUUID().toString();
     }
 
     @Override

@@ -15,6 +15,18 @@ public interface UserService {
 
     public Student loginStudent(String email, String password);
 
+    public Student findStudentByEmail(String email);
+
+    public Student saveTokenAndExpiryDate(Student student,String token, String expiryDate);
+
+    public void sendResetEmail(String email, String resetToken);
+
+    public Student findStudentByToken(String token);
+
+    public Student saveStudentNewPassword(Student student, String newPassword);
+
+    public String generateResetToken();
+
     public Student findStudentById(Long id);
 
     public CourseSchedule addCourseSchedule(CourseScheduleRequest courseScheduleRequest);

@@ -7,6 +7,7 @@ import SignIn from "./Sign-in/SignIn";
 import SignUp from "./sign-up/SignUp";
 import "@fontsource/roboto";
 import Dashboard from "./dashboard/Dashboard";
+import ResetPassword from "./ResetPassword";
 
 const theme = createTheme({
   typography: {
@@ -46,6 +47,7 @@ export const App = () => {
               />
             }
           />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path=":type/login" element={<SignIn />} />
           <Route path="/student/register" element={<SignUp />} />
           <Route path=":type/dashboard" element={<Dashboard />} />

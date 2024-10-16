@@ -102,7 +102,7 @@ export default function SettingsContent({
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/students/courses/${id}`
+          `http://localhost:8080/student/enrolled/${id}`
         );
         if (!response.ok) {
           if (response.status === 404) {

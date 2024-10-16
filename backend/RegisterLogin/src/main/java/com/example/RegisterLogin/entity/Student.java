@@ -20,6 +20,10 @@ public class Student {
 
     private String password;
 
+    private String token;
+
+    private String tokenExpiryDate;
+
     @ManyToOne
     @JoinColumn(name = "department_id",referencedColumnName = "id")
     private Department department;

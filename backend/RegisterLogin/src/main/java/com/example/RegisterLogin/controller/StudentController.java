@@ -107,5 +107,22 @@ public class StudentController {
         return ResponseEntity.ok("User Deleted");
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email){
+        Student student = userService.findStudentByEmail(email);
 
+        if(student != null){
+            String token = userService.generateResetToken();
+            userService.saveTokenAndExpiryDate(student,token, "15");
+            userService.sendResetEmail(email,token);
+        }
+        return ResponseEntity.ok("Email Sent!");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Student> resetPassword(@RequestBody ResetPasswordBody resetPasswordBody){
+        Student student = userService.findStudentByToken(resetPasswordBody.getToken());
+        Student updatedStudent = userService.saveStudentNewPassword(student,resetPasswordBody.getNewPassword());
+        return ResponseEntity.ok(updatedStudent);
+    }
 }
