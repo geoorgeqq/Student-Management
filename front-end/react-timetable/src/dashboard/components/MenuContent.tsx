@@ -94,21 +94,24 @@ export default function MenuContent({
                 />
               </ListItemButton>
             </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton
-                selected={selectedIndex === 4}
-                onClick={(event) => handleListItemClick(event, 4, "Timetable")}
-              >
-                <ListItemIcon>
-                  <AccessTimeIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Timetable"
-                  primaryTypographyProps={{ fontFamily: "Roboto" }}
-                />
-              </ListItemButton>
-            </ListItem>
           </>
+        )}
+
+        {(userType === "student" || userType === "teachers") && (
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={selectedIndex === 4}
+              onClick={(event) => handleListItemClick(event, 4, "Timetable")}
+            >
+              <ListItemIcon>
+                <AccessTimeIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Timetable"
+                primaryTypographyProps={{ fontFamily: "Roboto" }}
+              />
+            </ListItemButton>
+          </ListItem>
         )}
 
         {/* Admin-specific items */}

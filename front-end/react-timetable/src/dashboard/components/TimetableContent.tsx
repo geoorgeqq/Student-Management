@@ -4,7 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import rrulePlugin from "@fullcalendar/rrule"; // Import rrule plugin for recurring events
+import rrulePlugin from "@fullcalendar/rrule";
 import Header from "./Header";
 import {
   alpha,
@@ -19,12 +19,12 @@ import {
 } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.css";
 import bootstrap5Plugin from "@fullcalendar/bootstrap5";
-import "./../CalendarStyle.css"; // Ensure your CSS file is imported
+import "./../CalendarStyle.css";
 
 interface TimeTableContentProps {
   selectedContent: string;
   type: string | undefined;
-  studentId?: string; // Optional studentId prop for student type
+  studentId?: string; // Optional studentId prop for student or teacher type
 }
 
 interface Schedule {
@@ -32,11 +32,12 @@ interface Schedule {
   course: {
     id: number;
     courseName: string;
-    teacher: { name: string }; // Added teacher name
+    teacher: { name: string };
+    location: string;
   };
-  startTime: string; // e.g. "09:00:00"
-  endTime: string; // e.g. "11:00:00"
-  dayOfWeek: string; // e.g. "Monday"
+  startTime: string;
+  endTime: string;
+  dayOfWeek: string;
   isActive: boolean;
 }
 
@@ -54,7 +55,7 @@ export default function TimeTableContent({
 }: TimeTableContentProps) {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false); // Control dialog open state
+  const [dialogOpen, setDialogOpen] = useState(false);
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const dayMap: { [key: string]: number } = {
@@ -68,13 +69,26 @@ export default function TimeTableContent({
   };
 
   useEffect(() => {
+    console.log(type);
     if (studentId) {
-      axios
-        .get(`http://localhost:8080/schedules/${studentId}`)
-        .then((response) => {
-          setSchedules(response.data);
-          console.log(response.data);
-        });
+      if (type === "student") {
+        // Fetch student schedules
+        axios
+          .get(`http://localhost:8080/schedules/${studentId}`)
+          .then((response) => {
+            setSchedules(response.data);
+            console.log(response.data);
+          });
+      } else if (type === "teachers") {
+        // Fetch teacher schedules
+        axios
+          .get(`http://localhost:8080/courses/teachers/${studentId}`)
+          .then((response) => {
+            console.log(response.data);
+            setSchedules(response.data);
+            console.log(response.data);
+          });
+      }
     }
   }, [type, studentId]);
 
@@ -84,10 +98,9 @@ export default function TimeTableContent({
     const targetDate = new Date(today);
     targetDate.setDate(today.getDate() + dayDiff);
 
-    // Split time into hours and minutes, and ensure time is set correctly
-    const [hours, minutes] = time.split(":").map(Number); // Convert to numbers
-    targetDate.setHours(hours, minutes, 0, 0); // Set hours, minutes, and zero seconds
-    return targetDate; // Return the JavaScript date object itself, not a string
+    const [hours, minutes] = time.split(":").map(Number);
+    targetDate.setHours(hours, minutes, 0, 0);
+    return targetDate;
   };
 
   const events = schedules.map((schedule: Schedule) => {
@@ -102,44 +115,48 @@ export default function TimeTableContent({
         freq: "weekly",
         byweekday: [dayMap[schedule.dayOfWeek]],
         dtstart: startDate.toISOString(),
-        until: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // Recurring until next year
+        until: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       },
       duration: "02:00",
       extendedProps: {
-        courseId: schedule.course.id, // Add courseId for fetching course details
+        courseId: schedule.course.id,
         courseName: schedule.course.courseName,
         teacherName: schedule.course.teacher.name,
         startTime: schedule.startTime,
         endTime: schedule.endTime,
+        location: schedule.course.location,
       },
     };
   });
 
-  // Fetch course details and open dialog
   const handleEventClick = (clickInfo: any) => {
     const courseId = clickInfo.event.extendedProps.courseId;
 
     axios.get(`http://localhost:8080/courses/${courseId}`).then((response) => {
-      setSelectedCourse(response.data); // Set course details
-      setDialogOpen(true); // Open dialog
+      setSelectedCourse(response.data);
+      setDialogOpen(true);
     });
   };
 
-  // Close dialog
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
 
-  // Custom rendering for events
   const renderEventContent = (eventInfo: any) => {
     const { extendedProps } = eventInfo.event;
     return (
-      <div>
-        <div style={{ fontWeight: "bold" }}>
-          {extendedProps.courseName} {/* Only display the course name */}
+      <div className="eventClass">
+        <div
+          style={{
+            fontWeight: "bold",
+          }}
+        >
+          {extendedProps.courseName}
         </div>
-        <div className="teacher-name">{extendedProps.teacherName}</div>{" "}
-        {/* Display the teacher name */}
+        <div>{extendedProps.location}</div>
+        {type === "student" && (
+          <div className="teacher-name">{extendedProps.teacherName}</div>
+        )}
       </div>
     );
   };
@@ -187,12 +204,11 @@ export default function TimeTableContent({
           height="auto"
           slotMinTime="09:00:00"
           slotMaxTime="19:00:01"
-          eventContent={renderEventContent} // Use custom rendering for events
-          eventClick={handleEventClick} // Handle event clicks
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
         />
       </Stack>
 
-      {/* Dialog for course details */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Course Details</DialogTitle>
         <DialogContent>

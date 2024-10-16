@@ -25,6 +25,8 @@ public interface UserService {
 
     public List<CourseSchedule> listCourseSchedulesByStudentId(Long id);
 
+    public List<CourseSchedule> listCourseSchedulesByTeacherId(Long teacherid);
+
     public void deleteCourseScheduleById(Long id);
 
     public Admin loginAdmin(String email, String password);
@@ -46,6 +48,8 @@ public interface UserService {
     public Department getDepartmentByDepartmentId(long id);
 
     public List<Course> getCourses();
+
+    public List<Course> getCoursesByTeacherId(Long teacherId);
 
     public void deleteCourseById(Long id);
 

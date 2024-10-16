@@ -133,6 +133,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<CourseSchedule> listCourseSchedulesByTeacherId(Long teacherId) {
+        List<Course> courses = courseRepository.findCoursesByTeacherId(teacherId);
+
+        List<CourseSchedule> courseSchedules = courseScheduleRepository.findAll();
+
+        List<CourseSchedule> tempCourseSchedules = new ArrayList<>();
+        for(CourseSchedule courseSchedule : courseSchedules){
+            for(Course course : courses){
+                if(course == courseSchedule.getCourse()){
+                    tempCourseSchedules.add(courseSchedule);
+                }
+            }
+        }
+        return tempCourseSchedules;
+
+
+    }
+
+    @Override
     public void deleteCourseScheduleById(Long id) {
         CourseSchedule tempCourseSchedule = courseScheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found with id: " + id));
         courseScheduleRepository.delete(tempCourseSchedule);
@@ -214,6 +233,11 @@ public class UserServiceImpl implements UserService {
             saveEnrollmentsToCourse(course);
         }
         return courses;
+    }
+
+    @Override
+    public List<Course> getCoursesByTeacherId(Long teacherId) {
+        return courseRepository.findCoursesByTeacherId(teacherId);
     }
 
     @Override

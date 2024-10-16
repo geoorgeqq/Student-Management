@@ -11,4 +11,5 @@ import java.util.Set;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     Set<Course> findByDepartmentId(Long departmentId);
+    List<Course> findCoursesByTeacherId(Long teacherId);
 }

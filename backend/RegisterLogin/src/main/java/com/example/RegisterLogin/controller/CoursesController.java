@@ -3,6 +3,7 @@ package com.example.RegisterLogin.controller;
 import com.example.RegisterLogin.entity.AddCourse;
 import com.example.RegisterLogin.entity.Course;
 import com.example.RegisterLogin.entity.CourseSchedule;
+import com.example.RegisterLogin.entity.Teacher;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,11 @@ public class CoursesController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/teachers/{teacherId}")
+    public ResponseEntity<List<CourseSchedule>> listCourseSchedulesByTeacherId(@PathVariable Long teacherId){
+        return ResponseEntity.ok(userService.listCourseSchedulesByTeacherId(teacherId));
     }
 
     @GetMapping("/{courseId}")
