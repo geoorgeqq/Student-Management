@@ -265,7 +265,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   error={passwordError}
                   helperText={passwordErrorMessage}
                   name="password"
-                  placeholder="•"
+                  placeholder="•••••••"
                   type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
