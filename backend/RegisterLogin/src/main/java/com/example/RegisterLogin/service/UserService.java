@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface UserService {
 
-    public Student registerUser(Student user, MultipartFile file) throws IOException;
+    public Student registerUser(Student user, MultipartFile file, String token) throws IOException;
 
     public Student loginStudent(String email, String password);
 
@@ -21,11 +21,15 @@ public interface UserService {
 
     public void sendResetEmail(String email, String resetToken);
 
+    public void sendVerificationEmail(String email, String token);
+
+    public Student setUserVerified(String token);
+
     public Student findStudentByToken(String token);
 
     public Student saveStudentNewPassword(Student student, String newPassword);
 
-    public String generateResetToken();
+    public String generateToken();
 
     public Student findStudentById(Long id);
 

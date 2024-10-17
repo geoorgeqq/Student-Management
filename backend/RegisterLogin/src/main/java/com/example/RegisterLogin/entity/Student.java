@@ -24,6 +24,8 @@ public class Student {
 
     private String tokenExpiryDate;
 
+    private boolean isVerified;
+
     @ManyToOne
     @JoinColumn(name = "department_id",referencedColumnName = "id")
     private Department department;

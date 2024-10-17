@@ -50,9 +50,9 @@ public class StudentController {
         Department department = userService.getDepartmentByDepartmentId(department_id);
         user.setDepartment(department);
         user.setDateOfBirth(dateOfBirth);
-
+        String token = userService.generateToken();
         try {
-            Student savedUser = userService.registerUser(user, pic);
+            Student savedUser = userService.registerUser(user, pic, token);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,7 +112,7 @@ public class StudentController {
         Student student = userService.findStudentByEmail(email);
 
         if(student != null){
-            String token = userService.generateResetToken();
+            String token = userService.generateToken();
             userService.saveTokenAndExpiryDate(student,token, "15");
             userService.sendResetEmail(email,token);
         }
@@ -124,5 +124,11 @@ public class StudentController {
         Student student = userService.findStudentByToken(resetPasswordBody.getToken());
         Student updatedStudent = userService.saveStudentNewPassword(student,resetPasswordBody.getNewPassword());
         return ResponseEntity.ok(updatedStudent);
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<Student> verifyEmail(@RequestBody TokenRequest token){
+        System.out.println(token);
+        return ResponseEntity.ok(userService.setUserVerified(token.getToken()));
     }
 }

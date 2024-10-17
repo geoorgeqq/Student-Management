@@ -17,7 +17,19 @@ import dayjs, { Dayjs } from "dayjs"; // Import Dayjs type from dayjs
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { InputLabel, Select, MenuItem, SelectChangeEvent, IconButton, InputAdornment } from "@mui/material";
+import {
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  IconButton,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 import {
   createTheme,
@@ -169,6 +181,7 @@ const SignUp: React.FC = () => {
     }
   };
   const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -199,9 +212,10 @@ const SignUp: React.FC = () => {
       const { name, email, pic, id } = response.data;
       const imageUrl = `data:image/jpeg;base64,${pic}`;
       const departmentId = selectedDepartmentId;
-      navigate(`/student/dashboard`, {
-        state: { name, email, image: imageUrl, departmentId, id },
-      });
+
+      setTimeout(() => {
+        navigate("/check-email"); // Redirect to your custom "Check Your Email" page
+      }, 3000); // Adjust timing if needed
     } catch (error) {
       console.log("Error registering user: " + error);
     }
@@ -535,6 +549,19 @@ const SignUp: React.FC = () => {
               </Box>
             </Card>
           </Stack>
+          {/* Email Verification Dialog */}
+          <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+            <DialogTitle>Email Verification</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Thank you for signing up! A verification link has been sent to
+                your email. Please check your inbox to verify your account.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenDialog(false)}>OK</Button>
+            </DialogActions>
+          </Dialog>
         </SignUpContainer>
       </ThemeProvider>
     </TemplateFrame>

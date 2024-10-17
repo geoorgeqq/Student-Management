@@ -4,8 +4,6 @@ import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,16 +30,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
-    public Student registerUser(Student user, MultipartFile pic) throws IOException {
+    public Student registerUser(Student user, MultipartFile pic, String token) throws IOException {
         if (pic != null) {
             user.setPic(pic.getBytes());
         }
+        user.setToken(token);
+        sendVerificationEmail(user.getEmail(), token);
         return userRepository.save(user);
     }
 
     public Student loginStudent(String email, String password) {
         Student user = userRepository.findByEmail(email);
-        if (user != null && password.equals(user.getPassword())) {
+        if (user != null && password.equals(user.getPassword()) && user.isVerified()) {
             return user;
         } else {
             return null;
@@ -67,6 +67,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void sendVerificationEmail(String email, String token) {
+        String verificationLink ="http://localhost:3000/verify-email?token="+token;
+        String subject = "Email Verification";
+        String text = "Click on the following link to verify your email!\n"+verificationLink;
+        emailService.sendSimpleEmail(email,subject,text);
+    }
+
+    @Override
+    public Student setUserVerified(String token) {
+        Student student = findStudentByToken(token);
+        if(student !=null){
+            student.setVerified(true);
+            student.setToken(null);
+            return userRepository.save(student);
+        }
+        return null;
+    }
+
+    @Override
     public Student findStudentByToken(String token) {
         return userRepository.findByToken(token);
     }
@@ -79,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String generateResetToken() {
+    public String generateToken() {
         return UUID.randomUUID().toString();
     }
 

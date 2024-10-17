@@ -8,6 +8,8 @@ import SignUp from "./sign-up/SignUp";
 import "@fontsource/roboto";
 import Dashboard from "./dashboard/Dashboard";
 import ResetPassword from "./ResetPassword";
+import VerifyEmail from "./VerifyEmail";
+import CheckEmail from "./sign-up/CheckEmail";
 
 const theme = createTheme({
   typography: {
@@ -47,7 +49,9 @@ export const App = () => {
               />
             }
           />
+          <Route path="/check-email" element={<CheckEmail />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path=":type/login" element={<SignIn />} />
           <Route path="/student/register" element={<SignUp />} />
           <Route path=":type/dashboard" element={<Dashboard />} />
