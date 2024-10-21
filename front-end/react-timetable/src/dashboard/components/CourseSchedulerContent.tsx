@@ -18,6 +18,10 @@ import {
   DialogActions,
   Snackbar,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  AlertColor,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
@@ -25,6 +29,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
 import Header from "./Header";
+import { SelectChangeEvent } from "@mui/material";
 
 interface CourseSchedulerContentProps {
   selectedContent: string;
@@ -83,6 +88,8 @@ export default function CourseSchedulerContent({
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] =
+    useState<AlertColor>("success");
 
   // Fetch schedules based on user type
   useEffect(() => {
@@ -105,18 +112,38 @@ export default function CourseSchedulerContent({
     setNewSchedule((prev) => ({ ...prev, [name]: value }));
   };
 
+  const times = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+  ];
+
   // Automatically set endTime 2 hours after startTime
-  const handleStartTimeChange = (newValue: Dayjs | null) => {
-    const startTime = newValue ? newValue.format("HH:mm") : "";
-    // Calculate the endTime by adding 2 hours to startTime
+
+  const handleStartTimeChange = (event: SelectChangeEvent<string>) => {
+    const startTime = event.target.value as string;
+
     if (startTime) {
-      const [hours, minutes] = startTime.split(":");
-      let newHours = parseInt(hours) + 2;
-      if (newHours >= 24) newHours = newHours - 24; // Handle cases where hours exceed 24
-      const endTime = `${newHours.toString().padStart(2, "0")}:${minutes}`;
-      setNewSchedule((prev) => ({ ...prev, startTime, endTime }));
+      const [hours, minutes] = startTime.split(":").map(Number);
+      let newHours = hours + 2;
+      if (newHours >= 24) newHours -= 24;
+      const endTime = `${newHours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
+
+      setNewSchedule((prev) => ({
+        ...prev,
+        startTime, // Directly set startTime as the selected string
+        endTime,
+      }));
     } else {
-      setNewSchedule((prev) => ({ ...prev, startTime, endTime: "" }));
+      setNewSchedule((prev) => ({ ...prev, startTime: "", endTime: "" }));
     }
   };
 
@@ -124,10 +151,14 @@ export default function CourseSchedulerContent({
   const handleRowClick = (schedule: Schedule) => {
     setIsEditing(true);
     setEditingScheduleId(schedule.id);
+
+    const formattedStartTime = schedule.startTime.slice(0, 5); // Trim to HH:mm
+    const formattedEndTime = schedule.endTime.slice(0, 5); // Trim to HH:mm
+
     setNewSchedule({
       courseId: schedule.course.id,
-      startTime: schedule.startTime,
-      endTime: schedule.endTime,
+      startTime: formattedStartTime, // Set the trimmed time for the Select component
+      endTime: formattedEndTime,
       dayOfWeek: schedule.dayOfWeek,
       isActive: schedule.isActive,
     });
@@ -154,6 +185,10 @@ export default function CourseSchedulerContent({
       .post("http://localhost:8080/schedules", newSchedule)
       .then((response) => {
         setSchedules([...schedules, response.data]);
+        const scheduleMessage = "Course scheduled succesfully!";
+        setSnackbarMessage(scheduleMessage);
+        setSnackbarOpen(true);
+        setSnackbarSeverity("success");
         handleDialogClose();
       })
       .catch((error) => {
@@ -164,6 +199,7 @@ export default function CourseSchedulerContent({
               error.response.data.error ||
               "A course schedule already exists for this time period.";
             setSnackbarMessage(errorMessage);
+            setSnackbarSeverity("error");
             setSnackbarOpen(true);
           } else {
             console.error("Unexpected error", error);
@@ -185,6 +221,10 @@ export default function CourseSchedulerContent({
             schedule.id === editingScheduleId ? response.data : schedule
           );
           setSchedules(updatedSchedules);
+          const scheduleMessage = "Course scheduled succesfully!";
+          setSnackbarMessage(scheduleMessage);
+          setSnackbarOpen(true);
+          setSnackbarSeverity("success");
           handleDialogClose();
         })
         .catch((error) => {
@@ -314,19 +354,22 @@ export default function CourseSchedulerContent({
                 )}
 
                 {/* Start Time Field */}
-                <TimeField
-                  margin="dense"
-                  label="Start Time"
-                  name="startTime"
-                  format="HH:mm"
-                  value={
-                    newSchedule.startTime
-                      ? dayjs(`1970-01-01T${newSchedule.startTime}:00`)
-                      : null
-                  }
-                  onChange={handleStartTimeChange}
-                  fullWidth
-                />
+                <FormControl fullWidth margin="dense">
+                  <InputLabel id="start-time-label">Start Time</InputLabel>
+                  <Select
+                    labelId="start-time-label"
+                    value={newSchedule.startTime}
+                    onChange={handleStartTimeChange}
+                    label="Start Time"
+                    displayEmpty
+                  >
+                    {times.map((time) => (
+                      <MenuItem key={time} value={time}>
+                        {time}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
                 {/* End Time Field */}
                 <TimeField
@@ -388,7 +431,7 @@ export default function CourseSchedulerContent({
             >
               <Alert
                 onClose={handleSnackbarClose}
-                severity="error"
+                severity={snackbarSeverity}
                 sx={{ width: "100%" }}
               >
                 {snackbarMessage}

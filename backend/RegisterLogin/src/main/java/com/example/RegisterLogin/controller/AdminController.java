@@ -2,6 +2,7 @@ package com.example.RegisterLogin.controller;
 
 import com.example.RegisterLogin.entity.Admin;
 import com.example.RegisterLogin.repository.AdminRepository;
+import com.example.RegisterLogin.service.AdminServiceImpl;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ public class AdminController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    AdminServiceImpl adminService;
 
     @PostMapping("/login")
     public ResponseEntity<Admin> login(@RequestParam("email") String email,
@@ -27,7 +30,7 @@ public class AdminController {
         user.setEmail(email);
         user.setPassword(password);
 
-        Admin savedAdmin = userService.loginAdmin(user.getEmail(), user.getPassword());
+        Admin savedAdmin = adminService.loginAdmin(user.getEmail(), user.getPassword());
         if(savedAdmin != null){
             return ResponseEntity.ok(savedAdmin);
         }else {

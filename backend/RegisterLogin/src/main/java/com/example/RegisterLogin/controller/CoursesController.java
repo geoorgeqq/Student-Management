@@ -3,7 +3,9 @@ package com.example.RegisterLogin.controller;
 import com.example.RegisterLogin.entity.AddCourse;
 import com.example.RegisterLogin.entity.Course;
 import com.example.RegisterLogin.entity.CourseSchedule;
-import com.example.RegisterLogin.entity.Teacher;
+import com.example.RegisterLogin.service.CourseScheduleServiceImpl;
+import com.example.RegisterLogin.service.CourseServiceImpl;
+import com.example.RegisterLogin.service.EnrollmentServiceImpl;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,15 +22,21 @@ public class CoursesController {
 
     @Autowired
     public UserService userService;
+    @Autowired
+    CourseServiceImpl courseService;
+    @Autowired
+    public CourseScheduleServiceImpl courseScheduleService;
+    @Autowired
+    public EnrollmentServiceImpl enrollmentService;
 
     @GetMapping("")
     public ResponseEntity<List<Course>> getCourses(){
-        return ResponseEntity.ok(userService.getCourses());
+        return ResponseEntity.ok(courseService.getCourses());
     }
 
     @GetMapping("/students/{id}")
     public ResponseEntity<Set<Course>> getCoursesByStudentId(@PathVariable("id") Long id){
-        Set<Course> courses = userService.getEnrolledCoursesByStudentId(id);
+        Set<Course> courses = enrollmentService.getEnrolledCoursesByStudentId(id);
         if(!courses.isEmpty()){
             return ResponseEntity.ok(courses);
         }else {
@@ -38,12 +46,12 @@ public class CoursesController {
 
     @GetMapping("/teachers/{teacherId}")
     public ResponseEntity<List<CourseSchedule>> listCourseSchedulesByTeacherId(@PathVariable Long teacherId){
-        return ResponseEntity.ok(userService.listCourseSchedulesByTeacherId(teacherId));
+        return ResponseEntity.ok(courseScheduleService.listCourseSchedulesByTeacherId(teacherId));
     }
 
     @GetMapping("/{courseId}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long courseId){
-        Course tempCourse = userService.getCourseById(courseId);
+        Course tempCourse = courseService.getCourseById(courseId);
         if(tempCourse == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }else return ResponseEntity.ok(tempCourse);
@@ -51,13 +59,13 @@ public class CoursesController {
 
     @DeleteMapping("/{courseId}")
     public ResponseEntity<String> deleteCourse(@PathVariable("courseId") Long courseId){
-        userService.deleteCourseById(courseId);
+        courseService.deleteCourseById(courseId);
         return ResponseEntity.ok("Course deleted!");
     }
 
     @PutMapping("/{courseId}")
     public ResponseEntity<Course> editCourse(@PathVariable("courseId") Long courseId, @RequestBody AddCourse addCourse){
-        Course tempCourse = userService.editCourse(courseId,addCourse);
+        Course tempCourse = courseService.editCourse(courseId,addCourse);
         if(tempCourse != null){
             return ResponseEntity.ok(tempCourse);
         }else {
@@ -67,7 +75,7 @@ public class CoursesController {
 
     @PostMapping
     public ResponseEntity<Course> addCourse(@RequestBody AddCourse addCourse){
-        Course tempCourse = userService.addCourse(addCourse);
+        Course tempCourse = courseService.addCourse(addCourse);
         if(tempCourse != null){
             return ResponseEntity.ok(tempCourse);
         }else {

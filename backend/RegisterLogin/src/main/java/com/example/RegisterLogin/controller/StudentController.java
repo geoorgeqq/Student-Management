@@ -1,6 +1,9 @@
 package com.example.RegisterLogin.controller;
 
 import com.example.RegisterLogin.entity.*;
+import com.example.RegisterLogin.service.DepartmentServiceImpl;
+import com.example.RegisterLogin.service.EmailServiceImpl;
+import com.example.RegisterLogin.service.EnrollmentServiceImpl;
 import com.example.RegisterLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,12 @@ public class StudentController {
 
     @Autowired
     public UserService userService;
+    @Autowired
+    public DepartmentServiceImpl departmentService;
+    @Autowired
+    public EnrollmentServiceImpl enrollmentService;
+    @Autowired
+    public EmailServiceImpl emailService;
 
     @GetMapping("")
     public ResponseEntity<List<Student>> getStudents() {
@@ -47,7 +56,7 @@ public class StudentController {
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password); // Consider hashing this password for security
-        Department department = userService.getDepartmentByDepartmentId(department_id);
+        Department department = departmentService.getDepartmentByDepartmentId(department_id);
         user.setDepartment(department);
         user.setDateOfBirth(dateOfBirth);
         String token = userService.generateToken();
@@ -78,7 +87,7 @@ public class StudentController {
         System.out.println("Received studentId: " + studentId + ", courseId: " + courseId);
 
         try {
-            Enrollment enrollment = userService.addEnrollment(studentId, courseId);
+            Enrollment enrollment = enrollmentService.addEnrollment(studentId, courseId);
             return ResponseEntity.ok(new EnrollmentResponse(enrollment, enrollment.getCourse().getCourseName()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -87,7 +96,7 @@ public class StudentController {
 
     @GetMapping("/enrolled/{studentId}")
     public ResponseEntity<Set<Course>> getEnrolledCourses(@PathVariable("studentId") Long studentId) {
-        Set<Course> enrolledCourses = userService.getEnrolledCoursesByStudentId(studentId);
+        Set<Course> enrolledCourses = enrollmentService.getEnrolledCoursesByStudentId(studentId);
         return ResponseEntity.ok(enrolledCourses);
     }
 
@@ -114,7 +123,7 @@ public class StudentController {
         if(student != null){
             String token = userService.generateToken();
             userService.saveTokenAndExpiryDate(student,token, "15");
-            userService.sendResetEmail(email,token);
+            emailService.sendResetEmail(email,token);
         }
         return ResponseEntity.ok("Email Sent!");
     }

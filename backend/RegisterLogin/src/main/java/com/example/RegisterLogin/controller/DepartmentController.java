@@ -4,6 +4,8 @@ import com.example.RegisterLogin.entity.Course;
 import com.example.RegisterLogin.entity.Department;
 import com.example.RegisterLogin.repository.CourseRepository;
 import com.example.RegisterLogin.repository.DepartmentRepository;
+import com.example.RegisterLogin.service.CourseServiceImpl;
+import com.example.RegisterLogin.service.DepartmentServiceImpl;
 import com.example.RegisterLogin.service.UserService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +23,20 @@ public class DepartmentController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    DepartmentServiceImpl departmentService;
+    @Autowired
+    CourseServiceImpl courseService;
 
     @GetMapping("")
     public ResponseEntity<List<Department>> getDepartments() {
-        List<Department> departments = userService.getDepartmentsWithCourses();
+        List<Department> departments = departmentService.getDepartmentsWithCourses();
         return ResponseEntity.ok(departments);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Set<Course>> getCoursesForDepartmentId(@PathVariable("id") Long id) {
-        Set<Course> courses = userService.findCoursesByDepartmentId(id);
+        Set<Course> courses = courseService.findCoursesByDepartmentId(id);
         if (!courses.isEmpty()) {
             return ResponseEntity.ok(courses);
         } else {
@@ -40,19 +46,19 @@ public class DepartmentController {
 
     @PutMapping("")
     public ResponseEntity<Department> addDepartment(@RequestBody Department department) {
-        userService.addDepartment(department);
+        departmentService.addDepartment(department);
         return ResponseEntity.ok(department);
     }
 
     @PostMapping("/{departmentId}")
     public ResponseEntity<Department> editDepartment(@PathVariable("departmentId") Long departmentId, @RequestBody Department department) {
-        Department tempDepartment = userService.updateDepartmentById(departmentId, department);
+        Department tempDepartment = departmentService.updateDepartmentById(departmentId, department);
         return ResponseEntity.ok(tempDepartment);
     }
 
     @DeleteMapping("/{departmentId}")
     public ResponseEntity<String> deleteDepartment(@PathVariable("departmentId") Long departmentId) {
-        userService.deleteDepartmentById(departmentId);
+        departmentService.deleteDepartmentById(departmentId);
         return ResponseEntity.ok("Department Deleted!");
 
     }
