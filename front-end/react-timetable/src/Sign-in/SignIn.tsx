@@ -117,26 +117,36 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData();
-    data.append("email", formData.email);
-    data.append("password", formData.password);
+
+    // Prepare JSON data
+    const loginData = {
+      email: formData.email,
+      password: formData.password,
+    };
+
     try {
       const response = await axios.post(
         `http://localhost:8080/${type}/login`,
-        data
+        loginData, // Send as JSON
+        {
+          headers: {
+            "Content-Type": "application/json", // Ensure it's sent as JSON
+            "X-Requested-With": "XMLHttpRequest", // Add this header for AJAX requests
+          },
+        }
       );
 
-      const name = response.data.name;
-      const email = response.data.email;
-      const id = response.data.id;
-      const departmentId = response.data.department?.id;
-      const base64Image = response.data.pic;
-      const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+      // Destructure response data
+      const { name, email, id, pic, department } = response.data;
+      const departmentId = department?.id;
+      const imageUrl = `data:image/jpeg;base64,${pic}`;
+
+      // Navigate to dashboard
       navigate(`/${type}/dashboard`, {
         state: { name, email, id, image: imageUrl, departmentId },
       });
     } catch (error) {
-      console.log("Error logging in: " + error);
+      console.error("Error logging in: ", error);
     }
   };
 

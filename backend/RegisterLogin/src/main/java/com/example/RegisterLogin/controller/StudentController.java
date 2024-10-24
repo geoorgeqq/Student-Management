@@ -69,11 +69,12 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Student> login(@RequestParam("email") String email, @RequestParam("password") String password) {
-        Student savedUser = userService.loginStudent(email, password);
+    public ResponseEntity<Student> login(@RequestBody LoginRequest loginRequest) {
+        Student savedUser = userService.loginStudent(loginRequest.getEmail(), loginRequest.getPassword());
         if (savedUser != null) {
             return ResponseEntity.ok(savedUser);
-        } else {
+        }
+        else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
