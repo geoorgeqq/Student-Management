@@ -4,6 +4,10 @@ import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,23 +23,31 @@ public class UserServiceImpl implements UserService {
     private EmailServiceImpl emailService;
     @Autowired
     EnrollmentServiceImpl enrollmentService;
+    @Autowired
+    AuthenticationManager manager;
+    @Autowired
+    JwtService jwtService;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public Student registerUser(Student user, MultipartFile pic, String token) throws IOException {
         if (pic != null) {
             user.setPic(pic.getBytes());
         }
         user.setToken(token);
-        emailService.sendVerificationEmail(user.getEmail(), token);
+//        emailService.sendVerificationEmail(user.getEmail(), token);
+        user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public Student loginStudent(String email, String password) {
-        Student user = userRepository.findByEmail(email);
-        if (user != null && password.equals(user.getPassword()) && user.isVerified()) {
-            return user;
-        } else {
-            return null;
+        // facem veirifcare la autentificare
+        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+
+        if(authentication !=null){
+            jwtService.generateToken(email);
         }
+        return null;
     }
 
     @Override
