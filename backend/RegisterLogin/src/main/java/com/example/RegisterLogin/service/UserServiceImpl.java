@@ -3,6 +3,7 @@ package com.example.RegisterLogin.service;
 import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,12 +41,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    public Student loginStudent(String email, String password) {
-        // facem veirifcare la autentificare
+    public LoginResponse loginStudent(String email, String password) {
+        // facem verificare la autentificare
         Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
-
+        LoginResponse response = new LoginResponse();
         if(authentication !=null){
-            jwtService.generateToken(email);
+            response.setStudent(userRepository.findByEmail(email));
+            response.setJwtToken(jwtService.generateToken(email));
+            return response;
         }
         return null;
     }

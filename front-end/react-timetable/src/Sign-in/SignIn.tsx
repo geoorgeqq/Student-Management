@@ -27,6 +27,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { InputAdornment, IconButton } from "@mui/material";
+import { setAuthenticationHeader } from "../dashboard/components/Authenticate";
 
 // Styled components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -135,9 +136,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           },
         }
       );
+      const responseJWT = response.data;
+      localStorage.setItem("jsonWebToken", responseJWT.jwtToken);
 
       // Destructure response data
-      const { name, email, id, pic, department } = response.data;
+      const { name, email, id, pic, department } = responseJWT.student;
       const departmentId = department?.id;
       const imageUrl = `data:image/jpeg;base64,${pic}`;
 
@@ -145,6 +148,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       navigate(`/${type}/dashboard`, {
         state: { name, email, id, image: imageUrl, departmentId },
       });
+      setAuthenticationHeader(localStorage.getItem("jwtWebToken"));
     } catch (error) {
       console.error("Error logging in: ", error);
     }

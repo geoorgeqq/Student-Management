@@ -1,6 +1,8 @@
 import { Box, alpha, Stack, Typography, Avatar, Divider } from "@mui/material";
 import Header from "./Header";
 import { useState, useEffect } from "react";
+import axiosInstance from "./axiosConfig";
+import { isAxiosError } from "axios";
 
 interface MyAccountContentProps {
   selectedContent: string;
@@ -40,12 +42,17 @@ export default function MyAccountContent({
   const [loadingStudent, setLoadingStudent] = useState<boolean>(true);
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const jwtToken = localStorage.getItem("jwtWebToken");
 
   // Fetch the student data using the provided id
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/${type}/${id}`);
+        const response = await fetch(`https://localhost:8080/${type}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`, // Include the JWT token in the headers
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch student data");
         }
@@ -59,26 +66,36 @@ export default function MyAccountContent({
     };
 
     fetchStudent(); // Call the fetch function
-  }, [id]);
+  }, [type, id, jwtToken]); // Add dependencies to useEffect to re-fetch if they change
 
   // Fetch the courses for the student using the provided id
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8080/courses/students/${id}`
-        );
-        if (!response.ok) {
-          if (response.status === 404) {
-            setCourses([]); // Set courses to an empty array if no courses found
-            return; // Exit early for 404
-          }
-          throw new Error("Failed to fetch courses");
-        }
-        const data = await response.json();
-        setCourses(data); // Update state with the fetched courses
+        const response = await axiosInstance.get(`/courses/students/${id}`);
+        setCourses(response.data); // Update state with the fetched courses
       } catch (error) {
-        setError("Failed to fetch courses");
+        if (isAxiosError(error)) {
+          // Handle errors thrown by Axios
+          if (error.response) {
+            // If there's a response from the server
+            if (error.response.status === 404) {
+              setCourses([]); // Set courses to an empty array if no courses are found (404)
+            } else {
+              setError(
+                `Error ${error.response.status}: ${
+                  error.response.data?.message || "Failed to fetch courses"
+                }`
+              );
+            }
+          } else {
+            // Handle network errors
+            setError("Network error: Unable to connect to the server.");
+          }
+        } else {
+          // Handle unexpected errors
+          setError("An unexpected error occurred.");
+        }
       } finally {
         setLoadingCourses(false); // Set loading to false once the data is fetched or an error occurs
       }

@@ -29,6 +29,7 @@ import {
 
 import { makeStyles } from "@mui/styles"; // Import makeStyles
 import EditCourseModal from "./EditCourseModal";
+import axiosInstance from "./axiosConfig";
 
 // Define the styles with makeStyles
 const useStyles = makeStyles({
@@ -117,10 +118,22 @@ export default function CoursesContent({
   // Fetch courses when component mounts
   React.useEffect(() => {
     const fetchCourses = async () => {
-      if (userType === "student" || userType === "teachers") {
+      const jwtToken = localStorage.getItem("jsonWebToken");
+
+      if (
+        (userType === "student" || userType === "teacher") &&
+        departmentId &&
+        jwtToken
+      ) {
+        setLoading(true);
         try {
           const response = await axios.get(
-            `http://localhost:8080/departments/${departmentId}`
+            `http://localhost:8080/departments/${departmentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
           );
           setCourses(response.data);
         } catch (err) {
@@ -138,8 +151,17 @@ export default function CoursesContent({
 
   React.useEffect(() => {
     const fetchAdminCourses = async () => {
+      const jwtToken = localStorage.getItem("jsonWebToken");
+      console.log(jwtToken);
       try {
-        const response = await axios.get(`http://localhost:8080/courses`);
+        const response = await axiosInstance.get(
+          `http://localhost:8080/courses`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
         setAdminCourses(response.data);
       } catch (err) {
         setError("Failed to fetch data");

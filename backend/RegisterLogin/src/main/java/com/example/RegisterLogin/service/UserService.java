@@ -13,7 +13,7 @@ public interface UserService {
 
     public Student registerUser(Student user, MultipartFile file, String token) throws IOException;
 
-    public Student loginStudent(String email, String password);
+    public LoginResponse loginStudent(String email, String password);
 
     public Student findStudentByEmail(String email);
 
