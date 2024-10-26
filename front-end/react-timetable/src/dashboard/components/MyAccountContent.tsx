@@ -2,7 +2,7 @@ import { Box, alpha, Stack, Typography, Avatar, Divider } from "@mui/material";
 import Header from "./Header";
 import { useState, useEffect } from "react";
 import axiosInstance from "./axiosConfig";
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 
 interface MyAccountContentProps {
   selectedContent: string;
@@ -42,15 +42,16 @@ export default function MyAccountContent({
   const [loadingStudent, setLoadingStudent] = useState<boolean>(true);
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const jwtToken = localStorage.getItem("jwtWebToken");
+  const jwtToken = localStorage.getItem("jsonWebToken");
+  console.log(`WHAT: ${jwtToken}`);
 
   // Fetch the student data using the provided id
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`https://localhost:8080/${type}/${id}`, {
+        const response = await fetch(`http://localhost:8080/${type}/${id}`, {
           headers: {
-            Authorization: `Bearer ${jwtToken}`, // Include the JWT token in the headers
+            Authorization: `Bearer ${jwtToken}`,
           },
         });
         if (!response.ok) {
@@ -72,7 +73,14 @@ export default function MyAccountContent({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axiosInstance.get(`/courses/students/${id}`);
+        const response = await axios.get(
+          `http://localhost:8080/courses/students/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
         setCourses(response.data); // Update state with the fetched courses
       } catch (error) {
         if (isAxiosError(error)) {

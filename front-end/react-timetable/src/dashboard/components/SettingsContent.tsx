@@ -70,11 +70,17 @@ export default function SettingsContent({
   const [editDateOfBirth, setEditDateOfBirth] = useState<string>(""); // Store in DD-MM-YYYY format
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+  const jwtToken = localStorage.getItem("jsonWebToken");
+
   // Fetch student data based on id
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/${type}/${id}`);
+        const response = await fetch(`http://localhost:8080/${type}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch student data");
         }
@@ -102,7 +108,12 @@ export default function SettingsContent({
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/student/enrolled/${id}`
+          `http://localhost:8080/student/enrolled/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         if (!response.ok) {
           if (response.status === 404) {
@@ -154,6 +165,7 @@ export default function SettingsContent({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
         },
         body: JSON.stringify(updatedStudent),
       });

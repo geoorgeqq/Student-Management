@@ -36,6 +36,7 @@ export default function EnrollCourse({
   const [enrolledCourses, setEnrolledCourses] = useState<Set<string>>(
     new Set()
   );
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   const handleCourseChange = (event: SelectChangeEvent<string>) => {
     setSelectedCourseId(event.target.value);
@@ -48,6 +49,7 @@ export default function EnrollCourse({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
           },
           body: JSON.stringify({
             studentId: studentId,
@@ -81,7 +83,12 @@ export default function EnrollCourse({
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/departments/${departmentId}`
+          `http://localhost:8080/departments/${departmentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -99,7 +106,12 @@ export default function EnrollCourse({
     const fetchEnrolledCourses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/student/enrolled/${studentId}`
+          `http://localhost:8080/student/enrolled/${studentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch enrolled courses");

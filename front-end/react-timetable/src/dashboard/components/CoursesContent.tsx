@@ -95,6 +95,7 @@ export default function CoursesContent({
   const [error, setError] = React.useState<string | null>(null);
   const [adminCourses, setAdminCourses] = React.useState<AdminCourse[]>([]);
   const [teachers, setTeachers] = React.useState<Teacher[]>([]); // State for teachers
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   // State for modal and new course data
   const [openAdd, setOpenAdd] = React.useState(false);
@@ -118,8 +119,6 @@ export default function CoursesContent({
   // Fetch courses when component mounts
   React.useEffect(() => {
     const fetchCourses = async () => {
-      const jwtToken = localStorage.getItem("jsonWebToken");
-
       if (
         (userType === "student" || userType === "teacher") &&
         departmentId &&
@@ -154,14 +153,11 @@ export default function CoursesContent({
       const jwtToken = localStorage.getItem("jsonWebToken");
       console.log(jwtToken);
       try {
-        const response = await axiosInstance.get(
-          `http://localhost:8080/courses`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`http://localhost:8080/courses`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setAdminCourses(response.data);
       } catch (err) {
         setError("Failed to fetch data");
@@ -178,7 +174,14 @@ export default function CoursesContent({
     const fetchDepartments = async () => {
       if (openAdd || openEdit) {
         try {
-          const response = await axios.get("http://localhost:8080/departments");
+          const response = await axios.get(
+            "http://localhost:8080/departments",
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          );
           setDepartments(response.data);
         } catch (err) {
           setError("Failed to fetch departments");
@@ -197,7 +200,12 @@ export default function CoursesContent({
       if (newCourse.departmentId) {
         try {
           const response = await axios.get(
-            `http://localhost:8080/teachers/departments/${newCourse.departmentId}`
+            `http://localhost:8080/teachers/departments/${newCourse.departmentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
           );
           setTeachers(response.data);
         } catch (err) {
@@ -212,13 +220,21 @@ export default function CoursesContent({
   // Handle adding a new course
   const handleAddCourse = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/courses", {
-        courseName: newCourse.courseName,
-        departmentId: newCourse.departmentId,
-        description: newCourse.description,
-        location: newCourse.location,
-        teacherId: newCourse.teacherId,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/courses",
+        {
+          courseName: newCourse.courseName,
+          departmentId: newCourse.departmentId,
+          description: newCourse.description,
+          location: newCourse.location,
+          teacherId: newCourse.teacherId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
 
       const addedCourse = response.data;
 

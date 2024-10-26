@@ -68,13 +68,19 @@ export default function TimeTableContent({
     Sunday: 6,
   };
 
+  const jwtToken = localStorage.getItem("jsonWebToken");
+
   useEffect(() => {
     console.log(type);
     if (studentId) {
       if (type === "student") {
         // Fetch student schedules
         axios
-          .get(`http://localhost:8080/schedules/${studentId}`)
+          .get(`http://localhost:8080/schedules/${studentId}`, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          })
           .then((response) => {
             setSchedules(response.data);
             console.log(response.data);
@@ -82,7 +88,11 @@ export default function TimeTableContent({
       } else if (type === "teachers") {
         // Fetch teacher schedules
         axios
-          .get(`http://localhost:8080/courses/teachers/${studentId}`)
+          .get(`http://localhost:8080/courses/teachers/${studentId}`, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          })
           .then((response) => {
             console.log(response.data);
             setSchedules(response.data);
@@ -132,10 +142,16 @@ export default function TimeTableContent({
   const handleEventClick = (clickInfo: any) => {
     const courseId = clickInfo.event.extendedProps.courseId;
 
-    axios.get(`http://localhost:8080/courses/${courseId}`).then((response) => {
-      setSelectedCourse(response.data);
-      setDialogOpen(true);
-    });
+    axios
+      .get(`http://localhost:8080/courses/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      .then((response) => {
+        setSelectedCourse(response.data);
+        setDialogOpen(true);
+      });
   };
 
   const handleCloseDialog = () => {
