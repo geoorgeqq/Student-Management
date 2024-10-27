@@ -73,6 +73,7 @@ export default function CourseSchedulerContent({
   const [editingScheduleId, setEditingScheduleId] = useState<number | null>(
     null
   );
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   const initialNewSchedule = {
     courseId: 0,
@@ -93,16 +94,28 @@ export default function CourseSchedulerContent({
 
   // Fetch schedules based on user type
   useEffect(() => {
-    axios.get("http://localhost:8080/schedules").then((response) => {
-      setSchedules(response.data);
-    });
+    axios
+      .get("http://localhost:8080/schedules", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      .then((response) => {
+        setSchedules(response.data);
+      });
   }, []);
 
   useEffect(() => {
     if (type === "admin") {
-      axios.get("http://localhost:8080/courses").then((response) => {
-        setCourses(response.data);
-      });
+      axios
+        .get("http://localhost:8080/courses", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
+        .then((response) => {
+          setCourses(response.data);
+        });
     }
   }, [type]);
 
@@ -182,7 +195,11 @@ export default function CourseSchedulerContent({
   // Handle Snackbar close
   const handleAddSchedule = () => {
     axios
-      .post("http://localhost:8080/schedules", newSchedule)
+      .post("http://localhost:8080/schedules", newSchedule, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
       .then((response) => {
         setSchedules([...schedules, response.data]);
         const scheduleMessage = "Course scheduled succesfully!";
@@ -214,7 +231,12 @@ export default function CourseSchedulerContent({
       axios
         .put(
           `http://localhost:8080/schedules/${editingScheduleId}`,
-          newSchedule
+          newSchedule,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         )
         .then((response) => {
           const updatedSchedules = schedules.map((schedule) =>
@@ -252,7 +274,11 @@ export default function CourseSchedulerContent({
   const handleDeleteSchedule = () => {
     if (editingScheduleId !== null) {
       axios
-        .delete(`http://localhost:8080/schedules/${editingScheduleId}`)
+        .delete(`http://localhost:8080/schedules/${editingScheduleId}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
         .then(() => {
           const updatedSchedules = schedules.filter(
             (schedule) => schedule.id !== editingScheduleId

@@ -43,11 +43,15 @@ export default function DepartmentManagementContent({
   const [editMode, setEditMode] = useState(false); // For tracking edit mode
   const [selectedDepartment, setSelectedDepartment] =
     useState<Department | null>(null); // For tracking the selected department
-
+  const jwtToken = localStorage.getItem("jsonWebToken");
   // Fetch the departments from the API
   useEffect(() => {
     axios
-      .get("http://localhost:8080/departments")
+      .get("http://localhost:8080/departments", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
       .then((response) => {
         setDepartments(response.data);
       })
@@ -76,7 +80,11 @@ export default function DepartmentManagementContent({
     };
 
     axios
-      .put("http://localhost:8080/departments", newDepartment)
+      .put("http://localhost:8080/departments", newDepartment, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
       .then((response) => {
         if (response.data && response.data.id) {
           setDepartments([...departments, response.data]); // Update state with the newly added department
@@ -109,9 +117,17 @@ export default function DepartmentManagementContent({
     if (!selectedDepartment) return;
 
     axios
-      .post(`http://localhost:8080/departments/${selectedDepartment.id}`, {
-        department_name: newDepartmentName,
-      })
+      .post(
+        `http://localhost:8080/departments/${selectedDepartment.id}`,
+        {
+          department_name: newDepartmentName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      )
       .then((response) => {
         const updatedDepartments = departments.map((dept) =>
           dept.id === selectedDepartment.id
@@ -133,7 +149,11 @@ export default function DepartmentManagementContent({
     if (!selectedDepartment) return;
 
     axios
-      .delete(`http://localhost:8080/departments/${selectedDepartment.id}`)
+      .delete(`http://localhost:8080/departments/${selectedDepartment.id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
       .then(() => {
         const remainingDepartments = departments.filter(
           (dept) => dept.id !== selectedDepartment.id

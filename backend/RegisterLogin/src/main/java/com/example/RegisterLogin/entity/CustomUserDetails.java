@@ -9,10 +9,10 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private Student student;
+    private UserCommon user;
 
-    public CustomUserDetails(Student student) {
-        this.student = student;
+    public CustomUserDetails(UserCommon user){
+        this.user = user;
     }
 
     @Override
@@ -22,11 +22,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return student.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return student.getEmail();
+        return user.getEmail();
     }
 }

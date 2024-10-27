@@ -9,7 +9,7 @@ import lombok.Setter;
 @Table(name = "admin")
 @Getter
 @Setter
-public class Admin {
+public class Admin implements UserCommon{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

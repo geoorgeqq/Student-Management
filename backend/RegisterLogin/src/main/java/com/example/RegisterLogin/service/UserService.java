@@ -33,7 +33,7 @@ public interface UserService {
 
     public void deleteStudentById(Long id);
 
-    public Student updateStudentById(Long id, Student student);
+    public LoginResponse updateStudentById(Long id, Student student);
 
 
 }

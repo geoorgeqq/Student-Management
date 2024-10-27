@@ -26,6 +26,7 @@ import {
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Header from "./Header";
+const jwtToken = localStorage.getItem("jsonWebToken");
 
 interface UserManagementContentProps {
   selectedContent: string;
@@ -61,7 +62,11 @@ export default function UserManagementContent({
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch("http://localhost:8080/student");
+        const response = await fetch("http://localhost:8080/student", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -74,7 +79,11 @@ export default function UserManagementContent({
 
     const fetchDepartments = async () => {
       try {
-        const response = await fetch("http://localhost:8080/departments");
+        const response = await fetch("http://localhost:8080/departments", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -115,6 +124,7 @@ export default function UserManagementContent({
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${jwtToken}`,
             },
             body: JSON.stringify({
               id: selectedStudent.id,
@@ -150,6 +160,9 @@ export default function UserManagementContent({
           `http://localhost:8080/student/${selectedStudent.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
           }
         );
 

@@ -67,6 +67,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const [departmentId, setDepartmentId] = React.useState<string>(
     location.state?.departmentId || ""
   );
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   // State for managing selected content
   const [selectedContent, setSelectedContent] = React.useState<string>("Home");
@@ -80,7 +81,11 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   React.useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/student`);
+        const response = await axios.get(`http://localhost:8080/student`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setStudents(response.data);
         setLoading(false);
       } catch (err) {

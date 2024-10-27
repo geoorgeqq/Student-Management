@@ -64,7 +64,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  enum UserType {
+    STUDENT = "student",
+    TEACHER = "teacher",
+    ADMIN = "admin",
+  }
   const { type } = useParams<{ type: string }>();
+  const userType = type as UserType;
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -75,6 +81,21 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   interface User {
     email: string;
     password: string;
+  }
+
+  interface UserData {
+    name: string;
+    email: string;
+    id: number;
+    pic: string;
+    department?: { id: number; name: string };
+  }
+
+  interface ResponseJWT {
+    jwtToken: string;
+    student?: UserData;
+    teacher?: UserData;
+    admin?: UserData;
   }
 
   const toggleCustomTheme = () => {
@@ -101,7 +122,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const userType = "yourType"; // Adjust this to your needs
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -139,15 +159,21 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       const responseJWT = response.data;
       localStorage.setItem("jsonWebToken", responseJWT.jwtToken);
 
-      // Destructure response data
-      const { name, email, id, pic, department } = responseJWT.student;
-      const departmentId = department?.id;
-      const imageUrl = `data:image/jpeg;base64,${pic}`;
+      const userData = responseJWT[userType as keyof ResponseJWT] as
+        | UserData
+        | undefined;
 
-      // Navigate to dashboard
-      navigate(`/${type}/dashboard`, {
-        state: { name, email, id, image: imageUrl, departmentId },
-      });
+      // Destructure response data
+      if (userData) {
+        const { name, email, id, pic, department } = userData;
+        const departmentId = department?.id;
+        const imageUrl = `data:image/jpeg;base64,${pic}`;
+        // Navigate to dashboard
+        navigate(`/${type}/dashboard`, {
+          state: { name, email, id, image: imageUrl, departmentId },
+        });
+      }
+
       setAuthenticationHeader(localStorage.getItem("jwtWebToken"));
     } catch (error) {
       console.error("Error logging in: ", error);

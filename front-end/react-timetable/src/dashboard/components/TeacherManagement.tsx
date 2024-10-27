@@ -62,10 +62,15 @@ export default function TeacherManagement({
     departmentId: 0,
     password: "", // Initialize with an empty password
   });
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   useEffect(() => {
     const fetchTeachers = async () => {
-      const response = await fetch("http://localhost:8080/teachers");
+      const response = await fetch("http://localhost:8080/teachers", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       const data = await response.json();
       setTeachers(data);
     };
@@ -74,7 +79,11 @@ export default function TeacherManagement({
 
   useEffect(() => {
     const fetchDepartments = async () => {
-      const response = await fetch("http://localhost:8080/departments");
+      const response = await fetch("http://localhost:8080/departments", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       const data = await response.json();
       setDepartments(data);
     };
@@ -131,6 +140,7 @@ export default function TeacherManagement({
       method,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
         name: currentTeacher.name,
@@ -160,6 +170,9 @@ export default function TeacherManagement({
 
     const response = await fetch(url, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
     });
 
     if (response.ok) {

@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 @Table(name = "student")
 @Data
-public class Student {
+public class Student implements UserCommon{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

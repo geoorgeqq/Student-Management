@@ -6,7 +6,7 @@ import lombok.Data;
 @Entity
 @Table(name = "teacher")
 @Data
-public class Teacher {
+public class Teacher implements UserCommon{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

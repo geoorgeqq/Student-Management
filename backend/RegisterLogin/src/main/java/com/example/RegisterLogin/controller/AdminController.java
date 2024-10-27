@@ -1,6 +1,8 @@
 package com.example.RegisterLogin.controller;
 
 import com.example.RegisterLogin.entity.Admin;
+import com.example.RegisterLogin.entity.LoginRequest;
+import com.example.RegisterLogin.entity.LoginResponse;
 import com.example.RegisterLogin.repository.AdminRepository;
 import com.example.RegisterLogin.service.AdminServiceImpl;
 import com.example.RegisterLogin.service.UserService;
@@ -8,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,13 +23,12 @@ public class AdminController {
     AdminServiceImpl adminService;
 
     @PostMapping("/login")
-    public ResponseEntity<Admin> login(@RequestParam("email") String email,
-                                       @RequestParam("password") String password){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         Admin user = new Admin();
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setEmail(loginRequest.getEmail());
+        user.setPassword(loginRequest.getPassword());
 
-        Admin savedAdmin = adminService.loginAdmin(user.getEmail(), user.getPassword());
+        LoginResponse savedAdmin = adminService.loginAdmin(user.getEmail(), user.getPassword());
         if(savedAdmin != null){
             return ResponseEntity.ok(savedAdmin);
         }else {

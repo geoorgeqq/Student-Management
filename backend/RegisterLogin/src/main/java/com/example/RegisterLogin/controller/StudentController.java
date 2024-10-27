@@ -96,10 +96,10 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudentInfo(@PathVariable("id") Long id, @RequestBody Student student){
-        Student tempStudent = userService.updateStudentById(id, student);
-        if(tempStudent !=null){
-            return ResponseEntity.ok(tempStudent);
+    public ResponseEntity<LoginResponse> updateStudentInfo(@PathVariable("id") Long id, @RequestBody Student student){
+        LoginResponse loginResponse = userService.updateStudentById(id, student);
+        if(loginResponse !=null){
+            return ResponseEntity.ok(loginResponse);
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -169,20 +169,29 @@ export default function SettingsContent({
         },
         body: JSON.stringify(updatedStudent),
       });
+
+      // Check if the response is OK and then parse it
       if (!response.ok) {
         throw new Error("Failed to update student data");
       } else {
+        const responseData = await response.json(); // Parse response to JSON
+
+        // Assuming responseData contains both jwtToken and user details
+        const { jwtToken: newJwtToken } = responseData;
+        localStorage.setItem("jsonWebToken", responseData.jwtToken);
+
+        // Show a success message based on the type
         if (type === "student") {
           alert(`Student profile updated successfully!`);
         } else {
           alert(`Teacher profile updated successfully!`);
         }
-      }
 
-      // Update the parent state with new values
-      setName(editName);
-      setEmail(editEmail);
-      setImage(imageUrl);
+        // Update the parent state with new values
+        setName(editName);
+        setEmail(editEmail);
+        setImage(imageUrl);
+      }
     } catch (error) {
       alert("Error updating student data");
     }

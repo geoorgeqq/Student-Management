@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
             user.setPic(pic.getBytes());
         }
         user.setToken(token);
-//        emailService.sendVerificationEmail(user.getEmail(), token);
+        emailService.sendVerificationEmail(user.getEmail(), token);
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -44,11 +44,8 @@ public class UserServiceImpl implements UserService {
     public LoginResponse loginStudent(String email, String password) {
         // facem verificare la autentificare
         Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
-        LoginResponse response = new LoginResponse();
         if(authentication !=null){
-            response.setStudent(userRepository.findByEmail(email));
-            response.setJwtToken(jwtService.generateToken(email));
-            return response;
+            return new LoginResponse(userRepository.findByEmail(email),jwtService.generateToken(email));
         }
         return null;
     }
@@ -105,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Student updateStudentById(Long id, Student updatedStudent) {
+    public LoginResponse updateStudentById(Long id, Student updatedStudent) {
         Student existingStudent = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found!"));
 
         // Update basic fields
@@ -118,8 +115,10 @@ public class UserServiceImpl implements UserService {
 
         // Update enrollments in place (without replacing the collection)
         enrollmentService.updateEnrollments(existingStudent, updatedStudent.getEnrollments());
+        Student tempStudent = userRepository.save(existingStudent);
+        String jwtToken = jwtService.generateToken(tempStudent.getEmail());
+        return new LoginResponse(tempStudent,jwtToken);
 
-        return userRepository.save(existingStudent);
     }
 
     @Override

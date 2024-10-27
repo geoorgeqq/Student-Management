@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Enables CORS with the configuration defined in the corsConfigurationSource bean
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/student/login", "/student/register")
+                        .requestMatchers("/student/login", "/student/register", "/admin/login", "/teacher/login")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
