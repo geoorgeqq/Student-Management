@@ -14,7 +14,7 @@ public interface UserService {
 
     public Student registerUser(Student user, MultipartFile file, String token) throws IOException;
 
-    public LoginResponse loginStudent(String email, String password);
+    public LoginResponse loginStudent(LoginRequest loginRequest);
 
     public Student findStudentByEmail(String email);
 

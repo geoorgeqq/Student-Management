@@ -70,7 +70,8 @@ public class StudentController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-         return ResponseEntity.ok(userService.loginStudent(loginRequest.getEmail(), loginRequest.getPassword()));
+        System.out.println(loginRequest);
+         return ResponseEntity.ok(userService.loginStudent(loginRequest));
     }
 
     @PostMapping("/enroll")

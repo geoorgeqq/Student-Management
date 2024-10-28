@@ -74,6 +74,18 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
 
+  const [isChecked, setIsChecked] = React.useState<boolean>(false);
+
+  const handleCheckboxChange = (
+    _event: React.SyntheticEvent,
+    checked: boolean
+  ) => {
+    setIsChecked(checked);
+    console.log(checked);
+  };
+
+  const isRememberMeChecked = (): boolean => isChecked;
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -81,6 +93,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   interface User {
     email: string;
     password: string;
+    isChecked: boolean;
   }
 
   interface UserData {
@@ -114,6 +127,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [formData, setFormData] = React.useState<User>({
     email: "",
     password: "",
+    isChecked: isChecked,
   });
   const [emailError, setEmailError] = React.useState(false);
   const [departments, setDepartments] = React.useState([]);
@@ -143,7 +157,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const loginData = {
       email: formData.email,
       password: formData.password,
+      isChecked: isChecked,
     };
+
+    console.log("Sending data to backend:", loginData);
 
     try {
       const response = await axios.post(
@@ -362,6 +379,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                     fontFamily: "Roboto, sans-serif",
                   },
                 }}
+                checked={isChecked}
+                onChange={handleCheckboxChange}
               />
 
               <ForgotPassword open={open} handleClose={handleClose} />

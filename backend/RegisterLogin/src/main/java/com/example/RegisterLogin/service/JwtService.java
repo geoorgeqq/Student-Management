@@ -35,12 +35,23 @@ public class JwtService {
                 .claims()
                 .add(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+1000 * 15 ))
+                .expiration(new Date(System.currentTimeMillis()+1000 * 60 * 5))
                 .and()
                 .signWith(getKey())
                 .compact();
     }
-
+    public String generateNoExpiryToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .subject(username)
+                .claims()
+                .add(claims)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+ 1000L * 60 * 60 * 24 * 365))
+                .and()
+                .signWith(getKey())
+                .compact();
+    }
 
     public SecretKey getKey(){
         byte[] decodedSk = Base64.getDecoder().decode(SECRET_KEY);
@@ -78,4 +89,6 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+
 }

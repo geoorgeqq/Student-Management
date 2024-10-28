@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
 import java.util.*;
 
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
+    @Override
     public Student registerUser(Student user, MultipartFile pic, String token) throws IOException {
         if (pic != null) {
             user.setPic(pic.getBytes());
@@ -47,11 +49,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    public LoginResponse loginStudent(String email, String password) {
+    @Override
+    public LoginResponse loginStudent(LoginRequest loginRequest) {
         // facem verificare la autentificare
-        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
+
         if(authentication !=null){
-            return new LoginResponse(userRepository.findByEmail(email),jwtService.generateToken(email));
+            if(loginRequest.isChecked() ){
+                return new LoginResponse(userRepository.findByEmail(loginRequest.getEmail()), jwtService.generateNoExpiryToken(loginRequest.getEmail()));
+            }
+            return new LoginResponse(userRepository.findByEmail(loginRequest.getEmail()),jwtService.generateToken(loginRequest.getEmail()));
         }
         return null;
     }
