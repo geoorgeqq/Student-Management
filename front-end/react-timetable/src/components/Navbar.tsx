@@ -25,6 +25,7 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
     if (loggedIn) {
       onLoginLogout(); // Log out if logged in
     } else {
+      localStorage.setItem("role", type);
       navigate(`/${type}/login`); // Redirect to the specific login type
     }
     handleClose(); // Close the menu after clicking
@@ -73,7 +74,7 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
                 onClick={handleClick}
                 className="ms-3"
               >
-                {loggedIn ? "Account" : "Login"}
+                Login
               </Button>
               <Menu
                 id="basic-menu"
@@ -84,25 +85,17 @@ export const Navbar = ({ loggedIn, onLoginLogout }: NavbarProps) => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                {loggedIn ? (
-                  <>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={onLoginLogout}>Logout</MenuItem>
-                  </>
-                ) : (
-                  <>
-                    <MenuItem onClick={() => handleLoginClick("admin")}>
-                      Admin Login
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLoginClick("teachers")}>
-                      Teacher Login
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLoginClick("student")}>
-                      Student Login
-                    </MenuItem>
-                  </>
-                )}
+                <>
+                  <MenuItem onClick={() => handleLoginClick("admin")}>
+                    Admin Login
+                  </MenuItem>
+                  <MenuItem onClick={() => handleLoginClick("teachers")}>
+                    Teacher Login
+                  </MenuItem>
+                  <MenuItem onClick={() => handleLoginClick("student")}>
+                    Student Login
+                  </MenuItem>
+                </>
               </Menu>
             </li>
           </ul>

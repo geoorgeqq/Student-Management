@@ -11,6 +11,8 @@ import ResetPassword from "./ResetPassword";
 import VerifyEmail from "./VerifyEmail";
 import CheckEmail from "./sign-up/CheckEmail";
 import TokenVerification from "./TokenVerification";
+import axiosInstance from "./axiosInstance"; // Import the Axios instance
+import axios from "axios";
 
 const theme = createTheme({
   typography: {
@@ -21,7 +23,7 @@ const theme = createTheme({
 export const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
-  const [verificationComplete, setVerificationComplete] = useState(false); // Track verification status
+  const [verificationComplete, setVerificationComplete] = useState(false);
 
   const handleLoginLogout = () => {
     if (loggedIn) {
@@ -31,19 +33,17 @@ export const App: React.FC = () => {
   };
 
   const handleVerificationComplete = () => {
-    setVerificationComplete(true); // Set verification as complete
+    setVerificationComplete(true);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        {/* TokenVerification will handle redirection and notify when done */}
         <TokenVerification
           onVerificationComplete={handleVerificationComplete}
         />
         <Routes>
-          {/* Conditionally render the HomePage route only if verification is complete */}
           {verificationComplete && (
             <Route
               path="/"

@@ -15,11 +15,21 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from "./theme/customizations";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  replace,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import ContentRenderer from "./components/ContentRenderer";
 import axios from "axios";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
-// Create theme with customizations
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -58,8 +68,12 @@ const xThemeComponents = {
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const location = useLocation();
   const { type } = useParams<{ type: string }>();
+  const navigate = useNavigate();
 
-  // Create states for user-related data
+  if (typeof type !== "undefined") {
+    localStorage.setItem("role", type);
+  }
+
   const [name, setName] = React.useState<string>(location.state?.name || "");
   const [email, setEmail] = React.useState<string>(location.state?.email || "");
   const [image, setImage] = React.useState<string>(location.state?.image || "");
@@ -69,15 +83,33 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   );
   const jwtToken = localStorage.getItem("jsonWebToken");
 
-  // State for managing selected content
   const [selectedContent, setSelectedContent] = React.useState<string>("Home");
-
-  // State for managing students data, loading state, and error state
   const [students, setStudents] = React.useState<[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Fetch students data when component mounts
+  // State to manage the popup dialog visibility
+  const [sessionExpired, setSessionExpired] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem("jsonWebToken");
+          setSessionExpired(true); // Show the popup
+          // Delay navigation by 2 seconds
+          setTimeout(() => {
+            navigate(`/${type}/login`, { replace: true });
+          }, 2000);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
+
   React.useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -97,7 +129,6 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     fetchStudents();
   }, []);
 
-  // Handle side menu item click
   const handleMenuClick = (content: string) => {
     setSelectedContent(content);
   };
@@ -106,7 +137,6 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
-        {/* Pass current states to SideMenu */}
         <SideMenu
           userType={type}
           name={name}
@@ -116,7 +146,6 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           selectedContent={selectedContent}
         />
         <AppNavbar />
-        {/* Main content */}
         <ContentRenderer
           userType={type}
           selectedContent={selectedContent}
@@ -124,17 +153,30 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           loading={loading}
           error={error}
           name={name}
-          setName={setName} // Pass set state functions
+          setName={setName}
           email={email}
-          setEmail={setEmail} // Pass set state functions
+          setEmail={setEmail}
           image={image}
-          setImage={setImage} // Pass set state functions
+          setImage={setImage}
           id={id}
-          setId={setId} // Pass set state functions
+          setId={setId}
           departmentId={departmentId}
-          setDepartmentId={setDepartmentId} // Pass set state functions
+          setDepartmentId={setDepartmentId}
         />
       </Box>
+
+      {/* Session Expired Popup */}
+      <Dialog open={sessionExpired} onClose={() => setSessionExpired(false)}>
+        <DialogTitle>Session Expired</DialogTitle>
+        <DialogContent>
+          Your session has expired. You will be redirected to the login page.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSessionExpired(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppTheme>
   );
 }

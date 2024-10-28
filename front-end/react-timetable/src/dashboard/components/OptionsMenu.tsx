@@ -41,7 +41,8 @@ export default function OptionsMenu({
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.setItem("jsonWebToken", "");
+    localStorage.removeItem("jsonWebToken");
+    localStorage.removeItem("role");
     navigate("/");
   };
 

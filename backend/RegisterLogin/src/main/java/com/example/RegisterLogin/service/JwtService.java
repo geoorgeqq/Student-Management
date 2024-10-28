@@ -35,11 +35,12 @@ public class JwtService {
                 .claims()
                 .add(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+1000 * 60 *60 ))
+                .expiration(new Date(System.currentTimeMillis()+1000 * 15 ))
                 .and()
                 .signWith(getKey())
                 .compact();
     }
+
 
     public SecretKey getKey(){
         byte[] decodedSk = Base64.getDecoder().decode(SECRET_KEY);
