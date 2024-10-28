@@ -84,8 +84,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     console.log(checked);
   };
 
-  const isRememberMeChecked = (): boolean => isChecked;
-
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -179,6 +177,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       const userData = responseJWT[userType as keyof ResponseJWT] as
         | UserData
         | undefined;
+      console.log(userData);
 
       // Destructure response data
       if (userData) {

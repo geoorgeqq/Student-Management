@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Header from "./Header";
 const jwtToken = localStorage.getItem("jsonWebToken");
+console.log(jwtToken);
 
 interface UserManagementContentProps {
   selectedContent: string;

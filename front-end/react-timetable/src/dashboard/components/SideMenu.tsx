@@ -105,7 +105,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
             mr: "auto", // Automatically adjust space
           }}
         >
-          {(userType === "student" || userType === "teachers") && (
+          {(userType === "student" || userType === "teacher") && (
             <Tooltip title={name} arrow>
               <Typography
                 variant="body2"
@@ -122,7 +122,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
               </Typography>
             </Tooltip>
           )}
-          {(userType === "student" || userType === "teachers") && (
+          {(userType === "student" || userType === "teacher") && (
             <Tooltip title={email} arrow>
               <Typography
                 variant="caption"

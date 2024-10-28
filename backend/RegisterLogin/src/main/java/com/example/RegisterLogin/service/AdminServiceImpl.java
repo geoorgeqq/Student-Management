@@ -1,6 +1,7 @@
 package com.example.RegisterLogin.service;
 
 import com.example.RegisterLogin.entity.Admin;
+import com.example.RegisterLogin.entity.LoginRequest;
 import com.example.RegisterLogin.entity.LoginResponse;
 import com.example.RegisterLogin.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,15 @@ public class AdminServiceImpl {
     @Autowired
     JwtService jwtService;
 
-    public LoginResponse loginAdmin(String email, String password) {
-        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+    public LoginResponse loginAdmin(LoginRequest loginRequest) {
+        // facem verificare la autentificare
+        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
+
         if(authentication !=null){
-            return new LoginResponse(adminRepository.findByEmail(email),jwtService.generateToken(email));
+            if(loginRequest.isChecked() ){
+                return new LoginResponse(adminRepository.findByEmail(loginRequest.getEmail()), jwtService.generateNoExpiryToken(loginRequest.getEmail()));
+            }
+            return new LoginResponse(adminRepository.findByEmail(loginRequest.getEmail()),jwtService.generateToken(loginRequest.getEmail()));
         }
         return null;
     }

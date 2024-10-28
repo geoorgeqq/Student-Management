@@ -97,7 +97,7 @@ export default function MenuContent({
           </>
         )}
 
-        {(userType === "student" || userType === "teachers") && (
+        {(userType === "student" || userType === "teacher") && (
           <ListItem disablePadding>
             <ListItemButton
               selected={selectedIndex === 4}

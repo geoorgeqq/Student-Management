@@ -66,7 +66,7 @@ export default function TeacherManagement({
 
   useEffect(() => {
     const fetchTeachers = async () => {
-      const response = await fetch("http://localhost:8080/teachers", {
+      const response = await fetch("http://localhost:8080/teacher", {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -133,8 +133,8 @@ export default function TeacherManagement({
   const handleSaveTeacher = async () => {
     const method = editMode ? "PUT" : "POST";
     const url = editMode
-      ? `http://localhost:8080/teachers/${currentTeacher.id}`
-      : "http://localhost:8080/teachers";
+      ? `http://localhost:8080/teacher/${currentTeacher.id}`
+      : "http://localhost:8080/teacher";
 
     const response = await fetch(url, {
       method,

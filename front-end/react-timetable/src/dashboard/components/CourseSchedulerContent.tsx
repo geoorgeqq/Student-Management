@@ -216,7 +216,7 @@ export default function CourseSchedulerContent({
               error.response.data.error ||
               "A course schedule already exists for this time period.";
             setSnackbarMessage(errorMessage);
-            setSnackbarSeverity("error");
+            setSnackbarSeverity(`error`);
             setSnackbarOpen(true);
           } else {
             console.error("Unexpected error", error);
@@ -257,6 +257,7 @@ export default function CourseSchedulerContent({
                 error.response.data.error ||
                 "A course schedule already exists for this time period.";
               setSnackbarMessage(errorMessage);
+              setSnackbarSeverity(`error`);
               setSnackbarOpen(true);
             } else {
               console.error("Unexpected error", error);

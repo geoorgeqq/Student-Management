@@ -222,6 +222,7 @@ export default function CoursesContent({
     try {
       const response = await axios.post(
         "http://localhost:8080/courses",
+
         {
           courseName: newCourse.courseName,
           departmentId: newCourse.departmentId,
@@ -331,7 +332,7 @@ export default function CoursesContent({
         <Header selectedContent={selectedContent} />
 
         {/* Table for Students */}
-        {(userType === "student" || userType === "teachers") && (
+        {(userType === "student" || userType === "teacher") && (
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="courses table">
               <TableHead>

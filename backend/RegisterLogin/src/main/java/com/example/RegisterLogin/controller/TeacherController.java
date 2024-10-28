@@ -1,5 +1,7 @@
 package com.example.RegisterLogin.controller;
 
+import com.example.RegisterLogin.entity.LoginRequest;
+import com.example.RegisterLogin.entity.LoginResponse;
 import com.example.RegisterLogin.entity.Teacher;
 import com.example.RegisterLogin.service.TeacherServiceImpl;
 import com.example.RegisterLogin.service.UserService;
@@ -14,24 +16,15 @@ import java.util.List;
 
 @Controller
 @CrossOrigin("http://localhost:3000")
-@RequestMapping("/teachers")
+@RequestMapping("/teacher")
 public class TeacherController {
 
     @Autowired
     TeacherServiceImpl teacherService;
 
     @PostMapping("/login")
-    public ResponseEntity<Teacher> login(@RequestParam("email") String email, @RequestParam("password") String password) {
-        Teacher user = new Teacher();
-        user.setEmail(email);
-        user.setPassword(password);
-
-        Teacher savedUser = teacherService.loginTeacher(user.getEmail(), user.getPassword());
-        if (savedUser != null) {
-            return ResponseEntity.ok(savedUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(teacherService.loginTeacher(loginRequest));
     }
 
     @PostMapping

@@ -85,7 +85,7 @@ export default function TimeTableContent({
             setSchedules(response.data);
             console.log(response.data);
           });
-      } else if (type === "teachers") {
+      } else if (type === "teacher") {
         // Fetch teacher schedules
         axios
           .get(`http://localhost:8080/courses/teachers/${studentId}`, {
