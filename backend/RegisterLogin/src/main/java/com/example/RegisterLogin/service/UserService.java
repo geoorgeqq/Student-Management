@@ -1,5 +1,6 @@
 package com.example.RegisterLogin.service;
 
+import com.example.RegisterLogin.controller.StayLoggedInResponse;
 import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +35,8 @@ public interface UserService {
     public void deleteStudentById(Long id);
 
     public LoginResponse updateStudentById(Long id, Student student);
+
+    public StayLoggedInResponse verifyToken(String token);
 
 
 }

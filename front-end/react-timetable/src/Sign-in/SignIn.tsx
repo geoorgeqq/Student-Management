@@ -173,8 +173,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           state: { name, email, id, image: imageUrl, departmentId },
         });
       }
-
-      setAuthenticationHeader(localStorage.getItem("jwtWebToken"));
     } catch (error) {
       console.error("Error logging in: ", error);
     }

@@ -62,7 +62,7 @@ public class StudentController {
         String token = userService.generateToken();
         try {
             Student savedUser = userService.registerUser(user, pic, token);
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+            return ResponseEntity.ok(savedUser);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,5 +1,6 @@
 package com.example.RegisterLogin.service;
 
+import com.example.RegisterLogin.controller.StayLoggedInResponse;
 import com.example.RegisterLogin.entity.CourseScheduleRequest;
 import com.example.RegisterLogin.entity.*;
 import com.example.RegisterLogin.repository.*;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,10 @@ public class UserServiceImpl implements UserService {
     AuthenticationManager manager;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -119,6 +125,22 @@ public class UserServiceImpl implements UserService {
         String jwtToken = jwtService.generateToken(tempStudent.getEmail());
         return new LoginResponse(tempStudent,jwtToken);
 
+    }
+
+    @Override
+    public StayLoggedInResponse verifyToken(String token) {
+        if (userRepository.existsByEmail(jwtService.extractUserName(token))) {
+            Student student = userRepository.findByEmail(jwtService.extractUserName(token));
+            return new StayLoggedInResponse(student,token,"student");
+        } else if (teacherRepository.existsByEmail(jwtService.extractUserName(token))) {
+            Teacher teacher = teacherRepository.findByEmail(jwtService.extractUserName(token));
+            return new StayLoggedInResponse(teacher,token, "teacher");
+        } else if (adminRepository.existsByEmail(jwtService.extractUserName(token))) {
+            Admin admin = adminRepository.findByEmail(jwtService.extractUserName(token));
+            return new StayLoggedInResponse(admin,token,"admin");
+        } else {
+            throw new UsernameNotFoundException("User not found!");
+        }
     }
 
     @Override

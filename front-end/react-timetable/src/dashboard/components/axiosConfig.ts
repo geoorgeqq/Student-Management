@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Retrieve the JWT token from localStorage
-    const token = localStorage.getItem("jwtWebToken");
+    const token = localStorage.getItem("jsonWebToken");
 
     // If token exists, set it as the Authorization header
     if (token && config.headers) {
