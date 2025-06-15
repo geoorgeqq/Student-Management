@@ -82,7 +82,7 @@ export default function OptionsMenu({
           },
         }}
       >
-        {(userType === "student" || userType === "teachers") && (
+        {(userType === "student" || userType === "teacher") && (
           <>
             <MenuItem
               onClick={(event) => handleListItemClick(event, "My Account")}

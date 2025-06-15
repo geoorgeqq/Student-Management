@@ -24,16 +24,7 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        Admin user = new Admin();
-        user.setEmail(loginRequest.getEmail());
-        user.setPassword(loginRequest.getPassword());
-
-        LoginResponse savedAdmin = adminService.loginAdmin(user.getEmail(), user.getPassword());
-        if(savedAdmin != null){
-            return ResponseEntity.ok(savedAdmin);
-        }else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok(adminService.loginAdmin(loginRequest));
 
     }
 }

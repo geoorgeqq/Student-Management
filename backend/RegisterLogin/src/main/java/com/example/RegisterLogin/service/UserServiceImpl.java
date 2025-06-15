@@ -122,7 +122,11 @@ public class UserServiceImpl implements UserService {
         existingStudent.setDepartment(updatedStudent.getDepartment());
         existingStudent.setName(updatedStudent.getName());
         existingStudent.setPic(updatedStudent.getPic());
-        existingStudent.setPassword(updatedStudent.getPassword());
+
+        if (updatedStudent.getPassword() != null && !updatedStudent.getPassword().isEmpty()) {
+            existingStudent.setPassword(encoder.encode(updatedStudent.getPassword()));
+        }
+
         existingStudent.setDateOfBirth(updatedStudent.getDateOfBirth());
         existingStudent.setEmail(updatedStudent.getEmail());
 

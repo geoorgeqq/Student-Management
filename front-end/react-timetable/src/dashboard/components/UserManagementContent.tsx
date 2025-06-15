@@ -26,7 +26,6 @@ import {
 import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Header from "./Header";
-const jwtToken = localStorage.getItem("jsonWebToken");
 
 interface UserManagementContentProps {
   selectedContent: string;
@@ -58,6 +57,7 @@ export default function UserManagementContent({
   const [departments, setDepartments] = useState<Department[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   useEffect(() => {
     const fetchStudents = async () => {

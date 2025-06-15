@@ -199,16 +199,20 @@ export default function CoursesContent({
     const fetchTeachers = async () => {
       if (newCourse.departmentId) {
         try {
+          console.log("JWT Token:", jwtToken); // Debug token
+          console.log("Department ID:", newCourse.departmentId); // Debug department ID
           const response = await axios.get(
-            `http://localhost:8080/teachers/departments/${newCourse.departmentId}`,
+            `http://localhost:8080/teacher/departments/${newCourse.departmentId}`,
             {
               headers: {
                 Authorization: `Bearer ${jwtToken}`,
               },
             }
           );
+          console.log("Response:", response.data); // Debug response
           setTeachers(response.data);
-        } catch (err) {
+        } catch (err: any) {
+          console.error("Error details:", err.response?.data); // Debug error details
           setError("Failed to fetch teachers");
         }
       }
@@ -222,6 +226,7 @@ export default function CoursesContent({
     try {
       const response = await axios.post(
         "http://localhost:8080/courses",
+
         {
           courseName: newCourse.courseName,
           departmentId: newCourse.departmentId,
@@ -331,7 +336,7 @@ export default function CoursesContent({
         <Header selectedContent={selectedContent} />
 
         {/* Table for Students */}
-        {(userType === "student" || userType === "teachers") && (
+        {(userType === "student" || userType === "teacher") && (
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="courses table">
               <TableHead>
@@ -434,15 +439,15 @@ export default function CoursesContent({
               type="text"
               fullWidth
               variant="outlined"
-              value={newCourse.courseName}
+              value={newCourse.courseName || ""}
               onChange={(e) =>
                 setNewCourse({ ...newCourse, courseName: e.target.value })
               }
             />
             <TextareaAutosize
-              minRows={3} // Minimum number of rows to display
+              minRows={3}
               placeholder="Description"
-              value={newCourse.description}
+              value={newCourse.description || ""}
               onChange={(e) =>
                 setNewCourse({ ...newCourse, description: e.target.value })
               }
@@ -454,7 +459,7 @@ export default function CoursesContent({
               type="text"
               fullWidth
               variant="outlined"
-              value={newCourse.location}
+              value={newCourse.location || ""}
               onChange={(e) =>
                 setNewCourse({ ...newCourse, location: e.target.value })
               }
@@ -463,7 +468,7 @@ export default function CoursesContent({
               <InputLabel id="department-select-label">Department</InputLabel>
               <Select
                 labelId="department-select-label"
-                value={newCourse.departmentId}
+                value={newCourse.departmentId || ""}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, departmentId: e.target.value })
                 }
@@ -479,7 +484,7 @@ export default function CoursesContent({
               <InputLabel id="teacher-select-label">Teacher</InputLabel>
               <Select
                 labelId="teacher-select-label"
-                value={newCourse.teacherId}
+                value={newCourse.teacherId || ""}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, teacherId: e.target.value })
                 }

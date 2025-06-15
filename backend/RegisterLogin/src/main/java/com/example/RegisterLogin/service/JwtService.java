@@ -18,7 +18,6 @@ public class JwtService {
     private String SECRET_KEY = "";
 
     public JwtService() {
-
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             SecretKey key = keyGenerator.generateKey();
@@ -27,6 +26,7 @@ public class JwtService {
             throw new RuntimeException(e);
         }
     }
+
 
     public String generateToken(String username){
         Map<String, Object> claims = new HashMap<>();

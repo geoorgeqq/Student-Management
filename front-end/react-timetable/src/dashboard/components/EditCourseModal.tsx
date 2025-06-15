@@ -87,15 +87,21 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({
   const [courseLocation, setCourseLocation] = React.useState("");
   const [courseTeacherId, setCourseTeacherId] = React.useState("");
   const [teachers, setTeachers] = React.useState([]);
+  const jwtToken = localStorage.getItem("jsonWebToken");
 
   // Fetch teachers when department changes
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/teachers/departments/${departmentId}`
+          `http://localhost:8080/teacher/departments/${departmentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
-        setTeachers(response.data); // Assuming response.data is an array of teachers
+        setTeachers(response.data);
       } catch (error) {
         console.error("Failed to fetch teachers", error);
       }
@@ -143,6 +149,11 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({
           description: courseDescription,
           location: courseLocation,
           teacherId: courseTeacherId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
         }
       );
       onCourseUpdated(response.data);
@@ -154,7 +165,11 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/courses/${courseId}`);
+      await axios.delete(`http://localhost:8080/courses/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       onCourseDeleted(courseId);
       onClose();
     } catch (error) {
