@@ -39,6 +39,7 @@ interface Schedule {
   endTime: string;
   dayOfWeek: string;
   isActive: boolean;
+  daysOfWeek?: string;
 }
 
 interface Course {
@@ -102,41 +103,54 @@ export default function TimeTableContent({
     }
   }, [type, studentId]);
 
-  const getDateForDay = (dayOfWeek: string, time: string) => {
+  // Helper to safely get a date for a day and time
+  const safeGetDateForDay = (day: string, time: string) => {
+    if (!day || !time) return null;
     const today = new Date();
-    const dayDiff = dayMap[dayOfWeek] - today.getDay();
+    const dayIdx = dayMap[day];
+    if (typeof dayIdx !== 'number') return null;
+    const dayDiff = dayIdx - today.getDay();
     const targetDate = new Date(today);
     targetDate.setDate(today.getDate() + dayDiff);
-
     const [hours, minutes] = time.split(":").map(Number);
+    if (isNaN(hours) || isNaN(minutes)) return null;
     targetDate.setHours(hours, minutes, 0, 0);
     return targetDate;
   };
 
-  const events = schedules.map((schedule: Schedule) => {
-    const startDate = getDateForDay(schedule.dayOfWeek, schedule.startTime);
-    const endDate = getDateForDay(schedule.dayOfWeek, schedule.endTime);
-
-    return {
-      id: schedule.id.toString(),
-      title: `${schedule.course.courseName} - ${schedule.course.teacher.name}`,
-      start: startDate.toISOString(),
-      rrule: {
-        freq: "weekly",
-        byweekday: [dayMap[schedule.dayOfWeek]],
-        dtstart: startDate.toISOString(),
-        until: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-      },
-      duration: "02:00",
-      extendedProps: {
-        courseId: schedule.course.id,
-        courseName: schedule.course.courseName,
-        teacherName: schedule.course.teacher.name,
-        startTime: schedule.startTime,
-        endTime: schedule.endTime,
-        location: schedule.course.location,
-      },
-    };
+  // Support both dayOfWeek and daysOfWeek (comma-separated)
+  const events = schedules.flatMap((schedule: Schedule) => {
+    const days = schedule.daysOfWeek
+      ? schedule.daysOfWeek.split(',').map(d => d.trim()).filter(Boolean)
+      : schedule.dayOfWeek
+        ? [schedule.dayOfWeek]
+        : [];
+    return days.map((day) => {
+      const startDate = safeGetDateForDay(day, schedule.startTime);
+      const endDate = safeGetDateForDay(day, schedule.endTime);
+      return {
+        id: `${schedule.id}-${day}`,
+        title: `${schedule.course.courseName} - ${schedule.course.teacher.name}`,
+        start: startDate ? startDate.toISOString() : undefined,
+        rrule: startDate
+          ? {
+              freq: "weekly",
+              byweekday: [dayMap[day]],
+              dtstart: startDate.toISOString(),
+              until: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+            }
+          : undefined,
+        duration: "02:00",
+        extendedProps: {
+          courseId: schedule.course.id,
+          courseName: schedule.course.courseName,
+          teacherName: schedule.course.teacher.name,
+          startTime: schedule.startTime,
+          endTime: schedule.endTime,
+          location: schedule.course.location,
+        },
+      };
+    });
   });
 
   const handleEventClick = (clickInfo: any) => {

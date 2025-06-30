@@ -8,6 +8,6 @@ public class CourseScheduleRequest {
     private Long courseId;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String dayOfWeek;
+    private String daysOfWeek;
     private Boolean isActive;
 }

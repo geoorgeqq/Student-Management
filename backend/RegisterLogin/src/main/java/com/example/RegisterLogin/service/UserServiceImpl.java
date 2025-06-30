@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
     private AdminRepository adminRepository;
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -46,7 +48,19 @@ public class UserServiceImpl implements UserService {
         user.setToken(token);
         emailService.sendVerificationEmail(user.getEmail(), token);
         user.setPassword(encoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        Student savedStudent = userRepository.save(user);
+
+        // Enroll in up to 5 courses from their department
+        if (user.getDepartment() != null) {
+            List<Course> departmentCourses = courseRepository.findByDepartmentId(user.getDepartment().getId()).stream().toList();
+            int count = 0;
+            for (Course course : departmentCourses) {
+                if (count >= 5) break;
+                enrollmentService.addEnrollment(savedStudent.getId(), course.getId());
+                count++;
+            }
+        }
+        return savedStudent;
     }
 
     @Override

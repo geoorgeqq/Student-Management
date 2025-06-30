@@ -45,7 +45,8 @@ interface Schedule {
   };
   startTime: string;
   endTime: string;
-  dayOfWeek: string;
+  dayOfWeek?: string;
+  daysOfWeek?: string;
   isActive: boolean;
 }
 
@@ -58,9 +59,20 @@ interface NewSchedule {
   courseId: number;
   startTime: string;
   endTime: string;
-  dayOfWeek: string;
+  daysOfWeek: string[];
   isActive: boolean;
 }
+
+// Days of the week for selection
+const daysOfWeekList: string[] = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 export default function CourseSchedulerContent({
   selectedContent,
@@ -75,16 +87,15 @@ export default function CourseSchedulerContent({
   );
   const jwtToken = localStorage.getItem("jsonWebToken");
 
-  const initialNewSchedule = {
+  const initialNewSchedule: NewSchedule = {
     courseId: 0,
     startTime: "",
     endTime: "",
-    dayOfWeek: "",
+    daysOfWeek: [],
     isActive: true,
   };
 
-  const [newSchedule, setNewSchedule] =
-    useState<NewSchedule>(initialNewSchedule);
+  const [newSchedule, setNewSchedule] = useState<NewSchedule>(initialNewSchedule);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -164,15 +175,13 @@ export default function CourseSchedulerContent({
   const handleRowClick = (schedule: Schedule) => {
     setIsEditing(true);
     setEditingScheduleId(schedule.id);
-
-    const formattedStartTime = schedule.startTime.slice(0, 5); // Trim to HH:mm
-    const formattedEndTime = schedule.endTime.slice(0, 5); // Trim to HH:mm
-
+    const formattedStartTime = schedule.startTime.slice(0, 5);
+    const formattedEndTime = schedule.endTime.slice(0, 5);
     setNewSchedule({
       courseId: schedule.course.id,
-      startTime: formattedStartTime, // Set the trimmed time for the Select component
+      startTime: formattedStartTime,
       endTime: formattedEndTime,
-      dayOfWeek: schedule.dayOfWeek,
+      daysOfWeek: schedule.daysOfWeek ? schedule.daysOfWeek.split(",") : [],
       isActive: schedule.isActive,
     });
     setOpenDialog(true);
@@ -192,85 +201,21 @@ export default function CourseSchedulerContent({
     setNewSchedule(initialNewSchedule);
   };
 
+  // Handle checkbox change for days of week
+  const handleDaysOfWeekChange = (day: string) => {
+    setNewSchedule((prev) => {
+      const days = prev.daysOfWeek.includes(day)
+        ? prev.daysOfWeek.filter((d) => d !== day)
+        : [...prev.daysOfWeek, day];
+      return { ...prev, daysOfWeek: days };
+    });
+  };
+
   // Handle Snackbar close
-  const handleAddSchedule = () => {
-    axios
-      .post("http://localhost:8080/schedules", newSchedule, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      })
-      .then((response) => {
-        setSchedules([...schedules, response.data]);
-        const scheduleMessage = "Course scheduled succesfully!";
-        setSnackbarMessage(scheduleMessage);
-        setSnackbarOpen(true);
-        setSnackbarSeverity("success");
-        handleDialogClose();
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 409) {
-            // Check for HTTP 409 Conflict
-            const errorMessage =
-              error.response.data.error ||
-              "A course schedule already exists for this time period.";
-            setSnackbarMessage(errorMessage);
-            setSnackbarSeverity(`error`);
-            setSnackbarOpen(true);
-          } else {
-            console.error("Unexpected error", error);
-          }
-        }
-      });
-  };
-
-  // Update existing schedule (PUT request)
-  const handleUpdateSchedule = () => {
-    if (editingScheduleId !== null) {
-      axios
-        .put(
-          `http://localhost:8080/schedules/${editingScheduleId}`,
-          newSchedule,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        )
-        .then((response) => {
-          const updatedSchedules = schedules.map((schedule) =>
-            schedule.id === editingScheduleId ? response.data : schedule
-          );
-          setSchedules(updatedSchedules);
-          const scheduleMessage = "Course scheduled succesfully!";
-          setSnackbarMessage(scheduleMessage);
-          setSnackbarOpen(true);
-          setSnackbarSeverity("success");
-          handleDialogClose();
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 409) {
-              // Check for HTTP 409 Conflict
-              const errorMessage =
-                error.response.data.error ||
-                "A course schedule already exists for this time period.";
-              setSnackbarMessage(errorMessage);
-              setSnackbarSeverity(`error`);
-              setSnackbarOpen(true);
-            } else {
-              console.error("Unexpected error", error);
-            }
-          }
-        });
-    }
-  };
-
-  // Function to handle Snackbar close event
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
   // Delete existing schedule (DELETE request)
   const handleDeleteSchedule = () => {
     if (editingScheduleId !== null) {
@@ -296,6 +241,80 @@ export default function CourseSchedulerContent({
   const formatTime = (timeString: string) => {
     const [hours, minutes] = timeString.split(":");
     return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+  };
+
+  // Move these functions above the JSX return
+  const handleAddSchedule = () => {
+    axios
+      .post(
+        "http://localhost:8080/schedules",
+        { ...newSchedule, daysOfWeek: newSchedule.daysOfWeek.join(",") },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        setSchedules([...schedules, response.data]);
+        setSnackbarMessage("Course scheduled succesfully!");
+        setSnackbarOpen(true);
+        setSnackbarSeverity("success");
+        handleDialogClose();
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 409) {
+            const errorMessage =
+              error.response.data.error ||
+              "A course schedule already exists for this time period.";
+            setSnackbarMessage(errorMessage);
+            setSnackbarSeverity(`error`);
+            setSnackbarOpen(true);
+          } else {
+            console.error("Unexpected error", error);
+          }
+        }
+      });
+  };
+
+  const handleUpdateSchedule = () => {
+    if (editingScheduleId !== null) {
+      axios
+        .put(
+          `http://localhost:8080/schedules/${editingScheduleId}`,
+          { ...newSchedule, daysOfWeek: newSchedule.daysOfWeek.join(",") },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        )
+        .then((response) => {
+          const updatedSchedules = schedules.map((schedule) =>
+            schedule.id === editingScheduleId ? response.data : schedule
+          );
+          setSchedules(updatedSchedules);
+          setSnackbarMessage("Course scheduled succesfully!");
+          setSnackbarOpen(true);
+          setSnackbarSeverity("success");
+          handleDialogClose();
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status === 409) {
+              const errorMessage =
+                error.response.data.error ||
+                "A course schedule already exists for this time period.";
+              setSnackbarMessage(errorMessage);
+              setSnackbarSeverity(`error`);
+              setSnackbarOpen(true);
+            } else {
+              console.error("Unexpected error", error);
+            }
+          }
+        });
+    }
   };
 
   // Conditional rendering based on user type
@@ -326,13 +345,13 @@ export default function CourseSchedulerContent({
             <Header selectedContent={selectedContent} />
             {/* Schedule Table for Admin */}
             <TableContainer>
-              <Table>
+              <Table sx={{ borderCollapse: 'collapse', border: 'none' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Course</TableCell>
-                    <TableCell>Start Time</TableCell>
-                    <TableCell>End Time</TableCell>
-                    <TableCell>Day of Week</TableCell>
+                    <TableCell sx={{ borderBottom: '2px solid #ccc', borderStyle: 'solid', fontWeight: 'bold' }}>Course</TableCell>
+                    <TableCell sx={{ borderBottom: '2px solid #ccc', borderStyle: 'solid', fontWeight: 'bold' }}>Start Time</TableCell>
+                    <TableCell sx={{ borderBottom: '2px solid #ccc', borderStyle: 'solid', fontWeight: 'bold' }}>End Time</TableCell>
+                    <TableCell sx={{ borderBottom: '2px solid #ccc', borderStyle: 'solid', fontWeight: 'bold' }}>Days of Week</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -342,10 +361,10 @@ export default function CourseSchedulerContent({
                       onClick={() => handleRowClick(schedule)}
                       style={{ cursor: "pointer" }}
                     >
-                      <TableCell>{schedule.course.courseName}</TableCell>
-                      <TableCell>{formatTime(schedule.startTime)}</TableCell>
-                      <TableCell>{formatTime(schedule.endTime)}</TableCell>
-                      <TableCell>{schedule.dayOfWeek}</TableCell>
+                      <TableCell sx={{ borderBottom: '1px solid #eee', borderStyle: 'solid' }}>{schedule.course.courseName}</TableCell>
+                      <TableCell sx={{ borderBottom: '1px solid #eee', borderStyle: 'solid' }}>{formatTime(schedule.startTime)}</TableCell>
+                      <TableCell sx={{ borderBottom: '1px solid #eee', borderStyle: 'solid' }}>{formatTime(schedule.endTime)}</TableCell>
+                      <TableCell sx={{ borderBottom: '1px solid #eee', borderStyle: 'solid' }}>{schedule.daysOfWeek || schedule.dayOfWeek}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -419,16 +438,21 @@ export default function CourseSchedulerContent({
                   disabled // Automatically calculated
                 />
 
-                {/* Day of Week Field */}
-                <TextField
-                  margin="dense"
-                  label="Day of Week"
-                  name="dayOfWeek"
-                  fullWidth
-                  variant="outlined"
-                  value={newSchedule.dayOfWeek}
-                  onChange={handleFieldChange}
-                />
+                {/* Days of Week Field */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 2 }}>
+                  {daysOfWeekList.map((day: string) => (
+                    <FormControl key={day} sx={{ minWidth: 100 }}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={newSchedule.daysOfWeek.includes(day)}
+                          onChange={() => handleDaysOfWeekChange(day)}
+                        />
+                        {day}
+                      </label>
+                    </FormControl>
+                  ))}
+                </Box>
               </DialogContent>
 
               {/* Dialog Actions */}

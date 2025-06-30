@@ -3,12 +3,14 @@ package com.example.RegisterLogin.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "course")
 @Data
+@EqualsAndHashCode(exclude = {"department", "teacher", "enrollment"})
 public class Course {
 
     @Id

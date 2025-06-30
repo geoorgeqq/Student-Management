@@ -38,6 +38,7 @@ interface TemplateFrameProps {
   mode: PaletteMode;
   toggleColorMode: () => void;
   children: React.ReactNode;
+  showBackArrow?: boolean;
 }
 
 export default function TemplateFrame({
@@ -46,6 +47,7 @@ export default function TemplateFrame({
   mode,
   toggleColorMode,
   children,
+  showBackArrow = false,
 }: TemplateFrameProps) {
   const handleChange = (event: SelectChangeEvent) => {
     toggleCustomTheme(event.target.value === "custom");
@@ -66,7 +68,17 @@ export default function TemplateFrame({
               p: "8px 12px",
             }}
           >
-            <Box sx={{ display: "flex", gap: 1 }}>
+            {showBackArrow && (
+              <IconButton
+                aria-label="go back"
+                onClick={() => window.history.back()}
+                edge="start"
+                sx={{ mr: 1 }}
+              >
+                <ArrowBackRoundedIcon />
+              </IconButton>
+            )}
+            <Box sx={{ display: "flex", gap: 1, marginLeft: 'auto' }}>
               <ToggleColorMode
                 data-screenshot="toggle-mode"
                 mode={mode}

@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "i18next": "^25.2.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.5.3",
+    "rrule": "^2.8.1"
+  }
+}

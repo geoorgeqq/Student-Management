@@ -227,6 +227,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       showCustomTheme={showCustomTheme}
       mode={mode}
       toggleColorMode={toggleColorMode}
+      showBackArrow={true}
     >
       <ThemeProvider theme={showCustomTheme ? SignUpTheme : defaultTheme}>
         <CssBaseline enableColorScheme />
@@ -392,6 +393,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               >
                 Sign in
               </Button>
+              {/* Only show sign up link for students */}
+              {userType === UserType.STUDENT && (
               <Typography
                 sx={{
                   textAlign: "center",
@@ -413,6 +416,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   </Link>
                 </span>
               </Typography>
+              )}
             </Box>
           </Card>
         </SignInContainer>

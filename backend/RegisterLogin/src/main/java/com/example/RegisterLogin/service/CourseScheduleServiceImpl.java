@@ -35,9 +35,12 @@ public class CourseScheduleServiceImpl{
 
         Long departmentId = course.getDepartment().getId();
 
+        List<String> days = List.of(courseScheduleRequest.getDaysOfWeek().split(","));
+        // For conflict check, use the first day (for simplicity)
+        String firstDay = days.get(0);
         List<CourseSchedule> conflictingCourseSchedules = courseScheduleRepository.findConflictingSchedules(
                 departmentId,
-                courseScheduleRequest.getDayOfWeek(),
+                firstDay,
                 courseScheduleRequest.getStartTime(),
                 courseScheduleRequest.getEndTime(),
                 9999L);
@@ -62,9 +65,12 @@ public class CourseScheduleServiceImpl{
 
         Long departmentId = tempCourseSchedule.getCourse().getDepartment().getId();
 
+        List<String> days = List.of(courseSchedule.getDaysOfWeek().split(","));
+        // For conflict check, use the first day (for simplicity)
+        String firstDay = days.get(0);
         List<CourseSchedule> conflictingCourseSchedules = courseScheduleRepository.findConflictingSchedules(
                 departmentId,
-                courseSchedule.getDayOfWeek(),
+                firstDay,
                 courseSchedule.getStartTime(),
                 courseSchedule.getEndTime(),
                 tempCourseSchedule.getId());
@@ -79,13 +85,21 @@ public class CourseScheduleServiceImpl{
             return null;
         }
 
+        // Set the course if courseId is changed
+        if (courseSchedule.getCourseId() != null) {
+            Course newCourse = courseRepository.findById(courseSchedule.getCourseId()).orElse(null);
+            if (newCourse != null) {
+                tempCourseSchedule.setCourse(newCourse);
+            }
+        }
+
         return updateSchedule(tempCourseSchedule,courseSchedule);
     }
 
     public CourseSchedule updateSchedule(CourseSchedule tempSchedule, CourseScheduleRequest courseScheduleRequest){
         tempSchedule.setStartTime(courseScheduleRequest.getStartTime());
         tempSchedule.setEndTime(courseScheduleRequest.getEndTime());
-        tempSchedule.setDayOfWeek(courseScheduleRequest.getDayOfWeek());
+        tempSchedule.setDaysOfWeek(courseScheduleRequest.getDaysOfWeek());
         tempSchedule.setIsActive(courseScheduleRequest.getIsActive());
 
         return courseScheduleRepository.save(tempSchedule);

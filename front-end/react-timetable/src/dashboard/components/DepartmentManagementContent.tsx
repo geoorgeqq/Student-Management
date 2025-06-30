@@ -56,7 +56,15 @@ export default function DepartmentManagementContent({
         setDepartments(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching departments:", error);
+        if (error.response && error.response.status === 401) {
+          setErrorMessage("Session expired. Please log in again.");
+          localStorage.removeItem("jsonWebToken");
+          setTimeout(() => {
+            window.location.href = "/sign-in";
+          }, 2000);
+        } else {
+          console.error("Error fetching departments:", error);
+        }
       });
   }, []);
 

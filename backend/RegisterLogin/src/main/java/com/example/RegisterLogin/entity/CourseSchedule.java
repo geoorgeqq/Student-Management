@@ -23,7 +23,8 @@ public class CourseSchedule {
 
     private LocalTime endTime;
 
-    private String dayOfWeek;
+    // Comma-separated list of days, e.g., "Monday,Wednesday,Friday"
+    private String daysOfWeek;
 
     private Boolean isActive = true;
 

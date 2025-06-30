@@ -84,8 +84,21 @@ export default function TeacherManagement({
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      const data = await response.json();
-      setDepartments(data);
+      if (!response.ok) {
+        setDepartments([]);
+        return;
+      }
+      const text = await response.text();
+      if (!text) {
+        setDepartments([]);
+        return;
+      }
+      try {
+        const data = JSON.parse(text);
+        setDepartments(data);
+      } catch (e) {
+        setDepartments([]);
+      }
     };
     fetchDepartments();
   }, []);
